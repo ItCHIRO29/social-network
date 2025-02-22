@@ -1,0 +1,7 @@
+available endpoints :
+
+- Register : "/api/register" method : post (gender, username, first name, last name, age , email, password, avatar(optional), bio(optional), nickname(optional))
+- Login : "/api/login" method : post (email/username, password)
+- Profile : "/api/profile" method : get (*get user profile infos* : name, email, avatar, bio, followers, following, posts, comments)
+- Posts : "/api/posts"  method : get/post (create post/get posts(with comments))
+- Comments : "/api/comments" method : get/post (create comment/get comments)
