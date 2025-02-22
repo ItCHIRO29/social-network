@@ -5,3 +5,6 @@ available endpoints :
 - Profile : "/api/profile" method : get (*get user profile infos* : name, email, avatar, bio, followers, following, posts, comments)
 - Posts : "/api/posts"  method : get/post (create post/get posts(with comments))
 - Comments : "/api/comments" method : get/post (create comment/get comments)
+
+mux.handleFunc("/api/register", http.HandlerFunc(register)).Methods("POST")
+mux.handleFunc("/api/register", http.HandlerFunc(register)).Methods("POST")
