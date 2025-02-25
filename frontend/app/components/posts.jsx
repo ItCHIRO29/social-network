@@ -1,9 +1,4 @@
 
-import Header from "./header";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
-
-
 export default function CreatePost() {
     // console.log("Create Post");
     const PostsContainer = document.createElement('div')

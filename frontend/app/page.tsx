@@ -1,13 +1,10 @@
 
-import HomeP from "./components/home";
-import Login from "./components/login";
+import LoginPage from "./login/page";
 // import Header from "./components/header";
 export default function Home() {
   return (
     <>
-      <HomeP />
-      {/* <Header /> */}
-      <Login />
+      <LoginPage />
     </>
   )
 }
