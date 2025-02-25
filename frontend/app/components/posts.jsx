@@ -7,6 +7,9 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 export default function CreatePost() {
     // console.log("Create Post");
     const PostsContainer = document.createElement('div')
+    const main = document.getElementsByTagName('main');
+    console.log("main:", main);
+    console.log("PostsContainer:", PostsContainer);
     const handleCreatePost = async (e) => {
         e.preventDefault();
         const title = e.target.title.value;
@@ -20,7 +23,10 @@ export default function CreatePost() {
         const date = now.toLocaleString();
         PostsContainer.innerHTML += `
         <div class="post">
-            <h2>User</h2>
+        <section class="post-header">
+            <img id="user-icon" src="images/profile.png" alt="profile" />
+            <h2>username</h2>
+        </section>
             <h1>${title}</h1>
             <p>content : ${content}</p>
             <p> Created at : ${date}</p>
@@ -30,22 +36,27 @@ export default function CreatePost() {
             </div>
         </div>`;
         PostsContainer.classList.add('posts');
-        document.body.appendChild(PostsContainer);
+        main[0].appendChild(PostsContainer);
         e.target.title.value = '';
         e.target.content.value = '';
     }
 
     return (
-
         <>
-            {/* <Header /> */}
             <div id="createPost">
-                {/* <h1>Create Post</h1> */}
                 <form id="creation" onSubmit={handleCreatePost}>
-                    <img src="images/profile.png" alt="logo" />
-                    <input type="text" name="title" placeholder="Title" />
-                    <input type="text" name="content" placeholder="Content" />
-                    <button className="btn" type="submit">Publish</button>
+                    <img src="images/profile.png" alt="profile" />
+                    <section id="post-content">
+                        <input type="text" name="title" placeholder="Title" />
+                        <textarea type="text" name="content" placeholder="Content" />
+                    </section>
+                    <section id="post-options">
+                        <button className="btn" type="submit">Publish</button>
+                        <select name="privacy" className="btn">
+                            <option value="Public">Public</option>
+                            <option value="Private">Private</option>
+                        </select>
+                    </section>
                 </form>
             </div>
         </>

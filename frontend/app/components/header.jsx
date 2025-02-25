@@ -1,4 +1,3 @@
-"use client";
 
 export default function Header() {
     const handleHomeRoute = (e) => {

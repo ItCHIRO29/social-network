@@ -17,7 +17,6 @@ body {
 }
 
 body {
-    display: grid;
     color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -28,24 +27,15 @@ body {
 
 main {
     display: grid;
-    grid-template-areas: "header header header"
-        "side xx1 xx1"
-        "side xx xx"
-    ;
-    grid-template-rows: 10% 20% 10%;
-    grid-template-columns: 20% 50% 30%;
-}
-
-/* #main2 {
-    display: grid;
     grid-template-areas:
-        "side header header"
-        "side xx xx"
-        "side xx1 xx1"
-    ;
-    grid-template-rows: 20% 20% 0;
-    grid-template-columns: 20% 50% 30%;
-} */
+        "head head head "
+        "nav nav nav "
+        "side1 xx side2 "
+        "side1 posts . ";
+    height: 100vh;
+    grid-template-rows: 30% 60px 25%;
+    grid-template-columns: auto 60% auto;
+}
 
 body a {
     color: rgb(255, 3, 3);
@@ -71,8 +61,6 @@ h1 {
 
 header {
     display: flex;
-    /* position: relative; */
-    grid-area: header;
     top: 0;
     align-items: center;
     justify-content: space-between;
@@ -80,9 +68,7 @@ header {
     color: #ffffff;
     padding: 0 2rem 0 1rem;
     text-align: center;
-    /* margin-left: 20%; */
-    /* width: 80%; */
-    /* height: fit-content; */
+
 }
 
 header input {
@@ -96,7 +82,6 @@ header input {
 
 
 header button {
-    /* padding: 0.5rem; */
     border-radius: 5px;
     border: none;
     background-color: #000000;
@@ -110,26 +95,25 @@ header button:hover {
     border: 1px solid white;
 }
 
-.floating-sidebar {
-    /* position: fixed; */
+.floatingsidebar {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* top: 0; */
-    /* left: 0; */
     height: 100%;
-    /* float: left; */
-    /* width: 20%; */
     padding: 10px;
-    /* margin-right: 10px; */
     background-color: #333;
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* z-index: 1000; */
     word-wrap: break-word;
-    grid-area: side;
 }
 
+.nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #333;
+    grid-area: nav;
+}
 
 .btn {
     padding: 0.75rem 1.5rem;
@@ -141,8 +125,8 @@ header button:hover {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 5px;
-    width: stretch;
+    margin: 5px;
+    width: fit-content;
 }
 
 .btn:hover {
@@ -157,13 +141,9 @@ header button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* margin-bottom: 10px; */
     width: auto;
     height: auto;
-    grid-area: xx;
-    /* margin-right: 1%; */
-    /* margin-left: 21%; */
-    /* grid-area: xx1; */
+    grid-area: posts;
 }
 
 .post {
@@ -174,8 +154,6 @@ header button:hover {
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(255, 255, 255);
-    /* margin-top: 10px; */
-    /* margin-bottom: 10px; */
     position: relative;
 }
 
@@ -214,28 +192,6 @@ header button:hover {
     box-shadow: 0 3px 15px 5px rgb(255, 0, 0);
 }
 
-/* 
-.button-img {
-    position: relative;
-    z-index: 1;
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-    top: 0;
-    left: 0;
-    margin: 10px;
-    border: 2px solid #fff;
-    background-color: #000000;
-    cursor: pointer;
-    box-shadow: 0 0 25px rgb(255, 255, 255);
-    transition: all 0.3s ease;
-}
-
-.button-img:hover {
-    box-shadow: 0 0 25px rgb(255, 255, 255);
-    transform: scale(1.1);
-    transition: all 0.3s ease; 
-}*/
 
 .logo {
     height: 120px;
@@ -261,20 +217,12 @@ header button:hover {
 }
 
 #createPost {
-    /* display: fflex; */
-    /* justify-content: space-between; */
     border-radius: 5px;
-    grid-area: xx1;
-    /* border: 1px solid white; */
+    grid-area: xx;
     border: 1px solid white;
-    padding: 25px;
+    padding: 15px;
     color: #fff;
-    row-gap: 10px;
-    /* width: auto; */
     background-color: #3d3d3d46;
-    /* box-shadow: 1px 5px 10px 0 rgb(255, 255, 255); */
-    margin-top: 5%;
-    /* margin-left: 21%; */
 }
 
 #createPost .btn {
@@ -293,7 +241,51 @@ header button:hover {
     border: none;
     margin-right: 0.5rem;
     padding: 0.5rem;
-    width: 40%;
+    width: 100%;
+}
+
+#creation {
+    width: 100%;
+    display: grid;
+    grid-template-areas: "img post-content post-options";
+    grid-template-columns: 0.5fr 5fr 1fr;
+    flex-direction: row;
+}
+
+#creation #post-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#creation img {
+    grid-area: img;
+    width: 50px;
+    height: 50px;
+}
+
+#creation #post-content textarea {
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 0.5rem;
+    width: 100%;
+    grid-area: post-content;
+}
+
+#creation #post-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-area: post-options;
+    gap: 10px;
+    /* content: fill;     */
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 #comment {
@@ -303,14 +295,48 @@ header button:hover {
     gap: 10px;
 }
 
-#comment-icon {
+#comment-icon,
+#user-icon {
     height: 25px;
     width: 25px;
     cursor: pointer;
 }
 
-/* .settings {
-    color: "#ffffff";
-    padding: 2px;
-    align-items: "center";
-} */
+.userInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 10px;
+    color: #fff;
+    row-gap: 10px;
+    width: auto;
+    background-color: #534b4b6b;
+    grid-area: head;
+}
+
+.test1 {
+    background-color: orange;
+    grid-area: side1;
+    border: 1px solid white;
+    border-radius: 5px;
+
+}
+
+.test2 {
+    background-color: rgb(255, 255, 255);
+    padding: 15px;
+    font-family: serif;
+    grid-area: side2;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    height: max-content;
+}
+
+button {
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 15px;
+}
