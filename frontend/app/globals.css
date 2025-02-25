@@ -48,7 +48,7 @@ h1 {
   }
 }
 
-header {
+/* header {
   display: flex;
   position: relative;
   top: 0;
@@ -61,31 +61,31 @@ header {
   margin-left: 20%;
   width: 80%;
   height: fit-content;
-}
+} */
 
-header input {
+/* header input {
   height: 5vh;
   border-radius: 5px;
   border: none;
   margin-right: 0.5rem;
   padding: 0.5rem;
-}
+} */
 
 
-
+/* 
 header button {
   border-radius: 5px;
   border: none;
   background-color: #000000;
   color: #ffffff;
   cursor: pointer;
-}
+} */
 
-header button:hover {
+/* header button:hover {
   background-color: #b90000;
   color: #ffffff;
   border: 1px solid white;
-}
+} */
 
 /* .floating-sidebar {
   position: fixed;
