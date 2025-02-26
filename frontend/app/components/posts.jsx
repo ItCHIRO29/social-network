@@ -1,49 +1,54 @@
 
+import { useState } from "react";
+import Post from "../components/post";
+
 export default function CreatePost() {
-    // console.log("Create Post");
-    const PostsContainer = document.createElement('div')
-    const main = document.getElementsByTagName('main');
-    console.log("main:", main);
-    console.log("PostsContainer:", PostsContainer);
-    const handleCreatePost = async (e) => {
+    const [posts, setPosts] = useState([]);
+    const [imagePreview, setImagePreview] = useState(null);
+
+    const handleCreatePost = (e) => {
         e.preventDefault();
-        const title = e.target.title.value;
-        console.log(title);
-        const content = e.target.content.value;
-        console.log(content);
-        const now = new Date();
-        if (title === '' || content === '') {
-            return;
+        const title = e.target.title.value.trim();
+        const content = e.target.content.value.trim();
+        const image = e.target.image.files[0];
+
+        if (!title || !content) return;
+
+        const date = new Date().toLocaleString();
+        const newPost = { title, content, date, image };
+
+        setPosts([newPost, ...posts]);
+
+        // Reset form fields
+        e.target.title.value = "";
+        e.target.content.value = "";
+        setImagePreview(null);
+        const handleImageChange = (e) => {
+            if (e.type === "change") {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => setImagePreview(reader.result);
+                    reader.readAsDataURL(file);
+                } else {
+                    setImagePreview(null);
+                    e.target.value = null;
+                }
+            }
         }
-        const date = now.toLocaleString();
-        PostsContainer.innerHTML += `
-        <div class="post">
-        <section class="post-header">
-            <img id="user-icon" src="images/profile.png" alt="profile" />
-            <h2>username</h2>
-        </section>
-            <h1>${title}</h1>
-            <p>content : ${content}</p>
-            <p> Created at : ${date}</p>
-            <div id="comment">
-                <input type="text" name="comment" placeholder="comment" />
-                <img id="comment-icon" src="images/comment-icon.png" alt="logo" />
-            </div>
-        </div>`;
-        PostsContainer.classList.add('posts');
-        main[0].appendChild(PostsContainer);
-        e.target.title.value = '';
-        e.target.content.value = '';
-    }
+        handleImageChange(e);
+    };
 
     return (
         <>
             <div id="createPost">
                 <form id="creation" onSubmit={handleCreatePost}>
-                    <img src="images/profile.png" alt="profile" />
+                    <img src="/images/profile.png" alt="profile" />
                     <section id="post-content">
                         <input type="text" name="title" placeholder="Title" />
-                        <textarea type="text" name="content" placeholder="Content" />
+                        <textarea name="content" placeholder="Content" />
+                        <input id="post-file" type="file" name="image" accept="image/*" />
+                        {imagePreview && <img id="preview" src={imagePreview} alt="Post preview" />}
                     </section>
                     <section id="post-options">
                         <button className="btn" type="submit">Publish</button>
@@ -54,6 +59,13 @@ export default function CreatePost() {
                     </section>
                 </form>
             </div>
+            {/* Render Posts */}
+            <div className="posts">
+                {posts.map((post, index) => (
+                    <Post post={post} key={index} />
+                ))}
+            </div>
+
         </>
 
     );

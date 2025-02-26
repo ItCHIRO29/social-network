@@ -22,9 +22,9 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* background-color: #ffffff; */
     top: 0;
     left: 0;
-    background-color: #ffffff;
 }
 
 body a {
@@ -47,42 +47,6 @@ h1 {
     html {
         color-scheme: dark;
     }
-}
-
-header {
-    display: flex;
-    position: relative;
-    top: 0;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #dd0000da;
-    color: #ffffff;
-    padding: 0 2rem 0 1rem;
-    text-align: center;
-    width: 100%;
-    height: fit-content;
-}
-
-header input {
-    height: 5vh;
-    border-radius: 5px;
-    border: none;
-    margin-right: 0.5rem;
-    padding: 0.5rem;
-}
-
-header button {
-    border-radius: 5px;
-    border: none;
-    background-color: #000000;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-header button:hover {
-    background-color: #b90000;
-    color: #ffffff;
-    border: 1px solid white;
 }
 
 .btn {
@@ -114,28 +78,26 @@ header button:hover {
 
 }
 
-.register-container {
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     background: #c9c7b6;
     padding: 2rem;
     width: 70%;
-    height: 100%;
-    left: 100%;
-    top: 0;
-    /* transform: translate(50%,0); */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    z-index: 1000;
 }
 
 
-.register-container h1 {
+.login-container h1 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #000000;
 }
 
-.register-container input {
+.login-container input {
     width: 100%;
     padding: 0.75rem;
     margin-bottom: 1rem;
@@ -146,42 +108,36 @@ header button:hover {
     font-size: 14px;
 }
 
-.register-container input[type="text"]:focus,
-input[type="password"]:focus {
+.login-container input:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(47, 22, 189, 0.5);
 }
 
-.register-container input::placeholder {
+
+
+.login-container input::placeholder {
     color: #999;
 }
 
-.register-container input[type="file"] {
-    cursor: pointer;
-}
-
-.register-container #gender {
+.login-container #gender {
     display: flex;
-    flex-direction: row;
-    flex-flow: row;
-    align-items: center;
     justify-content: space-between;
 }
 
 
-#gender input[type="radio"] {
-    display: inline-block;
-    zoom: 1;
-    vertical-align: middle;
-    margin: 20px;
-    cursor: pointer;
-}
-
-#gender label {
-    display: inline-block;
-    zoom: 1;
-    width: 140px;
-}
+/* .Container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    background: #c9c7b6;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 800px;
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.733);
+} */
 
 .Container {
     position: absolute;
@@ -190,19 +146,19 @@ input[type="password"]:focus {
     background: #c9c7b6;
     border: none;
     border-radius: 10px;
+    top: 50%;
+    left: 50%;
     width: 100%;
-    height: fit-content;
+    height: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.562);
     max-width: 800px;
-}
+  }
 
 .xx {
-    /* position: absolute; */
     top: 0;
     left: 0;
     transform: translate(0, 0);
-    background: #ff0303c5;
+    background: #DB2A18;
     font-size: 30px;
     display: flex;
     flex-direction: column;

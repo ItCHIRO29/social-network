@@ -51,12 +51,13 @@ main {
     display: grid;
     grid-template-areas:
         "head head head "
-        "nav nav nav "
         "info info info "
-        "side1 xx side2 "
-        "side1 posts . ";
+        "side1 nav nav "
+        "side1 xx side3 "
+        "side1 posts side3 "
+        "side1 posts side2 ";
     height: 100vh;
-    grid-template-rows: 5% 20% 10% 25%;
+    grid-template-rows: 5% 20% 5% 25% 25%;
     grid-template-columns: 20% 60% auto;
 }
 
@@ -153,10 +154,12 @@ header .logo {
     width: auto;
     height: auto;
     grid-area: posts;
+    margin: 2%;
 }
 
 .post {
     display: grid;
+    grid-gap: 10px;
     gap: 10px;
     width: 100%;
     background-color: #ffffff;
@@ -164,6 +167,14 @@ header .logo {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(255, 255, 255);
     position: relative;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.post #post-image {
+    width: 100%;
+    height: auto;
+    justify-self: center;
 }
 
 .post h1 {
@@ -236,9 +247,10 @@ header .logo {
     grid-area: xx;
     border: 1px solid white;
     padding: 15px;
-    color: #fff;
+    color: #da7474;
     background-color: #3d3d3d46;
-    margin: 1%;
+    height: auto;
+    margin: 2%;
 }
 
 
@@ -247,7 +259,7 @@ header .logo {
     border: none;
     border-radius: 8px;
     background-color: #dd0000da;
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -283,9 +295,10 @@ header .logo {
 
 #creation {
     width: 100%;
+    height: auto;
     display: grid;
     grid-template-areas: "img post-content post-options";
-    grid-template-columns: 0.5fr 5fr 1fr;
+    grid-template-columns: 1fr 5fr 1fr;
     flex-direction: row;
 }
 
@@ -302,7 +315,7 @@ header .logo {
 }
 
 #creation #post-content textarea {
-    height: 100px;
+    height: 100%;
     border-radius: 5px;
     border: 1px solid white;
     padding: 0.5rem;
@@ -352,31 +365,107 @@ header .logo {
     color: #fff;
     row-gap: 10px;
     width: auto;
-    background-color: #929292;
+    background-color: #000000;
     grid-area: info;
 }
 
+
 .test1 {
-    background-color: #ffffff3d;
+    /* background-color: #1c1b1a; */
+    display: flex;
+    background-color: #f4f4f4;
     grid-area: side1;
-    border: 1px solid white;
+    border: 1px solid rgba(112, 102, 102, 0.897);
     border-radius: 5px;
-    border: 1px solid rgb(0, 0, 0);
+    margin-right: 1%;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 10px;
+    font-family: serif;
+    box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671);
+    word-wrap: break-word;
     margin: 1%;
+
+}
+
+.test1 button {
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.test1 button:hover {
+
+    background-color: #ff0000da;
+    color: #ffffff;
+    border: 1px solid white;
+    transition: all 0.3s ease;
+    transform: translateY(-2px);
 }
 
 .test2 {
-    background-color: rgb(255, 255, 255);
+    background-color: #f4f4f4;
     padding: 15px;
     font-family: serif;
     grid-area: side2;
     margin: 1%;
-    /* border: 1px solid rgb(0, 0, 0); */
     border-radius: 5px;
-    height: 150%;
+    height: fit-content;
 }
 
+.followers {
+    background-color: #f4f4f4;
+    padding: 15px;
+    font-family: serif;
+    grid-area: side3;
+    margin: 1%;
+    /* border: 1px solid rgb(0, 0, 0); */
+    border-radius: 5px;
+    /* height: 150%; */
+}
 
+.followers button {
+    width: 100%;
+    height: 50px;
+    /* border: 1px solid white; */
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.followers button:hover {
+    /* background-color: #ff0000da; */
+    color: #ffffff;
+    border: none;
+    /* transition: all 0.3s ease; */
+    /* transform: translateY(-2px); */
+}
+
+.followers img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+#follower {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #6b6b6b;
+    border: 1px solid white;
+    margin: 1%;
+    padding: 2px;
+}
+
+#follower:hover {
+    /* background-color: #ff0000da; */
+    color: #ffffff;
+    border: none;
+    /* transition: all 0.3s ease; */
+    /* transform: translateY(-2px); */
+}
 
 #search-input {
     font-size: 16px;

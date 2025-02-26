@@ -1,5 +1,5 @@
 
-import "./page.css"
+import "./register.css"
 import Header from "../components/header";
 export default function LoginPage() {
     return (
