@@ -48,7 +48,7 @@ h1 {
   }
 }
 
-header {
+ /* header {
   display: flex;
   position: relative;
   top: 0;
@@ -61,34 +61,33 @@ header {
   margin-left: 20%;
   width: 80%;
   height: fit-content;
-}
+}  */
 
-header input {
+/* header input {
   height: 5vh;
   border-radius: 5px;
   border: none;
   margin-right: 0.5rem;
   padding: 0.5rem;
-}
+} */
 
 
-
+/* 
 header button {
-  /* padding: 0.5rem; */
   border-radius: 5px;
   border: none;
   background-color: #000000;
   color: #ffffff;
   cursor: pointer;
-}
+} */
 
-header button:hover {
+/* header button:hover {
   background-color: #b90000;
   color: #ffffff;
   border: 1px solid white;
-}
+} */
 
-.floating-sidebar {
+/* .floating-sidebar {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -105,7 +104,9 @@ header button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   word-wrap: break-word;
-}
+} */
+
+
 
 .followers-sidebar {
   position: fixed;
@@ -141,73 +142,6 @@ header button:hover {
   max-width: 800px;
 }
 
-.login-container {
-  background: #c9c7b6;
-  padding: 2rem;
-  width: 50%;
-  height: 100%;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.xx {
-  background: #ff0000;
-  font-size: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;  /* border-radius: 5px; */
-  width: 50%;
-  height: 100%;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.login-container h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #000000;
-}
-
-.login-container input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 8px;
-  background: white;
-  color: #000000;
-  font-size: 14px;
-}
-
-.login-container input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(47, 22, 189, 0.5);
-}
-
-.login-container input::placeholder {
-  color: #999;
-}
-
-.login-container #gender {
-  display: flex;
-  justify-content: space-between;
-}
-
-.login-container select {
-  width: 70%;
-  height: 30px;
-  text-align: center;
-  border: none;
-  background: white;
-  color: #000000;
-  font-size: 14px;
-  margin: 2%;
-  cursor: pointer;
-}
-
-
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -228,7 +162,7 @@ header button:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 15px 5px rgb(255, 255, 255);
 }
-
+/* 
 .posts {
   display: flex;
   flex-direction: column;
@@ -238,7 +172,7 @@ header button:hover {
   width: auto;
   margin-right: 1%;
   margin-left: 21%;
-}
+} */
 
 .post {
   display: grid;
@@ -316,31 +250,23 @@ header button:hover {
   cursor: pointer;
 }
 
-.profile-image {
-  height: 140px;
-  width: 140px;
-  /* border-radius: 50%; */
-  margin: 10px;
-  border: 2px solid #fff;
-  background-color: #000000;
-}
 
 
-.userInfo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid white;
-  padding: 10px;
-  color: #fff;
-  row-gap: 10px;
-  width: auto;
-  background-color: #534b4b6b;
-  /* box-shadow: 1px 5px 10px 0 rgb(255, 255, 255); */
-  margin: 1%;
-  margin-left: 21%;
-}
+
+/* .userInfo { */
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* border-radius: 5px; */
+  /* border: 1px solid white; */
+  /* padding: 10px; */
+  /* color: #fff; */
+  /* row-gap: 10px; */
+  /* width: auto; */
+  /* background-color: #534b4b6b; */
+  /* margin: 1%; */
+  /* margin-left: 21%; */
+/* } */
 
 .right-buttons {
   display: flex;
@@ -358,19 +284,14 @@ header button:hover {
 }
 
 #createPost {
-  /* display: flex; */
-  /* justify-content: space-between; */
+
   border-radius: 5px;
-  /* border: 1px solid white; */
   border: 1px solid white;
   padding: 25px;
   color: #fff;
   row-gap: 10px;
   width: auto;
   background-color: #3d3d3d46;
-  /* box-shadow: 1px 5px 10px 0 rgb(255, 255, 255); */
-  margin: 1%;
-  margin-left: 21%;
 }
 
 #createPost .btn {
@@ -384,12 +305,14 @@ header button:hover {
 }
 
 #createPost input {
+  background-color: white;
+  color: black;
   height: 5vh;
   border-radius: 5px;
   border: none;
   margin-right: 0.5rem;
   padding: 0.5rem;
-  width: 40%;
+  width: 20%;
 }
 
 #comment {

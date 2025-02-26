@@ -1,5 +1,6 @@
 import ProfileButton from "./profileRoute";
 export default function UserActivity() {
+    // console.log("styling:", className);
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
@@ -18,15 +19,16 @@ export default function UserActivity() {
     }
     return (
         <>
-            <div className="floating-sidebar" onClick={handleClick}>
+            <div className="nav" onClick={handleClick}>
                 {/* <ProfileButton /> */}
-                <button className="btn" id="Home" type="submit">Home</button>
-                <button className="btn" id="Profile" type="submit" >Profile</button>
-                <button className="btn" id="Chat" type="submit">Chat</button>
-                <button className="btn" id="Groups" type="submit">Groups</button>
-                <button className="btn" id="Followers" type="submit">Followers</button>
-                <button className="btn" id="Logout" style={{ backgroundColor: "red" }} >Logout</button>
-            </div>
+                <button /* className="btn" */ id="Home" type="submit">Home</button>
+                <button /* className="btn" */ id="Profile" type="submit" >Profile</button>
+                <button /* className="btn" */ id="Chat" type="submit">Chat</button>
+                <button /* className="btn" */ id="Groups" type="submit">Groups</button>
+                <button /* className="btn" */ id="Followers" type="submit">Followers</button>
+                <button /* className="btn" */ id="about" type="submit">about</button>
+                <button /* className="btn" */ id="Logout" type="submit" >Logout</button>
+            </div >
         </>
     );
 }

@@ -1,0 +1,218 @@
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+body {
+    display: grid;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+}
+
+body a {
+    color: rgb(255, 3, 3);
+    text-decoration: none;
+}
+
+h1 {
+    color: #ededed;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: dark;
+    }
+}
+
+header {
+    display: flex;
+    position: relative;
+    top: 0;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #dd0000da;
+    color: #ffffff;
+    padding: 0 2rem 0 1rem;
+    text-align: center;
+    width: 100%;
+    height: fit-content;
+}
+
+header input {
+    height: 5vh;
+    border-radius: 5px;
+    border: none;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+}
+
+header button {
+    border-radius: 5px;
+    border: none;
+    background-color: #000000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: #b90000;
+    color: #ffffff;
+    border: 1px solid white;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff15;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    width: stretch;
+}
+
+.btn:hover {
+    background: #000000;
+    border: none;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 15px 5px rgb(255, 255, 255);
+}
+
+
+.logo {
+    height: 120px;
+    width: 120px;
+    cursor: pointer;
+
+}
+
+.register-container {
+    background: #c9c7b6;
+    padding: 2rem;
+    width: 70%;
+    height: 100%;
+    left: 100%;
+    top: 0;
+    /* transform: translate(50%,0); */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 1000;
+}
+
+
+.register-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #000000;
+}
+
+.register-container input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #000000;
+    font-size: 14px;
+}
+
+.register-container input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(47, 22, 189, 0.5);
+}
+
+.register-container input::placeholder {
+    color: #999;
+}
+
+.register-container input[type="file"] {
+    cursor: pointer;
+}
+
+.register-container #gender {
+    display: flex;
+    flex-direction: row;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+#gender input[type="radio"] {
+    display: inline-block;
+    zoom: 1;
+    vertical-align: middle;
+    margin: 20px;
+    cursor: pointer;
+}
+
+#gender label {
+    display: inline-block;
+    zoom: 1;
+    width: 140px;
+}
+
+.Container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    background: #c9c7b6;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    height: fit-content;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.562);
+    max-width: 800px;
+}
+
+.xx {
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    background: #ff0303c5;
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    width: 50%;
+    /* height: 100%; */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    z-index: 1000;
+}
