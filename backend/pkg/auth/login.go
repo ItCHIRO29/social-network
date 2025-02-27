@@ -8,27 +8,22 @@ import (
 	"os"
 	"time"
 
+	"social-network/pkg/models"
 	"social-network/pkg/utils"
 
 	"github.com/gofrs/uuid"
 )
 
-type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 func Login(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userData := User{}
+		userData := models.User{}
 		err := json.NewDecoder(r.Body).Decode(&userData)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
 			utils.WriteJSON(w, http.StatusBadRequest, "Bad Request")
 			return
 		}
 
-		if !ValidateEmail(userData.Email) || userData.Password == "" {
+		if !IsValidLoginForm(userData) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -47,7 +42,7 @@ func Login(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		if !isValidPassword(password, userData.Password) {
+		if !IdenticalPasswords(password, userData.Password) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

@@ -6,13 +6,13 @@ import (
 	"net/http"
 
 	"social-network/pkg/auth"
-	db "social-network/pkg/db/sqlite"
+	database "social-network/pkg/db/sqlite"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	db := db.Open()
+	db := database.Open()
 	limiters := auth.Limiters{}
 	mainMux := http.NewServeMux()
 	mainMux.Handle("/api/auth/", http.StripPrefix("/api/auth", auth.CreateAuthMux(db, &limiters)))
