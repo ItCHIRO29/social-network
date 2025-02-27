@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import CreatePost from "../components/posts";
 import UserActivity from "../components/userActivity";
-import "./profile.css"
 import Header from '../components/header';
+import "./profile.css"
 export default function ProfilePage() {
     const handleEditProfile = () => {
         window.location.href = "/editProfile";
@@ -27,8 +27,37 @@ export default function ProfilePage() {
 
                     </div>
                 </div>
-                <div className='test1'></div>
+                <div className="test1" id="chat">
+                    <h2>Chats</h2>
+                    <button >John Doe</button>
+                    <button >Jane Doe</button>
+                    <button >John Smith</button>
+                    <button >Jane Smith</button>
+                </div>
                 <CreatePost />
+                <div className="followers">
+                    <h2>Followers</h2>
+                    <div id="follower">
+                        <img src="/images/profile.png" alt="Profile" />
+                        <button>John Doe</button>
+                    </div>
+                    <div id="follower">
+                        <img src="/images/profile.png" alt="Profile" />
+                        <button>Jane Jenny</button>
+                    </div>
+                    <div id="follower">
+                        <img src="/images/profile.png" alt="Profile" />
+                        <button>John Smith</button>
+                    </div>
+                    <div id="follower">
+                        <img src="/images/profile.png" alt="Profile" />
+                        <button>Jane Smith</button>
+                    </div>
+                    <div id="follower">
+                        <img src="/images/profile.png" alt="Profile" />
+                        <button>Sam Smith</button>
+                    </div>
+                </div>
                 <div className='test2'>
                     <h2>about</h2>
                     <div className="center-user-infos">

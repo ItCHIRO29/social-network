@@ -1,4 +1,4 @@
-import "./page.css";
+import "./login.css";
 export default function LoginPage() {
     return (
         <>
