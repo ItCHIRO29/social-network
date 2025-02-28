@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"social-network/pkg/models"
 	"social-network/pkg/utils"
 
 	"github.com/gofrs/uuid"
@@ -27,21 +28,21 @@ func Login(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			if err == sql.ErrNoRows {
-				w.WriteHeader(http.StatusUnauthorized)
+				utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect email"})
 				return
 			}
-			w.WriteHeader(http.StatusInternalServerError)
+			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 			return
 		}
 
 		if !IdenticalPasswords(password, userData.Password) {
-			w.WriteHeader(http.StatusUnauthorized)
+			utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect Password"})
 			return
 		}
 		cookie, err := generateSessionToken(userId, db)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			w.WriteHeader(http.StatusInternalServerError)
+			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 			return
 		}
 		http.SetCookie(w, cookie)

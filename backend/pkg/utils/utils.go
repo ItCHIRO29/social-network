@@ -25,46 +25,49 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 		return "", err
 	}
 
-	file, _, err := r.FormFile("image")
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
+	_, ok := r.MultipartForm.File["image"]
+	if ok {
+		file, _, err := r.FormFile("image")
+		if err != nil {
+			return "", err
+		}
+		defer file.Close()
 
-	firstBytes := make([]byte, 512)
-	_, err = file.Read(firstBytes)
-	if err != nil {
-		return "", err
-	}
-	file.Seek(0, 0)
+		firstBytes := make([]byte, 512)
+		_, err = file.Read(firstBytes)
+		if err != nil {
+			return "", err
+		}
+		file.Seek(0, 0)
 
-	contentType := http.DetectContentType(firstBytes)
-	extension := ""
-	if contentType == "image/jpeg" {
-		extension = ".jpg"
-	} else if contentType == "image/png" {
-		extension = ".png"
-	} else if contentType == "image/gif" {
-		extension = ".gif"
-	} else {
-		return "", errors.New("invalid image type should be jpeg, png or gif")
-	}
+		contentType := http.DetectContentType(firstBytes)
+		extension := ""
+		if contentType == "image/jpeg" {
+			extension = ".jpg"
+		} else if contentType == "image/png" {
+			extension = ".png"
+		} else if contentType == "image/gif" {
+			extension = ".gif"
+		} else {
+			return "", errors.New("invalid image type should be jpeg, png or gif")
+		}
 
-	var path string
-	if imageType == "profile" {
-		path = "./uploads/profileImages/" + filename + extension
-	} else if imageType == "post" {
-		path = "./uploads/postsImages/" + filename + extension
+		var path string
+		if imageType == "profile" {
+			path = "./uploads/profileImages/" + filename + extension
+		} else if imageType == "post" {
+			path = "./uploads/postsImages/" + filename + extension
+		}
+		dest, err := os.Create(path)
+		if err != nil {
+			return "", err
+		}
+		defer dest.Close()
+		_, err = io.Copy(dest, file)
+		if err != nil {
+			return "", err
+		}
+		return path, nil
 	}
-	dest, err := os.Create(path)
-	if err != nil {
-		return "", err
-	}
-	defer dest.Close()
-	_, err = io.Copy(dest, file)
-	if err != nil {
-		return "", err
-	}
-
-	return path, nil
+	return "", errors.New("no image")
 }
