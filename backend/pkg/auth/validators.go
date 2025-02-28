@@ -3,6 +3,8 @@ package auth
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"net/http"
 	"regexp"
 	"slices"
 	"strconv"
@@ -112,45 +114,67 @@ func IsValidBio(bio string) bool {
 	return true
 }
 
-func IsValidRegisterForm(user *models.User, db *sql.DB) error {
+func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
+	user := models.User{
+		FirstName: r.FormValue("first_name"),
+		LastName:  r.FormValue("last_name"),
+		Nickname:  r.FormValue("nickname"),
+		Age:       r.FormValue("age"),
+		Gender:    r.FormValue("gender"),
+		Bio:       r.FormValue("bio"),
+		Username:  r.FormValue("username"),
+		Email:     r.FormValue("email"),
+		Password:  r.FormValue("password"),
+	}
+	fmt.Println(user)
 	if !IsValidName(user.FirstName) {
-		return errors.New("invalid first name")
+		return nil, errors.New("invalid first name")
 	}
 	if !IsValidName(user.LastName) {
-		return errors.New("invalid last name")
+		return nil, errors.New("invalid last name")
 	}
 
-	if !IsValidAge(strconv.Itoa(user.Age)) {
-		return errors.New("invalid age")
+	if !IsValidAge(user.Age) {
+		return nil, errors.New("invalid age")
 	}
 	if !IsValidGender(user.Gender) {
-		return errors.New("invalid gender")
+		return nil, errors.New("invalid gender")
 	}
 	if !IsValidEmail(user.Email) {
-		return errors.New("invalid email")
+		return nil, errors.New("invalid email")
 	}
 
 	if !IsValidUsername(user.Nickname) {
-		return errors.New("invalid nickname")
+		return nil, errors.New("invalid nickname")
 	}
 
 	if !IsValidUsername(user.Username) {
-		return errors.New("invalid username")
+		return nil, errors.New("invalid username")
 	}
 
 	if err := AlreadyExists(user.Email, user.Username, user.Nickname, db); err != nil {
-		return err
+		return nil, err
 	}
 
 	if !IsValidPassword(user.Password) {
-		return errors.New("invalid password")
+		return nil, errors.New("invalid password")
 	}
 	if !IsValidBio(user.Bio) {
-		return errors.New("invalid bio")
+		return nil, errors.New("invalid bio")
 	}
-	return nil
+	return &user, nil
 }
 
-func IsValidLoginForm(user models.User) bool {
-	return IsValidEmail(user.Email) && IsValidPassword(user.Password)
+func IsValidLoginForm(r *http.Request) (*models.User, error) {
+	user := models.User{
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
+	}
+	if !IsValidEmail(user.Email) {
+		return nil, errors.New("invalid email")
+	}
+	if !IsValidPassword(user.Password) {
+		return nil, errors.New("invalid password")
+	}
+	return &user, nil
 }
