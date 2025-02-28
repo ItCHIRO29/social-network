@@ -3,3 +3,6 @@ init_db:
 
 run:
 	@fresh "./*.go"
+
+init:
+	@go install github.com/gravityblast/fresh@latest
