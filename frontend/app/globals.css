@@ -48,6 +48,27 @@ h1 {
   }
 }
 
+
+header {
+  display: flex;
+  position: fixed;
+  /* top: 0; */
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #dd0000da;
+  color: #ffffff;
+  padding: 0 2rem 0 1rem;
+  text-align: center;
+  grid-area: head;
+  z-index: 1;
+}
+
+header .logo {
+    height: 50px;
+    width: 50px;
+}
+
 /* header {
   display: flex;
   position: relative;
@@ -163,7 +184,7 @@ header button {
   box-shadow: 0 3px 15px 5px rgb(255, 255, 255);
 }
 
-.posts {
+/* .posts {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,9 +193,9 @@ header button {
   width: auto;
   margin-right: 1%;
   margin-left: 21%;
-}
+} */
 
-.post {
+/* .post {
   display: grid;
   gap: 10px;
   width: 100%;
@@ -185,7 +206,7 @@ header button {
   position: relative;
   margin-bottom: 10px;
 
-}
+} */
 
 .post h1 {
   color: red;

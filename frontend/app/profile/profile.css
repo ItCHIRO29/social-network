@@ -71,9 +71,8 @@ main {
 
 
 
-header {
+/* header {
     display: flex;
-    /* top: 0; */
     align-items: center;
     justify-content: space-between;
     background-color: #dd0000da;
@@ -81,12 +80,12 @@ header {
     padding: 0 2rem 0 1rem;
     text-align: center;
     grid-area: head;
-}
+} */
 
-header .logo {
+/* header .logo {
     height: 50px;
     width: 50px;
-}
+} */
 
 .floatingsidebar {
     display: flex;

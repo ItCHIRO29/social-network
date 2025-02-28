@@ -64,9 +64,10 @@ h1 {
     }
 }
 
-header {
+/* header {
     display: flex;
-    /* top: 0; */
+    position: fixed;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     background-color: #dd0000da;
@@ -74,12 +75,12 @@ header {
     padding: 0 2rem 0 1rem;
     text-align: center;
     grid-area: head;
-}
+} */
 
-header .logo {
+/* header .logo {
     height: 50px;
     width: 50px;
-}
+} */
 
 .floatingsidebar {
     display: flex;
@@ -359,7 +360,7 @@ header .logo {
     background-color: #ffffff;
     grid-area: side1;
     border: 1px solid rgba(112, 102, 102, 0.897);
-    border-radius: 5px;
+    /* border-radius: 5px; */
     margin-right: 1%;
     flex-direction: column;
     align-items: center;
