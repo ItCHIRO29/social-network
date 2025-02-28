@@ -71,6 +71,14 @@ func IsValidUsername(nickname string) bool {
 	return re.MatchString(nickname)
 }
 
+func IsValidNickname(nickname string) bool {
+	if nickname == "" {
+		return true
+	} else {
+		return IsValidUsername(nickname)
+	}
+}
+
 func IsValidEmail(email string) bool {
 	re, err := regexp.Compile(`^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$`)
 	if err != nil || len(email) >= 255 {
@@ -144,7 +152,7 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 		return nil, errors.New("invalid email")
 	}
 
-	if !IsValidUsername(user.Nickname) {
+	if !IsValidNickname(user.Nickname) {
 		return nil, errors.New("invalid nickname")
 	}
 
