@@ -1,37 +1,56 @@
 
+'use client'
 import "./register.css"
-import Header from "../components/header";
-export default function LoginPage() {
+
+async function HandleRegister(e) {
+    e.preventDefault();
+    const formData = new FormData
+    fetch('http://localhost:8080/register',
+        {
+            method: 'POST',
+            body: formData,
+        }
+    ).then(response => response.json())
+        .then(data => {
+            console.log("registered successfully");
+            console.log(data);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+}
+
+
+export default function RegisterPage() {
     return (
         <>
-            {/* <Header /> */}
             <div className="Container">
                 <div className="xx">
                     <img width={170} height={170} src="images/SN-logo1.png" alt="logo" />
-                    <h2 style={{color: 'white', fontFamily:'serif'}}>Register</h2>
+                    <h2 style={{ color: 'white', fontFamily: 'serif' }}>Register</h2>
                 </div>
                 <div className="register-container">
-                    <form method="post">
+                    <form method="post" onSubmit={HandleRegister}>
                         <div id="gender">
-                            <label htmlFor="Female">Female</label>
+                            <label htmlFor="Female">Male</label>
                             <input type="radio" name="gender" value="male" />
-                            <label htmlFor="Male">Male</label>
+                            <label htmlFor="Male">Female</label>
                             <input type="radio" name="gender" value="female" />
                         </div>
-                        <input type="text" placeholder="username" />
-                        <input type="text" placeholder="first name" />
-                        <input type="text" placeholder="last name" />
-                        <input type="number" placeholder="age" />
-                        <input type="text" placeholder="Email" />
-                        <input type="password" placeholder="Password" />
+                        <input type="text" name="username" placeholder="username" />
+                        <input type="text" name="first_name" placeholder="first name" />
+                        <input type="text" name="last_name" placeholder="last name" />
+                        <input type="number" name="age" placeholder="age" />
+                        <input type="text" name="email" placeholder="Email" />
+                        <input type="password" name="password" placeholder="Password" />
                         <label >(optional)</label>
-                        <input type="file" datatype="image/*" placeholder="Avatar" />
+                        <input type="file" datatype="image/*" name="" placeholder="Avatar" />
                         <label>(optional)</label>
-                        <input type="text" placeholder="Nickname" />
+                        <input type="text" name="nickname" placeholder="Nickname" />
                         <label>(optional)</label>
-                        <input type="text" placeholder="Bio" />
+                        <input type="text" name="bio" placeholder="Bio" />
                         <a href="/login">you have an account? click here</a>
-                        <button className="btn"><a href="/home" type="button">Register</a></button>
+                        <button className="btn"><a href="/home" type="submit">Register</a></button>
                     </form>
                 </div>
             </div>
@@ -39,3 +58,4 @@ export default function LoginPage() {
 
     );
 }
+
