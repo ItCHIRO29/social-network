@@ -37,6 +37,7 @@ function isValidPassword(password) {
 
 function submitFormHandler(e) {
     e.preventDefault();
+    fetch()
     console.log("submitted");
 }
 
