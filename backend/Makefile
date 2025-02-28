@@ -2,4 +2,4 @@ init_db:
 	@sqlite3 ./pkg/db/social-network.db .databases
 
 run:
-	@fresh "./backend/*.go"
+	@fresh "./*.go"
