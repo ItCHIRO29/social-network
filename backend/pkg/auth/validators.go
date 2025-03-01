@@ -28,7 +28,7 @@ func AlreadyExists(email string, username string, nickname string, db *sql.DB) e
 	nicknameCount := 0
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE email=?", email).Scan(&emailCount)
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE username=?", username).Scan(&usernameCount)
-	db.QueryRow("SELECT COUNT(*) FROM users WHERE nickname=?", nickname).Scan(&nicknameCount)
+	db.QueryRow("SELECT COUNT(*) FROM users WHERE nickname=? AND nickname != ''", nickname).Scan(&nicknameCount)
 	if emailCount > 0 {
 		return errors.New("email already exists")
 	} else if usernameCount > 0 {

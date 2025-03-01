@@ -14,6 +14,7 @@ import (
 
 func Register(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("User created successfully")
 		var userData *models.User
 		var err error
 		if userData, err = IsValidRegisterForm(r, db); err != nil {
@@ -41,7 +42,7 @@ func Register(db *sql.DB) http.HandlerFunc {
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-
+		fmt.Println("userData:", userData)
 		utils.WriteJSON(w, http.StatusCreated, "User created successfully")
 	}
 }
