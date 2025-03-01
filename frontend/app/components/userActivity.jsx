@@ -1,8 +1,12 @@
+import ProfilePage from "../profile/page";
+
 export default function UserActivity() {
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
-            window.location.href = "/profile";
+            const data = FetchData("profile");
+            console.log("data", data);
+            // <ProfilePage data={data} />
         } else if (e.target.id === "Home") {
             window.location.href = "/home";
         } else if (e.target.id === "Notifications") {
@@ -18,7 +22,6 @@ export default function UserActivity() {
     return (
         <>
             <div className="nav" onClick={handleClick}>
-                {/* <ProfileButton /> */}
                 <button id="Home" type="submit">Home</button>
                 <button id="Profile" type="submit" >Profile</button>
                 <button id="Notifications" type="submit">Notifications</button>
@@ -29,4 +32,22 @@ export default function UserActivity() {
             </div >
         </>
     );
+}
+
+async function FetchData(id) {
+    //window.location.href = "/profile";
+    if (id === undefined || id === null || id === "") {
+        return;
+    }
+    if (id == "profile") {
+        const response = await fetch(`http://localhost:8080/api/auth/profile`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        console.log("profile data::", data);
+        return data;
+    }
 }

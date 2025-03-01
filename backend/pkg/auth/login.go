@@ -15,6 +15,7 @@ import (
 
 func Login(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Login Inside !!!!!!!!!!!!!!!!!!!")
 		userData, err := IsValidLoginForm(r)
 		if err != nil {
 			utils.WriteJSON(w, http.StatusBadRequest, err.Error())
@@ -28,25 +29,40 @@ func Login(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			if err == sql.ErrNoRows {
+				fmt.Println("Incorrect email")
 				utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect email"})
 				return
 			}
+			fmt.Println("Error while querying the database")
 			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 			return
 		}
 
-		if !IdenticalPasswords(password, userData.Password) {
+		// if !IdenticalPasswords(password, userData.Password) {
+		if password != userData.Password {
+			fmt.Println("Incorrect Password")
 			utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect Password"})
 			return
 		}
 		cookie, err := generateSessionToken(userId, db)
 		if err != nil {
+			fmt.Println("Error while generating session token")
 			fmt.Fprintln(os.Stderr, err)
 			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 			return
 		}
 		http.SetCookie(w, cookie)
 		w.WriteHeader(http.StatusOK)
+		fmt.Println("User logged in")
+		fmt.Println("user data in loggin : ", userData)
+		res := struct {
+			UserData *models.User
+			Status   string
+		}{
+			UserData: userData,
+			Status:   "success",
+		}
+		utils.WriteJSON(w, http.StatusOK, res)
 	}
 }
 

@@ -1,7 +1,8 @@
-'use client'
+"use client";
+
 import "./login.css";
 import { useState } from "react";
-
+// import LoginComponent from "@/app/components/login";
 function isValidEmail(email) {
     if (email.length >= 255) return "Email is too long.";
 
@@ -35,11 +36,36 @@ function isValidPassword(password) {
     return "";
 }
 
-function submitFormHandler(e) {
+async function submitFormHandler(e) {
     e.preventDefault();
-    fetch()
-    console.log("submitted");
+    console.log("Form submitted");
+    //const [status, setStatus] = useState("");
+    // Convert FormData to JSON
+    const formData = Object.fromEntries(new FormData(e.target));
+    console.log("Form Data:", formData);
+
+    const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: "POST",
+        body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+        alert("Invalid email or password");
+        return
+    }
+
+    const data = await response.json();
+    console.log("Server Response:", data);
+
+    if (data.Status === "success") {
+        console.log("User Data:", data.UserData);
+        //setStatus("success");
+        window.location.href = "/home";
+    } else if (data.error) {
+        alert("Invalid email or password");
+    }
 }
+
 
 
 
@@ -60,27 +86,27 @@ export default function LoginPage() {
             }
         })
     };
-
-
     return (
+
         <>
-            <div className="Container">
+            < div className="Container" >
                 <div className="xx">
                     <img width={150} height={150} src="images/SN-logo1.png" alt="logo" />
                     <h2 style={{ color: "white", fontFamily: 'serif' }}>Login</h2>
                 </div>
                 <div className="login-container">
                     <h1>Login</h1>
-                    <form>
+                    <form onSubmit={submitFormHandler}>
                         <input name="email" type="text" placeholder="Email" onChange={HandleInputChange} />
                         <p>{errors.email}</p>
                         <input name="password" type="password" placeholder="Password" onChange={HandleInputChange} />
                         <p>{errors.password}</p>
                         <a href="/register">you don't have an account? click here</a>
-                        <button onClick={submitFormHandler} className="btn">Login</button>
+                        <button type="submit" className="btn">Login</button>
                     </form>
                 </div>
-            </div>
+            </div >
         </>
+
     );
 }

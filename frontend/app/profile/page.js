@@ -5,6 +5,8 @@ import CreatePost from "../components/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
 import "./profile.css"
+
+
 export default function ProfilePage() {
     const handleEditProfile = () => {
         window.location.href = "/editProfile";

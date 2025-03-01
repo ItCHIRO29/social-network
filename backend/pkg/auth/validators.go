@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -174,15 +175,28 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 }
 
 func IsValidLoginForm(r *http.Request) (*models.User, error) {
-	user := models.User{
-		Email:    r.FormValue("email"),
-		Password: r.FormValue("password"),
+	// fmt.Println("r.body", r.Body)
+
+	var user1 struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
-	if !IsValidEmail(user.Email) {
+	json.NewDecoder(r.Body).Decode(&user1)
+
+	fmt.Println("user", user1)
+	if !IsValidEmail(user1.Email) {
+		fmt.Println("invalid email")
 		return nil, errors.New("invalid email")
 	}
-	if !IsValidPassword(user.Password) {
+	if !IsValidPassword(user1.Password) {
+		fmt.Println("invalid password")
 		return nil, errors.New("invalid password")
 	}
+	user := models.User{
+		Username: "username",
+		Email:    user1.Email,
+		Password: user1.Password,
+	}
+	fmt.Println("valid login form")
 	return &user, nil
 }

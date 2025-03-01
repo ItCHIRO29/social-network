@@ -4,31 +4,23 @@ import "./register.css"
 
 async function HandleRegister(e) {
     e.preventDefault();
-    const formData = new FormData()
-    formData.append('username', e.target.username.value);
-    formData.append('first_name', e.target.first_name.value);
-    formData.append('last_name', e.target.last_name.value);
-    formData.append('age', e.target.age.value);
-    formData.append('email', e.target.email.value);
-    formData.append('password', e.target.password.value);
-    formData.append('gender', e.target.gender.value);
-    formData.append('image', e.target.image.files[0]);
-    formData.append('bio', e.target.bio.value);
-    formData.append('nickname', e.target.nickname.value);
+    const formData = new FormData(e.target)
+    try {
+        await fetch('http://localhost:8080/api/auth/register',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        ).then(response => response.json())
+            .then(data => {
+                console.log("registered successfully");
+                console.log(data);
+                e.target.reset();
+            })
 
-    fetch('http://localhost:8080/api/auth/register',
-        {
-            method: 'POST',
-            body: formData,
-        }
-    ).then(response => response.json())
-        .then(data => {
-            console.log("registered successfully");
-            console.log(data);
-        })
-        .catch(error => {
-            console.error(error);
-        })
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 
