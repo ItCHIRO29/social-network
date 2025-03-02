@@ -7,6 +7,7 @@ import (
 
 	"social-network/pkg/auth"
 	database "social-network/pkg/db/sqlite"
+	"social-network/pkg/posts"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -39,6 +40,7 @@ func main() {
 	// Main router
 	mainMux := http.NewServeMux()
 	mainMux.Handle("/api/auth/", http.StripPrefix("/api/auth", authHandler))
+	mainMux.Handle("/api/posts", posts.CreatePostsMux(db, &limiters))
 
 	// Start Server
 	fmt.Println("\033[42mServer is running on port 8080\033[0m")
