@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"io"
@@ -86,4 +87,13 @@ func EnableCORS(next http.HandlerFunc) http.HandlerFunc {
 		}
 		next(w, r)
 	}
+}
+
+func GetUserIdFromUsername(db *sql.DB, username string) (int, error) {
+	var userId int
+	err := db.QueryRow("SELECT id FROM users WHERE username=?", username).Scan(&userId)
+	if err != nil {
+		return 0, err
+	}
+	return userId, nil
 }

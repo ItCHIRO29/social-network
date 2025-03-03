@@ -175,8 +175,6 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 }
 
 func IsValidLoginForm(r *http.Request) (*models.User, error) {
-	// fmt.Println("r.body", r.Body)
-
 	var user1 struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`

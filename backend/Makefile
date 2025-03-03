@@ -12,5 +12,4 @@ init:
 
 migration:
 	@echo "Enter migration name:"
-	@read MIGRATION_NAME
-	@migrate create -ext sql 
+	@read MIGRATION_NAME && migrate create -ext sql -dir ./pkg/db/migrations/sqlite $$MIGRATION_NAME
