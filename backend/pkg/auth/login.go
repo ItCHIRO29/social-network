@@ -15,7 +15,6 @@ import (
 
 func Login(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Login Inside !!!!!!!!!!!!!!!!!!!")
 		userData, err := IsValidLoginForm(r)
 		if err != nil {
 			utils.WriteJSON(w, http.StatusBadRequest, err.Error())
@@ -38,8 +37,7 @@ func Login(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		// if !IdenticalPasswords(password, userData.Password) {
-		if password != userData.Password {
+		if !IdenticalPasswords(password, userData.Password) {
 			fmt.Println("Incorrect Password")
 			utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect Password"})
 			return
@@ -53,16 +51,6 @@ func Login(db *sql.DB) http.HandlerFunc {
 		}
 		http.SetCookie(w, cookie)
 		w.WriteHeader(http.StatusOK)
-		fmt.Println("User logged in")
-		fmt.Println("user data in loggin : ", userData)
-		res := struct {
-			UserData *models.User
-			Status   string
-		}{
-			UserData: userData,
-			Status:   "success",
-		}
-		utils.WriteJSON(w, http.StatusOK, res)
 	}
 }
 
@@ -70,6 +58,7 @@ func generateSessionToken(userId int, db *sql.DB) (*http.Cookie, error) {
 	uuid, err := uuid.NewV4()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
+		return nil, err
 	}
 	session := uuid.String()
 	query := `

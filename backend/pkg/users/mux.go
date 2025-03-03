@@ -9,8 +9,6 @@ import (
 
 func CreateUsersMux(db *sql.DB, limiters *auth.Limiters) http.Handler {
 	mux := http.NewServeMux()
-	// mux.Handle("/user_data", auth.Middleware(db, limiters, GetUserData))
-	// mux.HandleFunc("POST /register", Register(db))
-	// mux.HandleFunc("/logout", logout(db, limiters))
+	mux.Handle("/profile", auth.Middleware(db, limiters, Profile))
 	return mux
 }

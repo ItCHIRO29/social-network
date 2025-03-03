@@ -47,23 +47,14 @@ async function submitFormHandler(e) {
     const response = await fetch('http://localhost:8080/api/auth/login', {
         method: "POST",
         body: JSON.stringify(formData),
+        credentials: "include",
     });
 
     if (!response.ok) {
         alert("Invalid email or password");
         return
     }
-
-    const data = await response.json();
-    console.log("Server Response:", data);
-
-    if (data.Status === "success") {
-        console.log("User Data:", data.UserData);
-        //setStatus("success");
-        window.location.href = "/home";
-    } else if (data.error) {
-        alert("Invalid email or password");
-    }
+    window.location.href = "/home"; 
 }
 
 

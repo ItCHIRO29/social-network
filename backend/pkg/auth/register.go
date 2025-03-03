@@ -14,7 +14,6 @@ import (
 
 func Register(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("User created successfully")
 		var userData *models.User
 		var err error
 		if userData, err = IsValidRegisterForm(r, db); err != nil {
@@ -36,6 +35,7 @@ func Register(db *sql.DB) http.HandlerFunc {
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+		fmt.Println("user data", userData.Password)
 		_, err = db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "In Exec", err)

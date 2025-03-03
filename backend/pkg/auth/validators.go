@@ -135,7 +135,6 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 		Email:     r.FormValue("email"),
 		Password:  r.FormValue("password"),
 	}
-	fmt.Println(user)
 	if !IsValidName(user.FirstName) {
 		return nil, errors.New("invalid first name")
 	}
@@ -181,7 +180,6 @@ func IsValidLoginForm(r *http.Request) (*models.User, error) {
 	}
 	json.NewDecoder(r.Body).Decode(&user1)
 
-	fmt.Println("user", user1)
 	if !IsValidEmail(user1.Email) {
 		fmt.Println("invalid email")
 		return nil, errors.New("invalid email")
@@ -195,6 +193,5 @@ func IsValidLoginForm(r *http.Request) (*models.User, error) {
 		Email:    user1.Email,
 		Password: user1.Password,
 	}
-	fmt.Println("valid login form")
 	return &user, nil
 }

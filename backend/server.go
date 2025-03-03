@@ -6,43 +6,31 @@ import (
 	"net/http"
 
 	"social-network/pkg/auth"
+	comments "social-network/pkg/comment"
 	database "social-network/pkg/db/sqlite"
+	"social-network/pkg/groups"
+	"social-network/pkg/notifications"
 	"social-network/pkg/posts"
+	"social-network/pkg/users"
+	"social-network/pkg/utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-func EnableCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-		// Handle preflight (OPTIONS) requests
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
-}
 
 func main() {
 	db := database.Open()
 	limiters := auth.Limiters{}
 
-	// Create Auth Router
-	authMux := auth.CreateAuthMux(db, &limiters)
-
-	// Apply CORS middleware to auth routes
-	authHandler := EnableCORS(authMux)
-
-	// Main router
 	mainMux := http.NewServeMux()
+	authHandler := auth.CreateAuthMux(db, &limiters)
 	mainMux.Handle("/api/auth/", http.StripPrefix("/api/auth", authHandler))
-	mainMux.Handle("/api/posts", posts.CreatePostsMux(db, &limiters))
+	mainMux.Handle("/api/posts", http.StripPrefix("/api", posts.CreatePostsMux(db, &limiters)))
+	mainMux.Handle("/api/comments", http.StripPrefix("/api", comments.CreateCommentsMux(db, &limiters)))
+	mainMux.Handle("/api/users/", http.StripPrefix("/api/users", users.CreateUsersMux(db, &limiters)))
+	mainMux.Handle("/api/groups", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db, &limiters)))
+	mainMux.Handle("/api/notifications", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db, &limiters)))
 
 	// Start Server
 	fmt.Println("\033[42mServer is running on port 8080\033[0m")
-	log.Fatalln(http.ListenAndServe("0.0.0.0:8080", mainMux))
+	log.Fatalln(http.ListenAndServe("0.0.0.0:8080", utils.EnableCORS(mainMux)))
 }
