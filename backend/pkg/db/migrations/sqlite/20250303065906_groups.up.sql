@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS groups (
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     foreign key(admin_id) references users(id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS group_members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS group_members (
     accepted BOOLEAN DEFAULT false,
     foreign key(user_id) references users(id),
     foreign key(group_id) references groups(id)
-)
+);

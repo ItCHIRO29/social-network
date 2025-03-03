@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS events (
     date TEXT NOT NULL,
     foreign key(group_id) references groups(id),
     foreign key(creator_id) references users(id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS event_members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS event_members (
     going BOOLEAN DEFAULT true,
     foreign key(user_id) references users(id),
     foreign key(event_id) references events(id)
-)
+);
