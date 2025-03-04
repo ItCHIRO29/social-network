@@ -29,12 +29,12 @@ func Register(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		userData.Password, err = HashPassword(userData.Password)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "in HashPassword", err)
-			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-			return
-		}
+		// userData.Password, err = HashPassword(userData.Password)
+		// if err != nil {
+		// 	fmt.Fprintln(os.Stderr, "in HashPassword", err)
+		// 	utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+		// 	return
+		// }
 		fmt.Println("user data", userData.Password)
 		_, err = db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password)
 		if err != nil {

@@ -24,12 +24,13 @@ func main() {
 	mainMux := http.NewServeMux()
 	authHandler := auth.CreateAuthMux(db, &limiters)
 	mainMux.Handle("/api/auth/", http.StripPrefix("/api/auth", authHandler))
-	mainMux.Handle("/api/posts", http.StripPrefix("/api", posts.CreatePostsMux(db, &limiters)))
+	mainMux.Handle("/api/posts/", http.StripPrefix("/api/posts", posts.CreatePostsMux(db, &limiters)))
 	mainMux.Handle("/api/comments", http.StripPrefix("/api", comments.CreateCommentsMux(db, &limiters)))
 	mainMux.Handle("/api/users/", http.StripPrefix("/api/users", users.CreateUsersMux(db, &limiters)))
 	mainMux.Handle("/api/groups", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db, &limiters)))
 	mainMux.Handle("/api/notifications", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db, &limiters)))
-
+	// serve images
+	mainMux.Handle("/uploads/", http.StripPrefix("/uploads", http.FileServer(http.Dir("uploads"))))
 	// Start Server
 	fmt.Println("\033[42mServer is running on port 8080\033[0m")
 	log.Fatalln(http.ListenAndServe("0.0.0.0:8080", utils.EnableCORS(mainMux)))

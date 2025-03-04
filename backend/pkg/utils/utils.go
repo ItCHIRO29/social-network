@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -23,6 +24,7 @@ func WriteJSON(w http.ResponseWriter, status int, data any) {
 func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (string, error) {
 	err := r.ParseMultipartForm(MaxUploadSize)
 	if err != nil {
+		fmt.Println("in parse multipart form", err)
 		return "", err
 	}
 
@@ -30,6 +32,7 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 	if ok {
 		file, _, err := r.FormFile("image")
 		if err != nil {
+			fmt.Println("in form file", err)
 			return "", err
 		}
 		defer file.Close()
@@ -37,6 +40,7 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 		firstBytes := make([]byte, 512)
 		_, err = file.Read(firstBytes)
 		if err != nil {
+			fmt.Println("in read", err)
 			return "", err
 		}
 		file.Seek(0, 0)
@@ -61,11 +65,13 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 		}
 		dest, err := os.Create(path)
 		if err != nil {
+			fmt.Println("in create", err)
 			return "", err
 		}
 		defer dest.Close()
 		_, err = io.Copy(dest, file)
 		if err != nil {
+			fmt.Println("in copy", err)
 			return "", err
 		}
 		return path, nil

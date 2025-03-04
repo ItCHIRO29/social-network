@@ -14,10 +14,10 @@ type User struct {
 }
 
 type PrivateProfile struct {
-	Public    bool   `json:"public"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Image     string `json:"image"`
+	Public    bool   `json:"public"`
 }
 
 type PublicProfile struct {
@@ -30,6 +30,13 @@ type PublicProfile struct {
 	Image     string   `json:"image"`
 	Username  string   `json:"username"`
 	Email     string   `json:"email"`
+	Public    bool     `json:"public"`
 	Followers []string `json:"followers"`
 	Following []string `json:"following"`
+}
+
+type EditProfile struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Public   string `json:"public"`
 }

@@ -4,8 +4,11 @@ export default function UserActivity() {
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
-            const data = FetchData("profile");
-            console.log("data", data);
+            // const data = FetchData("profile");
+            // console.log("data :: ", data.then(data => {
+            //     console.log("data :: ", data);
+            // }));
+            window.location.href = "/profile";
             // <ProfilePage data={data} />
         } else if (e.target.id === "Home") {
             window.location.href = "/home";
@@ -34,20 +37,5 @@ export default function UserActivity() {
     );
 }
 
-async function FetchData(id) {
-    //window.location.href = "/profile";
-    if (id === undefined || id === null || id === "") {
-        return;
-    }
-    if (id == "profile") {
-        const response = await fetch(`http://localhost:8080/api/auth/profile`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-        console.log("profile data::", data);
-        return data;
-    }
-}
+
+// export { FetchData };

@@ -12,16 +12,20 @@ type CustomHandler func(w http.ResponseWriter, r *http.Request, db *sql.DB, user
 
 func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Middleware triggered")
+		// fmt.Println("userId", userId)
 		cookie, err := r.Cookie("token")
 		if err != nil {
+			fmt.Println("Cookie not found")
 			fmt.Fprintln(os.Stderr, err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		token := cookie.Value
+		fmt.Println("Token:", token)
 		var userId int
 		var expiresAtStr string
-		err = db.QueryRow("SELECT user_id, expires_at FROM sessions WHERE token=?", token).Scan(&userId, &expiresAtStr)
+		err = db.QueryRow("SELECT user_id, expires_at FROM sessions WHERE id=?", token).Scan(&userId, &expiresAtStr)
 		if err == sql.ErrNoRows {
 			cookie := http.Cookie{
 				Name:     "token",
@@ -57,6 +61,8 @@ func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.Handler
 			w.WriteHeader(http.StatusTooManyRequests)
 			return
 		}
+		fmt.Println("userId:", userId)
+		// fmt.Println("nextt:", next)
 		next(w, r, db, userId)
 	}
 }
