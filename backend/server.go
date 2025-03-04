@@ -25,7 +25,7 @@ func main() {
 	authHandler := auth.CreateAuthMux(db, &limiters)
 	mainMux.Handle("/api/auth/", http.StripPrefix("/api/auth", authHandler))
 	mainMux.Handle("/api/posts/", http.StripPrefix("/api/posts", posts.CreatePostsMux(db, &limiters)))
-	mainMux.Handle("/api/comments", http.StripPrefix("/api", comments.CreateCommentsMux(db, &limiters)))
+	mainMux.Handle("/api/comment", http.StripPrefix("/api", comments.CreateCommentsMux(db, &limiters)))
 	mainMux.Handle("/api/users/", http.StripPrefix("/api/users", users.CreateUsersMux(db, &limiters)))
 	mainMux.Handle("/api/groups", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db, &limiters)))
 	mainMux.Handle("/api/notifications", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db, &limiters)))
