@@ -1,5 +1,6 @@
 'use client'
 // import  "../components/post.css"
+import Comments from "../components/comment";
 export default function Post({ post, userImage }) {
     console.log("post :: ", post);
     let imagePath = "";
@@ -16,10 +17,7 @@ export default function Post({ post, userImage }) {
             <p>Content: {post.Content}</p>
             <img id="post-image" src={imagePath} alt="Post" />
             <p>Created at: {post.CreatedAt}</p>
-            <div id="comment">
-                <input type="text" name="comment" placeholder="Comment" />
-                <img id="comment-icon" src="/images/comment-icon.png" alt="logo" />
-            </div>
+            <Comments postid={post.ID} />
         </div>
     )
 
