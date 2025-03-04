@@ -54,7 +54,7 @@ func Tablelen(table string, total *int, db *sql.DB) error {
 }
 
 func ExtractPosts(start int, db *sql.DB) (*sql.Rows, error) {
-	rows, err := db.Query(`SELECT post_id, post_title, post_content, post_date, post_author, post_likes, post_dislikes, post_comments_count
+	rows, err := db.Query(`SELECT post_id, post_title, post_content, post_date, post_author, post_likes, post_image post_dislikes, post_comments_count
 	FROM single_post
    ORDER BY post_date DESC LIMIT ? OFFSET ?`, models.PostsPerPage, start)
 	if err != nil {

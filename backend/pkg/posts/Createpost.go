@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 	"time"
@@ -13,7 +15,7 @@ import (
 func CreatePost(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session_token")
-		if err != nil || CheckExpiredCookie(cookie.Value, time.Now(), db){
+		if err != nil || CheckExpiredCookie(cookie.Value, time.Now(), db) {
 			utils.WriteJSON(w, http.StatusUnauthorized, struct {
 				Error string `json:"error"`
 			}{Error: "Unauthorized"})
@@ -25,7 +27,7 @@ func CreatePost(db *sql.DB) http.HandlerFunc {
 			utils.WriteJSON(w, 400, "bad request")
 			return
 		}
-		err = InsertPost(post, cookie.Value, db)
+		err = InsertPost(&post, cookie.Value, db, r)
 		if err != nil {
 			switch err.Error() {
 			case "invalid content length":
@@ -63,7 +65,7 @@ func CreatePost(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func InsertPost(post models.Post, sessionToken string, Db *sql.DB) error {
+func InsertPost(post *models.Post, sessionToken string, Db *sql.DB,r *http.Request) error {
 	_, User_id, err := GetId(sessionToken, Db)
 	if err != nil {
 		return errors.New("user doesn't exist")
@@ -74,5 +76,11 @@ func InsertPost(post models.Post, sessionToken string, Db *sql.DB) error {
 	} else if post.Type != "public" && post.Type != "private" && post.Type != "semi-private" {
 		return errors.New("type doesn't correct")
 	}
-	return Db.QueryRow("INSERT INTO posts (title,user_id, content, created_at, type ) VALUES (?, ?, ?, ?, ?)", post.Title, post.Content, User_id, time.Now(), post.Type).Err()
+	post.Image, err = utils.ValidateAndSaveImage(r, "Posts", post.Author)
+	if err != nil && err.Error() != "no image" {
+		fmt.Fprintln(os.Stderr, "in ValidateAndSaveImage", err)
+
+		return err
+	}
+	return Db.QueryRow("INSERT INTO posts (title,user_id, content,image , created_at, type ) VALUES (?, ?, ?, ?, ?)", post.Title, post.Content, User_id, post.Image, time.Now(), post.Type).Err()
 }
