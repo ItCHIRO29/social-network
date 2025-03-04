@@ -1,14 +1,14 @@
 'use client'
 
 export default function Comments({ postid }) {
-    const handleClick = async (e) => {
-        const commentInput = e.target.previousElementSibling;
-        const comment = commentInput.value.trim();
+    const handleClick = async (inputElement) => {
+        const comment = inputElement.value.trim();
 
         if (!comment) {
             alert("Please enter a comment.");
             return;
         }
+
         const res = await fetch("http://localhost:8080/api/comment", {
             method: "POST",
             credentials: "include",
@@ -23,20 +23,35 @@ export default function Comments({ postid }) {
 
         if (res.ok) {
             console.log("Comment posted successfully!");
-            commentInput.value = "";
+            inputElement.value = "";
         } else {
             console.error("Failed to post comment:", res.statusText);
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            const inputElement = e.target;
+            handleClick(inputElement);
+        }
+    };
+
     return (
         <div id="comment">
-            <input type="text" name="comment" placeholder="Comment" />
+            <input
+                type="text"
+                name="comment"
+                placeholder="Comment"
+                onKeyDown={handleKeyPress}
+            />
             <img
                 id="comment-icon"
                 src="/images/comment-icon.png"
                 alt="logo"
-                onClick={handleClick}
+                onClick={(e) => {
+                    const inputElement = e.target.previousElementSibling;
+                    handleClick(inputElement);
+                }}
             />
         </div>
     );
