@@ -20,7 +20,7 @@ export default function CreatePost({ userImage }) {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("data", data);
+                console.log("data", data.ID);
                 setPosts([data, ...posts]);
             })
         e.target.title.value = "";
@@ -57,8 +57,8 @@ export default function CreatePost({ userImage }) {
                 </form>
             </div>
             <div className="posts">
-                {posts.map((post, index) => (
-                    <Post post={post} key={index} />
+                {posts.map((post) => (
+                    <Post key={post.ID} post={post} postId={post.ID} /> // ✅ Use another prop like "postId"
                 ))}
             </div>
 

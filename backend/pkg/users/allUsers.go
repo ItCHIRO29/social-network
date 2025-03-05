@@ -14,6 +14,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 
 	// Initialize the struct properly
 	type User struct {
+		ID       int    `json:"id"`
 		FullName string `json:"full_name"`
 		Image    string `json:"image"`
 	}
@@ -21,7 +22,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		Users []User `json:"users"`
 	}
 
-	query := "SELECT first_name, last_name, image FROM users WHERE id != ?"
+	query := "SELECT id ,first_name, last_name, image FROM users WHERE id != ?"
 	rows, err := db.Query(query, userID)
 	if err != nil {
 		fmt.Println("Error executing query:", err)
@@ -31,8 +32,9 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 	defer rows.Close()
 
 	for rows.Next() {
+		var uID int
 		var firstName, lastName, image string
-		if err := rows.Scan(&firstName, &lastName, &image); err != nil {
+		if err := rows.Scan(&uID, &firstName, &lastName, &image); err != nil {
 			fmt.Println("Error scanning row:", err)
 			http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
 			return
@@ -40,12 +42,12 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 
 		fullName := firstName + " " + lastName
 		user := User{
+			ID:       uID,
 			FullName: fullName,
 			Image:    strings.Trim(image, "./"),
 		}
 		AllUsers.Users = append(AllUsers.Users, user)
 
-		// fmt.Println("Added User:", user)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -54,6 +56,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		return
 	}
 
-	// fmt.Println("All Users:", AllUsers)
+	fmt.Println("All Users:", AllUsers)
 	utils.WriteJSON(w, http.StatusOK, AllUsers)
 }

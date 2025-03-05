@@ -4,8 +4,8 @@
 // import  "../components/post.css"
 import Comments from "../components/comment";
 
-export default function Post({ post }) {
-    // console.log("post :: ", post);
+export default function Post({ post, postId }) {
+    //console.log("post :: ", post);
     let imagePath = "";
     let profileImage = "";
     if (post.Image != "") {
@@ -18,22 +18,17 @@ export default function Post({ post }) {
     }
 
     return (
-        <div className="post">
+        <div className="post" key={postId}>
             <section className="post-header">
                 <img id="user-icon" src={profileImage} alt="profile" onClick={() => { window.location.href = `/profile` }} />
                 <h2>{post.Post_creator}</h2>
+                <h1>ID : {post.ID}</h1>
             </section>
             <h1>{post.Title}</h1>
             <p>Content: {post.Content}</p>
-            <img id="post-image" src={imagePath} alt="Post" />
-            <p>Created at: {post.CreatedAt}</p>
-            <Comments postid={post.ID} />
             <p>{post.CreatedAt}</p>
-            {imagePath !== "" && <img id="post-image" src={imagePath} alt="Post image" />}
-            <div id="comment">
-                <input type="text" name="comment" placeholder="Comment" />
-                <img id="comment-icon" src="/images/comment-icon.png" alt="logo" />
-            </div>
+            {imagePath !== "" ? <img id="post-image" src={imagePath} alt="Post image" /> : null}
+            <Comments postid={post.ID} />
         </div>
     )
 

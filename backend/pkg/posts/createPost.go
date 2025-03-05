@@ -15,7 +15,7 @@ import (
 var post models.Posts
 
 func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	//fmt.Println("CreatePost triggered")
+	// fmt.Println("CreatePost triggered")
 	var first_name string
 	var last_name string
 	var author string
@@ -27,7 +27,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		return
 	}
 	author = first_name + " " + last_name
-	//fmt.Println("author:", author)
+	// fmt.Println("author:", author)
 	post.Title = r.FormValue("title")
 	post.Content = r.FormValue("content")
 	post.Type = r.FormValue("privacy")
@@ -59,6 +59,13 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	if err1 != nil {
 		fmt.Println("error in db.Exec:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting post: "+err1.Error())
+		return
+	}
+	query1 := "SELECT id FROM posts WHERE user_id = ? ORDER BY id DESC LIMIT 1"
+	err2 := db.QueryRow(query1, userId).Scan(&post.ID)
+	if err2 != nil {
+		fmt.Println("error in db.QueryRow:", err2)
+		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting post: "+err2.Error())
 		return
 	}
 	post.ProfileImage = strings.Trim(image, "./")

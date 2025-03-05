@@ -34,26 +34,22 @@ export default function SocialNetworkUsers() {
         }
         fetchUsers();
     }, []);
-
+    console.log("users :: ", users);
     return (
-        <>
-            <div className="test2">
-                <h3>People you might know:</h3>
-                <div>
-                    {users.length > 0 ? (
-                        users.map((user, index) => (
-                            <>
-                                <div id="follower-section">
-                                    <img key={index} src={user.image ? `http://localhost:8080/${user.image}` : "./images/profile.png"} alt="Profile" />
-                                    <button key={index} >{user.full_name}</button>
-                                </div>
-                            </>
-                        ))
-                    ) : (
-                        <p>No users found.</p>
-                    )}
-                </div>
+        <div className="test2">
+            <h3>People you might know:</h3>
+            <div className="users-list">
+                {users.length > 0 ? (
+                    users.map((user) => (
+                        <div id="follower-section" key={user.id} className="user-card">
+                            <img src={user.image ? `http://localhost:8080/${user.image}` : "./images/profile.png"} alt="Profile" />
+                            <button >{user.full_name}  </button>
+                        </div>
+                    ))
+                ) : (
+                    <p>No users found.</p>
+                )}
             </div>
-        </>
+        </div>
     );
 }
