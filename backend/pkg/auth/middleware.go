@@ -12,8 +12,6 @@ type CustomHandler func(w http.ResponseWriter, r *http.Request, db *sql.DB, user
 
 func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Middleware triggered")
-		// fmt.Println("userId", userId)
 		cookie, err := r.Cookie("token")
 		if err != nil {
 			fmt.Println("Cookie not found")
@@ -61,8 +59,6 @@ func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.Handler
 			w.WriteHeader(http.StatusTooManyRequests)
 			return
 		}
-		fmt.Println("userId:", userId)
-		// fmt.Println("nextt:", next)
 		next(w, r, db, userId)
 	}
 }

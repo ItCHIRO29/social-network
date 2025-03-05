@@ -2,6 +2,8 @@
 
 
 // import  "../components/post.css"
+import Comments from "../components/comment";
+
 export default function Post({ post }) {
     // console.log("post :: ", post);
     let imagePath = "";
@@ -23,6 +25,9 @@ export default function Post({ post }) {
             </section>
             <h1>{post.Title}</h1>
             <p>Content: {post.Content}</p>
+            <img id="post-image" src={imagePath} alt="Post" />
+            <p>Created at: {post.CreatedAt}</p>
+            <Comments postid={post.ID} />
             <p>{post.CreatedAt}</p>
             {imagePath !== "" && <img id="post-image" src={imagePath} alt="Post image" />}
             <div id="comment">
