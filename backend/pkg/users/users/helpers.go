@@ -17,14 +17,14 @@ func GetUserData(db *sql.DB, userId int) (any, error) {
 
 	if isPublic {
 		var user models.PublicProfile
-		err := db.QueryRow("SELECT first_name, last_name, nickname, age, gender, bio, image ,email,public FROM users WHERE id=?", userId).Scan(&user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public)
+		err := db.QueryRow("SELECT id, first_name, last_name, nickname, age, gender, bio, image ,email,public FROM users WHERE id=?", userId).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public)
 		if err != nil {
 			return nil, err
 		}
 		return user, nil
 	} else {
 		var user models.PrivateProfile
-		err := db.QueryRow("SELECT first_name, last_name, image,public FROM users WHERE id=?", userId).Scan(&user.FirstName, &user.LastName, &user.Image, &user.Public)
+		err := db.QueryRow("SELECT id, first_name, last_name, image,public FROM users WHERE id=?", userId).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Image, &user.Public)
 		if err != nil {
 			return nil, err
 		}

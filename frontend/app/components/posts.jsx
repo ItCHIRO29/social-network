@@ -57,11 +57,10 @@ export default function CreatePost({ userImage }) {
                 </form>
             </div>
             <div className="posts">
-                {posts.map((post) => (
-                    <Post key={post.ID} post={post} postId={post.ID} /> // ✅ Use another prop like "postId"
+                {(!posts) ? <h1>No posts yet</h1> : posts.map((post) => (
+                    <Post key={post.ID} post={post} postId={post.ID} />
                 ))}
             </div>
-
         </>
 
     );
