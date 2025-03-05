@@ -6,4 +6,5 @@ import (
 )
 
 func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	// data will be received as json
 }

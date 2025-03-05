@@ -6,4 +6,5 @@ import (
 )
 
 func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	// ?username=
 }
