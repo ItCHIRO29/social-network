@@ -5,11 +5,16 @@ import (
 	"net/http"
 
 	"social-network/pkg/auth"
+	"social-network/pkg/users/followers"
+	"social-network/pkg/users/users"
 )
 
 func CreateUsersMux(db *sql.DB, limiters *auth.Limiters) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("/profile", auth.Middleware(db, limiters, Profile))
-	mux.Handle("POST /EditProfile", auth.Middleware(db, limiters, EditProfile))
+	mux.Handle("/profile", auth.Middleware(db, limiters, users.Profile))
+	mux.Handle("POST /EditProfile", auth.Middleware(db, limiters, users.EditProfile))
+	mux.Handle("POST /follow", auth.Middleware(db, limiters, followers.Follow))
+	// mux.Handle("DELETE /follow", auth.Middleware(db, limiters, users.Unfollow))
+	// mux.Handle("PUT /follow", auth.Middleware(db, limiters, users.AcceptFollow))
 	return mux
 }
