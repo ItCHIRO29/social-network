@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"social-network/pkg/models"
+	"social-network/pkg/notifications"
 	"social-network/pkg/utils"
 
 	"github.com/mattn/go-sqlite3"
@@ -41,7 +42,13 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
-	_, err = db.Exec("INSERT INTO followers (follower_id, following_id, accepted) VALUES (?, ?, ?)", userId, followingId, isPublic)
+	tx, err := db.Begin()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+		return
+	}
+	result, err := tx.Exec("INSERT INTO followers (follower_id, following_id, accepted) VALUES (?, ?, ?)", userId, followingId, isPublic)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		if sqliteErr, ok := err.(sqlite3.Error); ok {
@@ -50,7 +57,37 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 				return
 			}
 		}
+		tx.Rollback()
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
+	var id int64
+	var notificationType string
+	if isPublic {
+		notificationType = "follow"
+	} else {
+		notificationType = "follow_request"
+		id, err = result.LastInsertId()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			tx.Rollback()
+			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+			return
+		}
+	}
+	err = notifications.SendNotification(tx, userId, followingId, notificationType, int(id))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		tx.Rollback()
+		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

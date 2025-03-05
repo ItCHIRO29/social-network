@@ -14,7 +14,7 @@ func CreateUsersMux(db *sql.DB, limiters *auth.Limiters) http.Handler {
 	mux.Handle("/profile", auth.Middleware(db, limiters, users.Profile))
 	mux.Handle("POST /EditProfile", auth.Middleware(db, limiters, users.EditProfile))
 	mux.Handle("POST /follow", auth.Middleware(db, limiters, followers.Follow))
-	// mux.Handle("DELETE /follow", auth.Middleware(db, limiters, users.Unfollow))
-	// mux.Handle("PUT /follow", auth.Middleware(db, limiters, users.AcceptFollow))
+	mux.Handle("DELETE /follow", auth.Middleware(db, limiters, followers.Unfollow))
+	mux.Handle("PUT /follow", auth.Middleware(db, limiters, followers.AcceptFollow))
 	return mux
 }
