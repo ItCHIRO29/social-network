@@ -3,7 +3,8 @@ package models
 type Posts struct {
 	ID           int
 	UserID       int
-	Post_creator string `json:"post_creator"`
+	Post_creator string
+	ProfileImage string
 	GroupId      int
 	Title        string
 	Content      string

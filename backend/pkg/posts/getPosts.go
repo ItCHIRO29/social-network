@@ -11,11 +11,13 @@ import (
 )
 
 func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetPosts triggered")
-	var creator string
+	// fmt.Println("GetPosts triggered")
+	var creator_first_name string
+	var creator_last_name string
+	var profile_image string
 
 	var posts []models.Posts
-	rows, err := db.Query("SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public'")
+	rows, err := db.Query("SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' ORDER BY id DESC")
 	if err != nil {
 		fmt.Println("error in GetPosts:", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -31,20 +33,25 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		query := "SELECT username FROM users WHERE id = ?"
-		err = db.QueryRow(query, post.UserID).Scan(&creator)
+		query := "SELECT first_name,last_name, image FROM users WHERE id = ?"
+		err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		post.Post_creator = creator
 		if post.Image != "" {
 			post.Image = strings.Trim(post.Image, "./")
 		}
-		fmt.Println("post image:", post.Image)
+		creator := creator_first_name + " " + creator_last_name
+		post.Post_creator = creator
+		post.ProfileImage = strings.Trim(profile_image, "./")
+		// fmt.Println("post:", post)
+		// fmt.Println("creator:", creator)
+		// fmt.Println("post-creator:", post.Post_creator)
+		// fmt.Println("post image:", post.Image)
 		posts = append(posts, post)
-		// fmt.Println("posts =======>", posts)
 	}
+	// fmt.Println("posts =======>", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }

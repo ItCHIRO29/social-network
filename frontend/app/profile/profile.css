@@ -171,9 +171,10 @@ main {
 }
 
 .post #post-image {
-    width: 100%;
+    width: 80%;
     height: auto;
     justify-self: center;
+    align-self: center;
 }
 
 .post h1 {
@@ -346,10 +347,16 @@ main {
     gap: 10px;
 }
 
-#comment-icon,
-#user-icon {
+#comment-icon {
     height: 30px;
     width: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#user-icon {
+    height: 50px;
+    width: 50px;
     border-radius: 50%;
     cursor: pointer;
 }
@@ -436,7 +443,6 @@ main {
 }
 
 .followers button:hover {
-    /* background-color: #ff0000da; */
     color: #ffffff;
     border: none;
     /* transition: all 0.3s ease; */
@@ -460,7 +466,6 @@ main {
 }
 
 #follower:hover {
-    /* background-color: #ff0000da; */
     color: #ffffff;
     border: none;
     /* transition: all 0.3s ease; */

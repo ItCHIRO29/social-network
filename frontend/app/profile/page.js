@@ -30,14 +30,14 @@ export default function ProfilePage() {
                 <div className="userInfo">
                     <div className="left-infos">
                         <img className="profile-image" src={imagePath} alt="Profile" />
-                        <h1>{userData.first_name}</h1>
+                        <h1>{userData.first_name} {userData.last_name}</h1>
+                        {userData.public == false ? <h2>(Private Account)</h2> : null}
                     </div>
                     <div className="right-buttons">
                         <button className="commentButtons" onClick={handleEditProfile} >
                             <FontAwesomeIcon icon={faGear} className="settings" />
                             Edit Profile
                         </button>
-
                     </div>
                 </div>
                 <div className="test1" id="chat">

@@ -82,7 +82,7 @@ h1 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: #c9c7b6;
+    background: linear-gradient(263deg, #00000042, #00000000);
     padding: 2rem;
     width: 70%;
     z-index: 1000;
@@ -152,13 +152,13 @@ h1 {
     height: 50%;
     transform: translate(-50%, -50%);
     max-width: 800px;
-  }
+}
 
 .xx {
     top: 0;
     left: 0;
     transform: translate(0, 0);
-    background: #DB2A18;
+    background: linear-gradient(221deg, #ff0000, #00000067);
     font-size: 30px;
     display: flex;
     flex-direction: column;

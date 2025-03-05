@@ -1,12 +1,13 @@
 "use client";
 import { React } from "react";
+import { useState, useEffect } from 'react';
 import CreatePost from "../components/posts";
 import UserActivity from "../components/userActivity";
 import Header from "../components/header";
+import SocialNetworkUsers from "../components/social-network-users";
 import "./home.css"
 // import FetchData from "../profile/page";
-import { useState, useEffect } from 'react';
-import Post from "../components/post";
+// import Post from "../components/post";
 
 export default function HomeP() {
     const [userData, setUserData] = useState({}); // Store user data
@@ -51,8 +52,7 @@ export default function HomeP() {
                 <button >Jane Smith</button>
             </div>
             <CreatePost userImage={imagePath} />
-            {/* <Post /> */}
-            <div className="test2">
+            {/* <div className="test2">
                 <h3>People you might know : </h3>
                 <div className="center-user-infos">
                     <button >ismail ICHI</button>
@@ -71,7 +71,8 @@ export default function HomeP() {
                     <button >John Smith</button>
                     <button >Jane Smith</button>
                 </div>
-            </div>
+            </div> */}
+            <SocialNetworkUsers />
             <UserActivity />
         </main>
     );

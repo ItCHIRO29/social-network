@@ -13,44 +13,24 @@ export default function CreatePost({ userImage }) {
         const privacy = e.target.privacy.value;
         if (!title || !content) return;
         const formData = new FormData(e.target);
-        //formData.append("image", image);
-        //console.log("formData", Object.fromEntries(formData));
-        // const date = new Date().toLocaleString();
-        const newPost = { title, content, image, privacy };
         fetch("http://localhost:8080/api/posts/createPost", {
             method: "POST",
             credentials: "include",
             body: formData,
         })
-
-        // setPosts([newPost, ...posts]);
-        // const data = GetPosts();
-
-        // setPosts([data], posts);
-        // Reset form fields
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("data", data);
+                setPosts([data, ...posts]);
+            })
         e.target.title.value = "";
         e.target.content.value = "";
         e.target.image.value = null;
         setImagePreview(null);
-        const handleImageChange = (e) => {
-            if (e.type === "change") {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = () => setImagePreview(reader.result);
-                    reader.readAsDataURL(file);
-                } else {
-                    setImagePreview(null);
-                    e.target.value = null;
-                }
-            }
-        }
-        handleImageChange(e);
     };
     useEffect(() => {
         async function fetchUser() {
             const data = await GetPosts();
-            console.log("data===========>", data);
             setPosts(data);
         }
         fetchUser();
@@ -76,10 +56,9 @@ export default function CreatePost({ userImage }) {
                     </section>
                 </form>
             </div>
-            {/* Render Posts */}
             <div className="posts">
                 {posts.map((post, index) => (
-                    <Post post={post} key={index} userImage={userImage} />
+                    <Post post={post} key={index} />
                 ))}
             </div>
 
