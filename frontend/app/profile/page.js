@@ -9,6 +9,8 @@ import "./profile.css"
 
 export default function ProfilePage() {
     const [userData, setUserData] = useState({}); // Store user data
+    const [followState, setFollowState] = useState("");
+
 
     useEffect(() => {
         async function fetchUser() {
@@ -32,6 +34,7 @@ export default function ProfilePage() {
                         <img className="profile-image" src={imagePath} alt="Profile" />
                         <h1>{userData.first_name} {userData.last_name}</h1>
                         {userData.public == false ? <h2>(Private Account)</h2> : null}
+                        <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
                     </div>
                     <div className="right-buttons">
                         <button className="commentButtons" onClick={handleEditProfile} >
@@ -106,7 +109,7 @@ export default function ProfilePage() {
 async function FetchData(id) {
     try {
         if (id === "profile") {
-            const response = await fetch(`http://localhost:8080/api/users/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/users/profile?username=ismail`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -126,4 +129,73 @@ async function FetchData(id) {
         return null; // Handle errors gracefully
     }
 }
+
+function FollowButton({ userData, followState, setFollowState }) {
+    const followButton = userData.follow_button
+    if (!followButton || followButton.state === 'none') {
+        return null
+    }
+    var referenceId = followButton.reference_id;
+    if (followState === ""){
+        setFollowState(followButton.state)
+    }
+
+    const handleFollow = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/follow?username=${userData.username}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            referenceId = data.reference_id;
+            setFollowState("pending");
+        } catch (error) {
+            console.error("Fetch Error:", error);
+        }
+    }
+
+    const handleUnfollow = async (reference_id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/follow?reference_id=${reference_id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            setFollowState("follow");
+        } catch (error) {
+            console.error("Fetch Error:", error);
+        }
+    }
+
+    const handleClick = async() => {
+        if (followState === "follow") {
+            handleFollow(userData.username);
+        } else if (followState === "pending" || followState === "unfollow") {
+           await handleUnfollow(referenceId)
+        }
+    }
+
+    return (
+        <button onClick={handleClick}>
+            {followState == "follow" ? "Follow" : ''}
+            {followState == "unfollow" ? "Unfollow" : ''}
+            {followState == "pending" ? "Cancel Request" : ''}
+        </button>
+    )
+
+}
+
 export { FetchData };

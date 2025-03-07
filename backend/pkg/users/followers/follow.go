@@ -89,5 +89,5 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "follow", ReferenceId: int(id)})
 }

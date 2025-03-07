@@ -14,27 +14,35 @@ type User struct {
 }
 
 type PrivateProfile struct {
-	ID        int    `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Image     string `json:"image"`
-	Public    bool   `json:"public"`
+	ID           int          `json:"id"`
+	Username     string       `json:"username"`
+	FirstName    string       `json:"first_name"`
+	LastName     string       `json:"last_name"`
+	Image        string       `json:"image"`
+	FollowButton FollowButton `json:"follow_button"`
+	Public       bool         `json:"public"`
 }
 
 type PublicProfile struct {
-	ID        int      `json:"id"`
-	FirstName string   `json:"first_name"`
-	LastName  string   `json:"last_name"`
-	Nickname  string   `json:"nickname"`
-	Age       string   `json:"age"`
-	Gender    string   `json:"gender"`
-	Bio       string   `json:"bio"`
-	Image     string   `json:"image"`
-	Username  string   `json:"username"`
-	Email     string   `json:"email"`
-	Public    bool     `json:"public"`
-	Followers []string `json:"followers"`
-	Following []string `json:"following"`
+	ID           int          `json:"id"`
+	FirstName    string       `json:"first_name"`
+	LastName     string       `json:"last_name"`
+	Nickname     string       `json:"nickname"`
+	Age          string       `json:"age"`
+	Gender       string       `json:"gender"`
+	Bio          string       `json:"bio"`
+	Image        string       `json:"image"`
+	Username     string       `json:"username"`
+	Email        string       `json:"email"`
+	Public       bool         `json:"public"`
+	FollowButton FollowButton `json:"follow_button"`
+	Followers    []string     `json:"followers"`
+	Following    []string     `json:"following"`
+}
+
+type FollowButton struct {
+	State       string `json:"state"` // "follow" || "unfollow" || "cancel request" || "none"
+	ReferenceId int    `json:"reference_id"`
 }
 
 type EditProfile struct {
