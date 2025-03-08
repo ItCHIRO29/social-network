@@ -16,6 +16,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
+	fmt.Println("r..URL.Query():", r.URL.Query())
 	SpecificUser_id_str := r.FormValue("id")
 	if SpecificUser_id_str == "" || SpecificUser_id_str == "0" {
 		SpecificUser_id_str = strconv.Itoa(userId)

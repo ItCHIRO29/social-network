@@ -9,8 +9,9 @@ import "./profile.css"
 
 export default function ProfilePage() {
     const url = window.location.href;
-    console.log("url :: ", url.split("=")[1]);
+    console.log("url :: ", url);
     const id = url.split("=")[1];
+    console.log("id :: ", id);
     const [userData, setUserData] = useState({}); // Store user data
     const [followState, setFollowState] = useState("");
 
@@ -44,7 +45,7 @@ export default function ProfilePage() {
                         <img className="profile-image" src={imagePath} alt="Profile" />
                         <h1>{userData.first_name} {userData.last_name}</h1>
                         {userData.public == false ? <h2>(Private Account)</h2> : null}
-                        {/* <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} /> */}
+                        <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
                     </div>
                     <div className="right-buttons">
                         <button className="commentButtons" onClick={handleEditProfile} >
@@ -172,6 +173,7 @@ function FollowButton({ userData, followState, setFollowState }) {
     }
 
     const handleUnfollow = async (reference_id) => {
+        console.log("reference_id :: ", reference_id);
         try {
             const response = await fetch(`http://localhost:8080/api/users/follow?reference_id=${reference_id}`, {
                 method: "DELETE",

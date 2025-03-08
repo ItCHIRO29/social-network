@@ -12,6 +12,12 @@ import (
 
 func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int) {
 	if r.Method == "POST" {
+		// idstr := r.FormValue("id")
+		// id, err := strconv.Atoi(idstr)
+		// if err != nil {
+		// 	utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
+		// 	return
+		// }
 		fmt.Println("EditProfile triggered!!!!!!!!!!!")
 		var NewData models.EditProfile
 		var isPublic bool
