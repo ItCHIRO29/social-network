@@ -62,29 +62,7 @@ export default function ProfilePage() {
                     <button >Jane Smith</button>
                 </div>
                 <CreatePost userImage={imagePath} userId={id} />
-                <div className="followers">
-                    <h2>Followers</h2>
-                    <div id="follower">
-                        <img src="/images/profile.png" alt="Profile" />
-                        <button>John Doe</button>
-                    </div>
-                    <div id="follower">
-                        <img src="/images/profile.png" alt="Profile" />
-                        <button>Jane Jenny</button>
-                    </div>
-                    <div id="follower">
-                        <img src="/images/profile.png" alt="Profile" />
-                        <button>John Smith</button>
-                    </div>
-                    <div id="follower">
-                        <img src="/images/profile.png" alt="Profile" />
-                        <button>Jane Smith</button>
-                    </div>
-                    <div id="follower">
-                        <img src="/images/profile.png" alt="Profile" />
-                        <button>Sam Smith</button>
-                    </div>
-                </div>
+                <FollowersComponent />
                 <div className='test2'>
                     {userData.public == true ?
                         <>
@@ -208,6 +186,30 @@ function FollowButton({ userData, followState, setFollowState }) {
         </button>
     )
 
+}
+
+function FollowersComponent() {
+    return (
+        <div className="followers">
+            <h2>Followers</h2>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>John Doe</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>Jane Jenny</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>John Smith</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>Jane Smith</button>
+            </div>
+        </div>
+    )
 }
 
 export { FetchData };

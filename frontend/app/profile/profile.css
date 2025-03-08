@@ -53,11 +53,11 @@ main {
         "head head head "
         "info info info "
         "side1 nav nav "
-        "side1 xx side3 "
+        "side1 xx side2 "
         "side1 posts side3 "
-        "side1 posts side2 ";
+        "side1 posts side3 ";
     height: 100vh;
-    grid-template-rows: 5% 20% 5% 25% 25%;
+    grid-template-rows: 5% 20% 5% 25% auto;
     grid-template-columns: 20% 60% auto;
 }
 
@@ -414,11 +414,12 @@ main {
 }
 
 .test2 {
+    position: relative;
     background-color: #f4f4f4;
     padding: 15px;
     font-family: serif;
     grid-area: side2;
-    margin: 1%;
+    margin: 2%;
     border-radius: 5px;
     height: fit-content;
 }
@@ -429,9 +430,8 @@ main {
     font-family: serif;
     grid-area: side3;
     margin: 1%;
-    /* border: 1px solid rgb(0, 0, 0); */
+    height: fit-content;
     border-radius: 5px;
-    /* height: 150%; */
 }
 
 .followers button {

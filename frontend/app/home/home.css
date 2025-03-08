@@ -36,7 +36,7 @@ main {
         "head head head "
         "side1 nav nav"
         "side1 create side2 "
-        "side1 posts . ";
+        "side1 posts side3 ";
     height: 100vh;
     grid-template-rows: 5% 7% 20% auto;
     grid-template-columns: 20% 60% auto;
@@ -408,7 +408,19 @@ h1 {
     /* box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671); */
 }
 
-/* button {
+#followers {
+    background-color: rgb(255, 255, 255);
+    padding: 15px;
+    font-family: serif;
+    grid-area: side3;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    height: fit-content;
+    margin: 2%;
+    /* box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671); */
+}
+
+#followers button {
     width: 100%;
     height: 50px;
     border: 1px solid white;
@@ -416,14 +428,13 @@ h1 {
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #000000;
+#followers button:hover {
+    background-color: #ff0000da;
     color: #ffffff;
     border: 1px solid white;
-    transform: translateY(-2px);
     transition: all 0.3s ease;
-} */
-
+    transform: translateY(-2px);
+}
 
 #follower-section {
     display: flex;
