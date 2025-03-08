@@ -34,7 +34,6 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									u.email, 
 									u.public,
 									COALESCE(f.id, 0) AS reference_id,
-									FROM users u
 									CASE
 										WHEN u.id = $1 THEN 'none'
 										WHEN f.id IS NOT NULL AND accepted = 1 THEN 'unfollow'
