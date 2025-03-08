@@ -8,7 +8,7 @@ import (
 	"social-network/pkg/auth"
 	comments "social-network/pkg/comment"
 	database "social-network/pkg/db/sqlite"
-	"social-network/pkg/groups"
+	groups "social-network/pkg/groups"
 	"social-network/pkg/notifications"
 	"social-network/pkg/posts"
 	"social-network/pkg/users"
