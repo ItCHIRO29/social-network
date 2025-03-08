@@ -42,6 +42,7 @@ async function submitFormHandler(e) {
     //const [status, setStatus] = useState("");
     // Convert FormData to JSON
     const formData = Object.fromEntries(new FormData(e.target));
+    // console.log("formdata : ", formData);
     console.log("Form Data:", formData);
 
     const response = await fetch('http://localhost:8080/api/auth/login', {
@@ -54,7 +55,7 @@ async function submitFormHandler(e) {
         alert("Invalid email or password");
         return
     }
-    window.location.href = "/home"; 
+    window.location.href = "/home";
 }
 
 

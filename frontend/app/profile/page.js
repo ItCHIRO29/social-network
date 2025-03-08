@@ -8,14 +8,24 @@ import Header from '../components/header';
 import "./profile.css"
 
 export default function ProfilePage() {
+    const url = window.location.href;
+    console.log("url :: ", url.split("=")[1]);
+    const id = url.split("=")[1];
     const [userData, setUserData] = useState({}); // Store user data
     const [followState, setFollowState] = useState("");
 
 
     useEffect(() => {
         async function fetchUser() {
-            const data = await FetchData("profile");
-            setUserData(data);
+            if (id == 0) {
+                const data = await FetchData("profile", 0);
+                setUserData(data);
+            } else {
+                const data = await FetchData("profile", id);
+                setUserData(data);
+            }
+            // const data = await FetchData("profile", id);
+            // setUserData(data);
         }
         fetchUser();
     }, []);
@@ -34,7 +44,7 @@ export default function ProfilePage() {
                         <img className="profile-image" src={imagePath} alt="Profile" />
                         <h1>{userData.first_name} {userData.last_name}</h1>
                         {userData.public == false ? <h2>(Private Account)</h2> : null}
-                        <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
+                        {/* <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} /> */}
                     </div>
                     <div className="right-buttons">
                         <button className="commentButtons" onClick={handleEditProfile} >
@@ -50,7 +60,7 @@ export default function ProfilePage() {
                     <button >John Smith</button>
                     <button >Jane Smith</button>
                 </div>
-                <CreatePost userImage={imagePath} />
+                <CreatePost userImage={imagePath} userId={id} />
                 <div className="followers">
                     <h2>Followers</h2>
                     <div id="follower">
@@ -106,10 +116,10 @@ export default function ProfilePage() {
     );
 }
 
-async function FetchData(id) {
+async function FetchData(category, id) {
     try {
-        if (id === "profile") {
-            const response = await fetch(`http://localhost:8080/api/users/profile?username=ismail`, {
+        if (category === "profile") {
+            const response = await fetch(`http://localhost:8080/api/users/profile?id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -136,7 +146,7 @@ function FollowButton({ userData, followState, setFollowState }) {
         return null
     }
     var referenceId = followButton.reference_id;
-    if (followState === ""){
+    if (followState === "") {
         setFollowState(followButton.state)
     }
 
@@ -180,16 +190,16 @@ function FollowButton({ userData, followState, setFollowState }) {
         }
     }
 
-    const handleClick = async() => {
+    const handleClick = async () => {
         if (followState === "follow") {
             handleFollow(userData.username);
         } else if (followState === "pending" || followState === "unfollow") {
-           await handleUnfollow(referenceId)
+            await handleUnfollow(referenceId)
         }
     }
 
     return (
-        <button onClick={handleClick}>
+        <button className='commentButtons' onClick={handleClick}>
             {followState == "follow" ? "Follow" : ''}
             {followState == "unfollow" ? "Unfollow" : ''}
             {followState == "pending" ? "Cancel Request" : ''}

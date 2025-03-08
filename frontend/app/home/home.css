@@ -380,6 +380,14 @@ h1 {
     margin: 2%;
 }
 
+.test1 button {
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
 .test1 button:hover {
     background-color: #ff0000da;
     color: #ffffff;
@@ -445,6 +453,7 @@ button:hover {
     font-size: 15px;
     cursor: pointer;
 }
+
 #follower-section button:hover {
     border: none;
     background-color: #ffffff00;

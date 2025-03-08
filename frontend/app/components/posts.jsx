@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import Post from "../components/post";
 import { useEffect, useState } from "react";
-export default function CreatePost({ userImage }) {
+export default function CreatePost({ userImage , userId}) {
     const [posts, setPosts] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
 
@@ -21,7 +21,12 @@ export default function CreatePost({ userImage }) {
             .then((res) => res.json())
             .then((data) => {
                 console.log("data", data.ID);
-                setPosts([data, ...posts]);
+                if (posts.length > 0) {
+                    setPosts([data, ...posts]);
+                } else {
+                    setPosts([data]);
+                }
+                // setPosts([data, ...posts]);
             })
         e.target.title.value = "";
         e.target.content.value = "";
@@ -30,7 +35,7 @@ export default function CreatePost({ userImage }) {
     };
     useEffect(() => {
         async function fetchUser() {
-            const data = await GetPosts();
+            const data = await GetPosts(userId);
             setPosts(data);
         }
         fetchUser();
@@ -66,8 +71,8 @@ export default function CreatePost({ userImage }) {
     );
 }
 
-async function GetPosts() {
-    const response = await fetch("http://localhost:8080/api/posts/getPosts", {
+async function GetPosts(id) {
+    const response = await fetch(`http://localhost:8080/api/posts/getPosts?id=${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

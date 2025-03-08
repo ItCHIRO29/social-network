@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"social-network/pkg/models"
@@ -11,13 +12,23 @@ import (
 )
 
 func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	// fmt.Println("GetPosts triggered")
+	fmt.Println("GetPosts triggered")
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
-
+	SpecificUser_id_str := r.FormValue("id")
+	if SpecificUser_id_str == "" || SpecificUser_id_str == "0" {
+		SpecificUser_id_str = strconv.Itoa(userId)
+	}
+	SpecificUser_id, err := strconv.Atoi(SpecificUser_id_str)
+	if err != nil {
+		fmt.Println("error in strconv.Atoi:", err)
+		utils.WriteJSON(w, http.StatusBadRequest, "Invalid request")
+		return
+	}
+	fmt.Println("SpecificUser_id:", SpecificUser_id)
 	var posts []models.Posts
-	rows, err := db.Query("SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' ORDER BY id DESC")
+	rows, err := db.Query("SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' AND user_id = ? ORDER BY id DESC", SpecificUser_id)
 	if err != nil {
 		fmt.Println("error in GetPosts:", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")

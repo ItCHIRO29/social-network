@@ -1,11 +1,10 @@
-import ProfilePage from "../profile/page";
-import { FetchData } from "../profile/page";
 
-export default function UserActivity() {
+
+export default function NavBar() {
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
-            window.location.href = "/profile";
+            window.location.href = "/profile?id=0";
         } else if (e.target.id === "Home") {
             window.location.href = "/home";
         } else if (e.target.id === "Notifications") {

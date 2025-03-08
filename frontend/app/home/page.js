@@ -2,19 +2,17 @@
 import { React } from "react";
 import { useState, useEffect } from 'react';
 import CreatePost from "../components/posts";
-import UserActivity from "../components/userActivity";
+import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
 import "./home.css"
-// import FetchData from "../profile/page";
-// import Post from "../components/post";
 
 export default function HomeP() {
     const [userData, setUserData] = useState({}); // Store user data
 
     useEffect(() => {
         async function fetchUser() {
-            const data = await FetchData("profile");
+            const data = await FetchData("profile", 0);
             setUserData(data);
         }
         fetchUser();
@@ -51,36 +49,16 @@ export default function HomeP() {
                 <button >John Smith</button>
                 <button >Jane Smith</button>
             </div>
-            <CreatePost userImage={imagePath} />
-            {/* <div className="test2">
-                <h3>People you might know : </h3>
-                <div className="center-user-infos">
-                    <button >ismail ICHI</button>
-                    <button >Ayoub ElHeddad</button>
-                    <button >Youssef Ehajjaoui</button>
-                    <button >Ibrahim Benso</button>
-                    <button >Jane Doe</button>
-                    <button >John Smith</button>
-                    <button >Jane Smith</button>
-                    <button >John Doe</button>
-                    <button >Jane Doe</button>
-                    <button >John Smith</button>
-                    <button >Jane Smith</button>
-                    <button >John Doe</button>
-                    <button >Jane Doe</button>
-                    <button >John Smith</button>
-                    <button >Jane Smith</button>
-                </div>
-            </div> */}
+            <CreatePost userImage={imagePath} userId={0} />
             <SocialNetworkUsers />
-            <UserActivity />
+            <NavBar />
         </main>
     );
 }
-async function FetchData(id) {
+async function FetchData(category, id) {
     try {
-        if (id === "profile") {
-            const response = await fetch("http://localhost:8080/api/users/profile", {
+        if (category === "profile") {
+            const response = await fetch(`http://localhost:8080/api/users/profile?id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
