@@ -172,6 +172,41 @@ main {
     width: 40%;
 }
 
+#comment {
+    gap: 10px;
+    padding: 15px;
+    word-wrap: break-word;
+}
+
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    word-wrap: break-word;
+    background-color: transparent;
+    border-radius: 5px;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#comment-icon {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.comment-item {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    border: #000000 1px solid;
+    padding: 15px;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+}
+
 .commentButtons {
     padding: 0.75rem 1.5rem;
     border: none;
@@ -322,19 +357,19 @@ main {
     gap: 10px;
 }
 
-#comment {
+/* #comment {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10px;
-}
+} */
 
-#comment-icon {
+/* #comment-icon {
     height: 30px;
     width: 30px;
     border-radius: 50%;
     cursor: pointer;
-}
+} */
 
 #user-icon {
     height: 50px;

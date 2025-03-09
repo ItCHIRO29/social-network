@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import CreatePost from "../components/posts";
+import CreatePost from "../components/postsComponents/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
-import CreateGroup from '../components/createGroup';
+import CreateGroup from '../components/groupsComponents/createGroup';
 import "./profile.css"
 
 export default function ProfilePage() {

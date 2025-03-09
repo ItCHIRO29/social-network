@@ -41,20 +41,29 @@ export default function CommentsSection({ postid, comments, setComments }) {
     }
 
     return (
-        <div className="comment-section">
-            <h3>Comments</h3>
-            {comments ? (
-                <ul className="comment-list">
-                    {comments.map((comment) => (
-                        <li key={comment.ID} className="comment-item"> {/* Add unique key */}
-                            <p><strong>{comment.AuthorName}</strong>: {comment.content}</p>
-                            <small>{new Date(comment.CreatedAt).toLocaleString()}</small>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No comments yet.</p>
-            )}
-        </div>
+        <>
+            {comments ?
+                <>
+                    <div className="comment-section" >
+                        <h3>Comments :</h3>
+                        <div className="comment-list">
+                            {comments.map((comment) => (
+                                console.log(comment),
+                                <div key={comment.ID} className="comment-item"> {/* Add unique key */}
+                                    <h3><strong>{comment.AuthorName}</strong></h3>
+                                    <small>{new Date(comment.CreatedAt).toLocaleString()}</small>
+                                    <p>{comment.content}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </>
+                :
+                <>
+                    <h3>Comments :</h3>
+                    <p>No comments yet.</p>
+                </>
+            }
+        </>
     );
 }

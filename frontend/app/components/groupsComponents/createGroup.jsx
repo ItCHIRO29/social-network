@@ -23,7 +23,7 @@ export default function CreateGroup() {
                     <input type="text" name="name" placeholder="Group Name" />
                     <textarea name="description" placeholder="Description" />
                 </section>
-                <button className="btn" type="submit">Publish</button>
+                <button className="btn" type="submit">Create Group</button>
             </form>
         </>
     );

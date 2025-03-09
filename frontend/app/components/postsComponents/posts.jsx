@@ -1,5 +1,6 @@
 // import { useState } from "react";
-import Post from "../components/post";
+'use client';
+import Post from "./post";
 import { useEffect, useState } from "react";
 export default function CreatePost({ userImage, userId }) {
     const [posts, setPosts] = useState([]);

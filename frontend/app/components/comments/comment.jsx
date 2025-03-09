@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import CommentsSection from './commentsection';
 
 export default function Comments({ postid }) {
-    const [showComments, setShowComments] = useState(true);
+    const [showComments, setShowComments] = useState(false);
+    const [opened, setOpened] = useState(0);
     const [comments, setComments] = useState([]);
 
     const handleClick = async (inputElement) => {
@@ -45,6 +46,7 @@ export default function Comments({ postid }) {
         if (e.key === 'Enter') {
             const inputElement = e.target;
             handleClick(inputElement);
+            setShowComments(true);
         }
     };
 
@@ -63,11 +65,13 @@ export default function Comments({ postid }) {
                 onClick={(e) => {
                     const inputElement = e.target.previousElementSibling;
                     setShowComments(!showComments);
+                    setOpened(opened === 1 ? 0 : 1);
+                    console.log("opened");
                 }}
                 style={{ cursor: 'pointer' }}
             />
             {showComments && (
-                <CommentsSection postid={postid} comments={comments} setComments={setComments} />
+                <CommentsSection key={postid} postid={postid} comments={comments} setComments={setComments} />
             )}
         </div>
     );

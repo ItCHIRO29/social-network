@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchMyGroups } from "../helpers/fetchGroups";
+import { fetchMyGroups } from "../../helpers/fetchGroups";
 
 export default function MyGroups() {
     const [myGroups, setMyGroups] = useState([]);

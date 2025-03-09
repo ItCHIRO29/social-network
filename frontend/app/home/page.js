@@ -1,7 +1,7 @@
 "use client";
 import { React } from "react";
 import { useState, useEffect } from 'react';
-import CreatePost from "../components/posts";
+import CreatePost from "../components/postsComponents/posts";
 import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";

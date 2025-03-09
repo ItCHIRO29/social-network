@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchAllGroups } from "../helpers/fetchGroups";
+import { fetchAllGroups } from "../../helpers/fetchGroups";
 
 export default function JoinGroup() {
     const [groups, setGroups] = useState([]);

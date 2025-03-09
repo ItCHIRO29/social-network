@@ -2,7 +2,7 @@
 
 
 // import  "../components/post.css"
-import Comments from "../components/comment";
+import Comments from "../comments/comment";
 
 export default function Post({ post, postId }) {
     //console.log("post :: ", post);
