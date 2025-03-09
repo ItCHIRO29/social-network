@@ -122,3 +122,12 @@ func IsPublicProfile(db *sql.DB, userId int) (bool, error) {
 	}
 	return isPublic, nil
 }
+
+func GetUserName(db *sql.DB, userId int) string {
+	var username string
+	err := db.QueryRow("SELECT username FROM users WHERE id=?", userId).Scan(&username)
+	if err != nil {
+		return ""
+	}
+	return username
+}

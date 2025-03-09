@@ -53,7 +53,7 @@ func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.Handler
 
 		ok, limiter := limiters.GetRateLimiter(userId)
 		if !ok {
-			limiter = limiters.NewRateLimiter(userId, 10, 20, time.Second)
+			limiter = limiters.NewRateLimiter(userId, 10, 30, time.Second)
 		}
 		if !limiter.Allow() {
 			w.WriteHeader(http.StatusTooManyRequests)

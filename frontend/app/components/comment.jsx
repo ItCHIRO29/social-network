@@ -1,6 +1,12 @@
-'use client'
+'use client';
+
+import React, { useState } from 'react';
+import CommentsSection from './commentsection';
 
 export default function Comments({ postid }) {
+    const [showComments, setShowComments] = useState(true);
+    const [comments, setComments] = useState([]); // State to manage the list of comments
+
     const handleClick = async (inputElement) => {
         const comment = inputElement.value.trim();
 
@@ -23,7 +29,14 @@ export default function Comments({ postid }) {
 
         if (res.ok) {
             console.log("Comment posted successfully!");
-            inputElement.value = "";
+            const newComment = {
+                id: Date.now().toString(),
+                content: comment,
+                // author: , // Replace with the actual author name if available
+                timestamp: new Date().toISOString(),
+            };
+            setComments([...comments, newComment]); // Add the new comment to the list
+            inputElement.value = ""; // Clear the input field
         } else {
             console.error("Failed to post comment:", res.statusText);
         }
@@ -50,9 +63,13 @@ export default function Comments({ postid }) {
                 alt="logo"
                 onClick={(e) => {
                     const inputElement = e.target.previousElementSibling;
-                    handleClick(inputElement);
+                    setShowComments(!showComments);
                 }}
+                style={{ cursor: 'pointer' }}
             />
+            {showComments && (
+                <CommentsSection postid={postid} comments={comments} setComments={setComments} />
+            )}
         </div>
     );
 }
