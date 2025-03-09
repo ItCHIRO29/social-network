@@ -14,20 +14,20 @@ export default function NavBar() {
         } else if (e.target.id === "Followers") {
             window.location.href = "/followers";
         } else if (e.target.id === "Logout") {
-            // fetch("http://localhost:8080/api/auth/logout", {
-            //     method: "POST",
-            //     credentials: "include",
-            // })
-            //     .then((response) => {
-            //         if (response.ok) {
-            //             window.location.href = "/";
-            //         } else {
-            //             console.error("Logout failed");
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         console.error("Error during logout:", error);
-            //     });
+            fetch("http://localhost:8080/api/auth/logout", {
+                method: "POST",
+                credentials: "include",
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.href = "/";
+                    } else {
+                        console.error("Logout failed");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error during logout:", error);
+                });
             window.location.href = "/login";
         }
     }

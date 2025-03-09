@@ -13,7 +13,7 @@ import (
 
 func CreateComment(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var coment models.Comment
-	fmt.Println("Received request to create comment")
+	//fmt.Println("Received request to create comment")
 	err := json.NewDecoder(r.Body).Decode(&coment)
 	if err != nil {
 		utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request"})
@@ -52,7 +52,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request, db *sql.DB, userId in
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to create comment"})
 		return
 	}
-	fmt.Println("Comment created successfully", coment)
+	//fmt.Println("Comment created successfully", coment)
 	// utils.WriteJSON(w, http.StatusCreated, map[string]string{"message": "Comment created successfully"})
 	w.WriteHeader(http.StatusCreated)
 }

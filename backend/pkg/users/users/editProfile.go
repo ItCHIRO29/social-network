@@ -3,7 +3,6 @@ package users
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"social-network/pkg/models"
@@ -18,7 +17,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		// 	utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		// 	return
 		// }
-		fmt.Println("EditProfile triggered!!!!!!!!!!!")
+		// fmt.Println("EditProfile triggered!!!!!!!!!!!")
 		var NewData models.EditProfile
 		var isPublic bool
 		err := json.NewDecoder(r.Body).Decode(&NewData)
@@ -26,7 +25,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 			utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 			return
 		}
-		fmt.Println("NewData:", NewData)
+		// fmt.Println("NewData:", NewData)
 		stmt, err := db.Prepare("UPDATE users SET username = ?, email = ?, public = ? WHERE id = ?")
 		if err != nil {
 			utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to update user"})

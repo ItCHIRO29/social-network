@@ -17,7 +17,7 @@ export default function JoinGroup() {
         <div id="joinGroup-container">
             {groups.length > 0 ? (
                 groups.map((group) => (
-                    <form id="joinGroup" key={group.id_group}>
+                    <form id="joinGroup" key={group.id_group} onSubmit={(e) => sendInvit(e, group.id_group)} >
                         <h1>{group.name}</h1>
                         <div>
                             <h3>Group Description:</h3>
@@ -33,4 +33,19 @@ export default function JoinGroup() {
             )}
         </div>
     );
+}
+
+async function sendInvit(e, id_group) {
+    e.preventDefault();
+    const response = await fetch("http://localhost:8080/api/groups/invitation", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            id_group: id_group,
+        }),
+    });
+    console.log(response);
 }

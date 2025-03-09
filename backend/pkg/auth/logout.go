@@ -5,9 +5,22 @@ import (
 	"net/http"
 )
 
-func Logout(db *sql.DB, userId int) http.HandlerFunc {
+func Logout(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cookie := &http.Cookie{
+		cookie, err := r.Cookie("token")
+		if err != nil {
+			http.Error(w, "Failed to get cookie", http.StatusUnauthorized)
+			return
+		}
+		token := cookie.Value
+
+		query := "DELETE FROM sessions WHERE id = ?"
+		_, err = db.Exec(query, token)
+		if err != nil {
+			http.Error(w, "Failed to delete session", http.StatusInternalServerError)
+			return
+		}
+		cookie = &http.Cookie{
 			Name:     "token",
 			Value:    "",
 			Path:     "/",
@@ -15,11 +28,5 @@ func Logout(db *sql.DB, userId int) http.HandlerFunc {
 			HttpOnly: true,
 		}
 		http.SetCookie(w, cookie)
-		query := "DELETE FROM sessions WHERE user_id = ?"
-		_, err := db.Exec(query, userId)
-		if err != nil {
-			http.Error(w, "Failed to delete session", http.StatusInternalServerError)
-			return
-		}
 	}
 }

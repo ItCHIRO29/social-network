@@ -12,7 +12,7 @@ import (
 )
 
 func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("in create group")
+	//fmt.Println("in create group")
 	var Groups models.Groups
 	err := json.NewDecoder(r.Body).Decode(&Groups)
 	if err != nil {

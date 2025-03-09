@@ -10,7 +10,7 @@ import (
 )
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int) {
-	fmt.Println("GetAllUsers triggered!")
+	//fmt.Println("GetAllUsers triggered!")
 
 	// Initialize the struct properly
 	type User struct {
@@ -56,6 +56,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		return
 	}
 
-	fmt.Println("All Users:", AllUsers)
+	//fmt.Println("All Users:", AllUsers)
 	utils.WriteJSON(w, http.StatusOK, AllUsers)
 }

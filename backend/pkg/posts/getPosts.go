@@ -12,11 +12,11 @@ import (
 )
 
 func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetPosts triggered")
+	// fmt.Println("GetPosts triggered")
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
-	fmt.Println("r..URL.Query():", r.URL.Query())
+	// fmt.Println("r..URL.Query():", r.URL.Query())
 	SpecificUser_id_str := r.FormValue("id")
 	if SpecificUser_id_str == "" || SpecificUser_id_str == "0" {
 		SpecificUser_id_str = strconv.Itoa(userId)
@@ -27,7 +27,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusBadRequest, "Invalid request")
 		return
 	}
-	fmt.Println("SpecificUser_id:", SpecificUser_id)
+	// fmt.Println("SpecificUser_id:", SpecificUser_id)
 	var posts []models.Posts
 	rows, err := db.Query("SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' AND user_id = ? ORDER BY id DESC", SpecificUser_id)
 	if err != nil {

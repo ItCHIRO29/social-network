@@ -20,7 +20,7 @@ func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.Handler
 			return
 		}
 		token := cookie.Value
-		fmt.Println("Token:", token)
+		//fmt.Println("Token:", token)
 		var userId int
 		var expiresAtStr string
 		err = db.QueryRow("SELECT user_id, expires_at FROM sessions WHERE id=?", token).Scan(&userId, &expiresAtStr)

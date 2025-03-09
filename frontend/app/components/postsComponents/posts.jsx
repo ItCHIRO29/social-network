@@ -8,10 +8,10 @@ export default function CreatePost({ userImage, userId }) {
 
     const handleCreatePost = (e) => {
         e.preventDefault();
-        const title = e.target.title.value.trim();
-        const content = e.target.content.value.trim();
-        const image = e.target.image.files[0];
-        const privacy = e.target.privacy.value;
+        // const title = e.target.title.value.trim();
+        // const content = e.target.content.value.trim();
+        // const image = e.target.image.files[0];
+        // const privacy = e.target.privacy.value;
         if (!title || !content) return;
         const formData = new FormData(e.target);
         fetch("http://localhost:8080/api/posts/createPost", {
@@ -40,7 +40,7 @@ export default function CreatePost({ userImage, userId }) {
         }
         fetchUser();
     }, []);
-    console.log("posts", posts);
+    //console.log("posts", posts);
     return (
         <>
             {

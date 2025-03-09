@@ -52,12 +52,12 @@ main {
     grid-template-areas:
         "head head head "
         "info info info "
-        "side1 nav nav "
+        "side1 nav . "
         "side1 xx side2 "
         "side1 posts side3 "
         "side1 posts side4 ";
     height: 100vh;
-    grid-template-rows: 5% 20% 5% 25% 25%;
+    grid-template-rows: 5% 30% 5% 25% 25%;
     grid-template-columns: 20% 60% auto;
 }
 
@@ -69,17 +69,6 @@ main {
     background-color: #000000;
 }
 
-/* .floatingsidebar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    padding: 10px;
-    background-color: #333;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    word-wrap: break-word;
-} */
 
 .nav {
     display: flex;
@@ -378,18 +367,20 @@ main {
     cursor: pointer;
 }
 
-.userInfo {
+.groupInfo {
     display: flex;
     justify-content: space-between;
     align-items: end;
-    /* border-radius: 5px; */
-    /* border: 1px solid white; */
     border: none;
     padding: 10px;
     color: #fff;
     row-gap: 10px;
     width: auto;
-    background-color: #000000;
+    background-image: url("/images/groupCover.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    /* opacity: 0.7; */
     grid-area: info;
 }
 

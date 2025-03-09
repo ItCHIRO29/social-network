@@ -13,10 +13,8 @@ export default function Page() {
                 <Header />
                 <NavBar />
                 <CreateGroup />
-                <div id="groups" >
-                    <h1>Your Groups</h1>
+                
                     <MyGroups />
-                </div>
                 <JoinGroup />
             </main >
         </>

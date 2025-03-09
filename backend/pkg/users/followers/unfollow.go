@@ -20,14 +20,14 @@ func Unfollow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		return
 	}
 	referenceIdStr := r.FormValue("reference_id")
-	fmt.Println("referenceIdStr:", referenceIdStr)
+	//fmt.Println("referenceIdStr:", referenceIdStr)
 	referenceId, err := strconv.Atoi(referenceIdStr)
 	if err != nil || referenceId <= 0 {
 		fmt.Fprintln(os.Stderr, err)
 		utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: fmt.Sprintf("Invalid reference_id, %d", referenceId)})
 		return
 	}
-	fmt.Println("referenceId:", referenceId, "userId:", userId)
+	//fmt.Println("referenceId:", referenceId, "userId:", userId)
 	tx, err := db.Begin()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
