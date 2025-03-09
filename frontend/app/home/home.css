@@ -64,23 +64,6 @@ h1 {
     }
 }
 
-/* header {
-    display: flex;
-    position: fixed;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #dd0000da;
-    color: #ffffff;
-    padding: 0 2rem 0 1rem;
-    text-align: center;
-    grid-area: head;
-} */
-
-/* header .logo {
-    height: 50px;
-    width: 50px;
-} */
 
 .floatingsidebar {
     display: flex;

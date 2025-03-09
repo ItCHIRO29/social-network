@@ -1,7 +1,8 @@
 package models
 
 type Groups struct {
-	Id int `json:"id_group"`
-	Name string `json:"name_group"`
-	Description string `json:"description_group"`
+	Id          int    `json:"id_group"`
+	Admin       string `json:"admin"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }

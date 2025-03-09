@@ -105,6 +105,15 @@ func GetUserIdFromUsername(db *sql.DB, username string) (int, error) {
 	return userId, nil
 }
 
+func GetUsernameFromId(db *sql.DB, userId int) (string, error) {
+	var username string
+	err := db.QueryRow("SELECT username FROM users WHERE id=?", userId).Scan(&username)
+	if err != nil {
+		return "", err
+	}
+	return username, nil
+}
+
 func IsPublicProfile(db *sql.DB, userId int) (bool, error) {
 	var isPublic bool
 	err := db.QueryRow("SELECT public FROM users WHERE id=?", userId).Scan(&isPublic)

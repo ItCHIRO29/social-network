@@ -5,6 +5,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import CreatePost from "../components/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
+import CreateGroup from '../components/createGroup';
 import "./profile.css"
 
 export default function ProfilePage() {
@@ -62,6 +63,7 @@ export default function ProfilePage() {
                     <button >Jane Smith</button>
                 </div>
                 <CreatePost userImage={imagePath} userId={id} />
+                <CreateGroup />
                 <FollowersComponent />
                 <div className='test2'>
                     {userData.public == true ?
@@ -107,6 +109,7 @@ async function FetchData(category, id) {
             });
 
             if (!response.ok) {
+                window.location.href = "/login";
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
@@ -192,6 +195,22 @@ function FollowersComponent() {
     return (
         <div className="followers">
             <h2>Followers</h2>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>John Doe</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>Jane Jenny</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>John Smith</button>
+            </div>
+            <div id="follower">
+                <img src="/images/profile.png" alt="Profile" />
+                <button>Jane Smith</button>
+            </div>
             <div id="follower">
                 <img src="/images/profile.png" alt="Profile" />
                 <button>John Doe</button>

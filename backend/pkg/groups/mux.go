@@ -10,9 +10,10 @@ import (
 func CreateGroupsMux(db *sql.DB, limiters *auth.Limiters) http.Handler {
 	mux := http.NewServeMux()
 	// Create group
-	mux.Handle("POST /", auth.Middleware(db, limiters, CreateGroup))
+	mux.Handle("POST /createGroup", auth.Middleware(db, limiters, CreateGroup))
 	// Get groups
-	mux.Handle("GET /", auth.Middleware(db, limiters, GetGroups))
+	mux.Handle("GET /getGroups/all", auth.Middleware(db, limiters, GetAllGroups))
+	mux.Handle("GET /getGroups/MyGroups", auth.Middleware(db, limiters, GetMyGroups))
 	// Refuse invitation
 	mux.Handle("DELETE /invitation", auth.Middleware(db, limiters, RefuseInvitation))
 	// Accept invitation
