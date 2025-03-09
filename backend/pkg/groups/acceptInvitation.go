@@ -3,7 +3,6 @@ package groups
 import (
 	"database/sql"
 	"encoding/json"
-	"encoding/json"
 	"net/http"
 
 	"social-network/pkg/models"
