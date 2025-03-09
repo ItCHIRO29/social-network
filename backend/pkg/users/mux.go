@@ -10,7 +10,7 @@ import (
 	"social-network/pkg/users/users"
 )
 
-func CreateUsersMux(db *sql.DB, limiters *auth.Limiters) http.Handler {
+func CreateUsersMux(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/profile", auth.Middleware(db, 10, 20, time.Second, users.Profile))
 	mux.Handle("POST /EditProfile", auth.Middleware(db, 10, 20, time.Second, users.EditProfile))
