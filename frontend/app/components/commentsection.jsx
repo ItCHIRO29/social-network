@@ -20,7 +20,7 @@ export default function CommentsSection({ postid, comments, setComments }) {
                     throw new Error("Failed to fetch comments");
                 }
                 const data = await res.json();
-                setComments(data);
+                setComments(Array.isArray(data) ? data : []);
             } catch (e) {
                 console.error(e);
                 setError(e.message);
@@ -30,7 +30,7 @@ export default function CommentsSection({ postid, comments, setComments }) {
         };
 
         fetchComments();
-    }, [postid, setComments]);
+    }, [postid, setComments]); // Re-fetch comments when postid changes
 
     if (loading) {
         return <p>Loading comments...</p>;
@@ -46,7 +46,7 @@ export default function CommentsSection({ postid, comments, setComments }) {
             {comments ? (
                 <ul className="comment-list">
                     {comments.map((comment) => (
-                        <li key={comment.id} className="comment-item">
+                        <li key={comment.ID} className="comment-item"> {/* Add unique key */}
                             <p><strong>{comment.AuthorName}</strong>: {comment.content}</p>
                             <small>{new Date(comment.CreatedAt).toLocaleString()}</small>
                         </li>
