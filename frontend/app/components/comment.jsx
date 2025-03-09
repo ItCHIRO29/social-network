@@ -5,7 +5,7 @@ import CommentsSection from './commentsection';
 
 export default function Comments({ postid }) {
     const [showComments, setShowComments] = useState(true);
-    const [comments, setComments] = useState([]); // State to manage the list of comments
+    const [comments, setComments] = useState([]);
 
     const handleClick = async (inputElement) => {
         const comment = inputElement.value.trim();
@@ -14,7 +14,13 @@ export default function Comments({ postid }) {
             alert("Please enter a comment.");
             return;
         }
-
+        const newComment = {
+            id: Date.now().toString(),
+            content: comment,
+            // author: , 
+            CreatedAt: new Date().toISOString(),
+        };
+        setComments((prevComments) => [...prevComments, newComment]);
         const res = await fetch("http://localhost:8080/api/comment", {
             method: "POST",
             credentials: "include",
@@ -29,14 +35,7 @@ export default function Comments({ postid }) {
 
         if (res.ok) {
             console.log("Comment posted successfully!");
-            const newComment = {
-                id: Date.now().toString(),
-                content: comment,
-                // author: , 
-                timestamp: new Date().toISOString(),
-            };
-            setComments([...comments, newComment]); 
-            inputElement.value = ""; 
+            inputElement.value = "";
         } else {
             console.error("Failed to post comment:", res.statusText);
         }

@@ -20,7 +20,7 @@ export default function CommentsSection({ postid, comments, setComments }) {
                     throw new Error("Failed to fetch comments");
                 }
                 const data = await res.json();
-                setComments(data); // Update the parent's comments state
+                setComments(Array.isArray(data) ? data : []);
             } catch (e) {
                 console.error(e);
                 setError(e.message);
