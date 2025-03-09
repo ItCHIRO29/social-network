@@ -32,11 +32,11 @@ export default function Comments({ postid }) {
             const newComment = {
                 id: Date.now().toString(),
                 content: comment,
-                // author: , // Replace with the actual author name if available
+                // author: , 
                 timestamp: new Date().toISOString(),
             };
-            setComments([...comments, newComment]); // Add the new comment to the list
-            inputElement.value = ""; // Clear the input field
+            setComments([...comments, newComment]); 
+            inputElement.value = ""; 
         } else {
             console.error("Failed to post comment:", res.statusText);
         }
