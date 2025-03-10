@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func CreateAuthMux(db *sql.DB, limiters *Limiters) http.Handler {
+func CreateAuthMux(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("POST /login", Login(db))
 	mux.HandleFunc("POST /register", Register(db))

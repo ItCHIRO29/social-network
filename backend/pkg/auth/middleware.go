@@ -10,7 +10,8 @@ import (
 
 type CustomHandler func(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 
-func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.HandlerFunc {
+func Middleware(db *sql.DB, rate int, capacity int, limitertime time.Duration, next CustomHandler) http.HandlerFunc {
+	limiters := Limiters{}
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("token")
 		if err != nil {
@@ -53,7 +54,7 @@ func Middleware(db *sql.DB, limiters *Limiters, next CustomHandler) http.Handler
 
 		ok, limiter := limiters.GetRateLimiter(userId)
 		if !ok {
-			limiter = limiters.NewRateLimiter(userId, 10, 30, time.Second)
+			limiter = limiters.NewRateLimiter(userId, rate, capacity, limitertime)
 		}
 		if !limiter.Allow() {
 			w.WriteHeader(http.StatusTooManyRequests)
