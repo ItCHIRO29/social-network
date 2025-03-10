@@ -27,7 +27,7 @@ func main() {
 	mainMux.Handle("/api/posts/", http.StripPrefix("/api/posts", posts.CreatePostsMux(db)))
 	mainMux.Handle("/api/comment", http.StripPrefix("/api", comments.CreateCommentsMux(db)))
 	mainMux.Handle("/api/users/", http.StripPrefix("/api/users", users.CreateUsersMux(db)))
-	mainMux.Handle("/api/groups", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db)))
+	mainMux.Handle("/api/groups/", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db)))
 	mainMux.Handle("/api/notifications", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db)))
 	// serve images
 	mainMux.Handle("/uploads/", http.StripPrefix("/uploads", http.FileServer(http.Dir("uploads"))))
