@@ -30,14 +30,10 @@ export default function MyGroups() {
 
     return (
         <>
-            {/* <main> */}
-            {/* <Header />
-                <NavBar />
-                <CreateGroup /> */}
             <div id="groups" >
                 <h1>Your Groups</h1>
                 <div>
-                    {myGroups.length > 0 ? (
+                    {(myGroups) ? (
                         myGroups.map((group) => (
                             <button
                                 key={group.id_group}
@@ -48,12 +44,10 @@ export default function MyGroups() {
                             </button>
                         ))
                     ) : (
-                        <p>Loading your groups...</p>
+                        <p>No groups yet...</p>
                     )}
                 </div>
             </div>
-            {/* <JoinGroup />
-            </main > */}
         </>
 
     );

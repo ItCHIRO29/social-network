@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS groups (
 
 CREATE TABLE IF NOT EXISTS group_members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    group_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL ,
+    group_id INTEGER NOT NULL UNIQUE,
     accepted BOOLEAN DEFAULT false,
     foreign key(user_id) references users(id),
     foreign key(group_id) references groups(id)

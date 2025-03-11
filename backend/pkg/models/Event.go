@@ -2,9 +2,9 @@ package models
 
 type Event struct {
 	ID          int    `json:"id"`
+	GroupId     int    `json:"group_id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	GroupId     int    `json:"group_id"`
 }
 
 type Event_members struct {

@@ -8,10 +8,10 @@ export default function CreatePost({ userImage, userId }) {
 
     const handleCreatePost = (e) => {
         e.preventDefault();
-        // const title = e.target.title.value.trim();
-        // const content = e.target.content.value.trim();
+        const title = e.target.title.value.trim();
+        const content = e.target.content.value.trim();
         // const image = e.target.image.files[0];
-        // const privacy = e.target.privacy.value;
+        const privacy = e.target.privacy.value;
         if (!title || !content) return;
         const formData = new FormData(e.target);
         fetch("http://localhost:8080/api/posts/createPost", {
@@ -22,7 +22,7 @@ export default function CreatePost({ userImage, userId }) {
             .then((res) => res.json())
             .then((data) => {
                 console.log("post created:", data);
-                if (posts) {
+                if (posts && privacy == "Public") {
                     setPosts([data, ...posts]);
                 } else {
                     setPosts([data]);

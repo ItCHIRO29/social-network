@@ -52,12 +52,12 @@ main {
     grid-template-areas:
         "head head head "
         "info info info "
-        "side1 nav . "
+        "side1 nav nav "
         "side1 xx side2 "
-        "side1 posts side3 "
-        "side1 posts side4 ";
+        "side1 posts side2 "
+        "side1 posts side2 ";
     height: 100vh;
-    grid-template-rows: 5% 30% 5% 25% 25%;
+    grid-template-rows: 5% 30% 5% 30% 25%;
     grid-template-columns: 20% 60% auto;
 }
 
@@ -248,19 +248,19 @@ main {
     font-size: 40px;
 }
 
-#createPost {
+#creation {
     border-radius: 5px;
     grid-area: xx;
     border: 1px solid white;
     padding: 15px;
     color: #da7474;
     background-color: #3d3d3d46;
-    height: auto;
+    height: fit-content;
     margin: 2%;
 }
 
 
-#createPost button {
+#creation button {
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 8px;
@@ -274,7 +274,7 @@ main {
     width: fit-content;
 }
 
-#createPost button:hover {
+#creation button:hover {
     background: #ffffff;
     color: #b90000;
     border: none;
@@ -282,13 +282,13 @@ main {
     box-shadow: 0 3px 15px 5px rgb(255, 0, 0);
 }
 
-#createPost img {
+#creation img {
     border: 1px solid white;
     width: 40px;
     height: 40px;
 }
 
-#createPost input {
+#creation input {
     height: 5vh;
     border-radius: 5px;
     border: none;
@@ -299,14 +299,7 @@ main {
     color: black;
 }
 
-#creation {
-    width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-areas: "img post-content post-options";
-    grid-template-columns: 1fr 5fr 1fr;
-    flex-direction: row;
-}
+
 
 #creation #post-content {
     display: flex;
@@ -405,6 +398,7 @@ main {
 }
 
 .test1 button {
+    padding: 15px;
     width: 100%;
     height: 50px;
     border: 1px solid white;
@@ -413,6 +407,43 @@ main {
 }
 
 .test1 button:hover {
+
+    background-color: #ff0000da;
+    color: #ffffff;
+    border: 1px solid white;
+    transition: all 0.3s ease;
+    transform: translateY(-2px);
+}
+
+.members {
+    /* background-color: #1c1b1a; */
+    display: flex;
+    background-color: #f4f4f4;
+    grid-area: side2;
+    border: 1px solid rgba(112, 102, 102, 0.897);
+    border-radius: 5px;
+    margin-right: 1%;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 10px;
+    font-family: serif;
+    box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671);
+    word-wrap: break-word;
+    margin: 1%;
+
+}
+
+.members button {
+    padding: 15px;
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.members button:hover {
 
     background-color: #ff0000da;
     color: #ffffff;

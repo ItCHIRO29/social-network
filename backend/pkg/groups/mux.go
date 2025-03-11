@@ -15,6 +15,8 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	// Get groups
 	mux.Handle("GET /getGroups/all", auth.Middleware(db, 10, 20, time.Second, GetAllGroups))
 	mux.Handle("GET /getGroups/MyGroups", auth.Middleware(db, 10, 20, time.Second, GetMyGroups))
+	// Get group activity
+	mux.Handle("GET /getGroupActivity", auth.Middleware(db, 10, 20, time.Second, GetGroupActivity))
 	// Refuse invitation
 	mux.Handle("DELETE /invitation", auth.Middleware(db, 1, 1, time.Second, RefuseInvitation))
 	// Accept invitation

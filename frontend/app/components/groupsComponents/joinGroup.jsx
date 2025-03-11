@@ -15,7 +15,7 @@ export default function JoinGroup() {
 
     return (
         <div id="joinGroup-container">
-            {groups.length > 0 ? (
+            {groups ? (
                 groups.map((group) => (
                     <form id="joinGroup" key={group.id_group} onSubmit={(e) => sendInvit(e, group.id_group)} >
                         <h1>{group.name}</h1>
@@ -29,7 +29,7 @@ export default function JoinGroup() {
                     </form>
                 ))
             ) : (
-                <p>No groups!</p>
+                <h1>No groups to Join yet !</h1>
             )}
         </div>
     );
