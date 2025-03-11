@@ -15,6 +15,7 @@ export default function SocialNetworkUsers() {
             });
 
             if (!response.ok) {
+                window.location.href = "/login";
                 throw new Error("Failed to fetch users");
             }
 

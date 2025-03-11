@@ -39,9 +39,11 @@ function isValidPassword(password) {
 async function submitFormHandler(e) {
     e.preventDefault();
     console.log("Form submitted");
-    //const [status, setStatus] = useState("");
-    // Convert FormData to JSON
     const formData = Object.fromEntries(new FormData(e.target));
+    const email = formData.email;
+    const password = formData.password;
+    const credentials = btoa(`${email}:${password}`);
+    localStorage.setItem("jwt", credentials);
     // console.log("formdata : ", formData);
     console.log("Form Data:", formData);
 
