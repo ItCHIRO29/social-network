@@ -16,7 +16,7 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	rows, err := db.Query(`
     SELECT g.* 
     FROM groups g
-    LEFT JOIN group_members gm ON g.id = gm.group_id
+    LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
     WHERE g.admin_id = ? OR gm.user_id = ?`, userId, userId)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
@@ -42,17 +42,19 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 }
 
 func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	// fmt.Println("Get groups")
-	// rows, err := db.Query("SELECT g.id, g.name, g.description FROM groups g JOIN group_members gm on g.id = gm.group_id  WHERE (gm.user_id = 1; AND gm.accepted = 1)", userId)
-	// rows, err := db.Query("SELECT * FROM groups")
-	rows, err := db.Query("SELECT * FROM groups WHERE admin_id != ? ", userId)
+	query := `
+    SELECT g.*
+    FROM groups g
+	WHERE g.admin_id != ? AND g.id NOT IN (
+		SELECT group_id FROM group_members WHERE user_id = ?
+	)`
+	rows, err := db.Query(query, userId, userId)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)
 		return
 	}
 	defer rows.Close()
-
 	var AllGroups []models.Groups
 	for rows.Next() {
 		var group models.Groups
@@ -65,7 +67,8 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		}
 		AllGroups = append(AllGroups, group)
 	}
-	// fmt.Println("groups ==>I", AllGroups)
+
+	fmt.Println("groups Not joined ==>", AllGroups)
 	utils.WriteJSON(w, 200, AllGroups)
 }
 
@@ -78,10 +81,10 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	// err := db.QueryRow("SELECT id FROM groups WHERE name = ?", group_name).Scan(&group_id)
 	query := `
         SELECT g.id, g.name, g.description, 
-               gm.user_id, 
-               e.id, e.group_id, e.title, e.description, e.date
+			gm.id, gm.user_id, gm.group_id, gm.accepted,
+            e.id, e.group_id, e.title, e.description ,e.date
         FROM groups g
-        LEFT JOIN group_members gm ON g.id = gm.group_id
+        LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
         LEFT JOIN events e ON g.id = e.group_id
         WHERE g.name = ?`
 	rows, err := db.Query(query, group_name)
@@ -97,14 +100,16 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	for rows.Next() {
 		var event models.Event
 		var member models.Member
-		rows.Scan(&group.Id, &group.Name, &group.Description, &event.ID, &event.GroupId, &event.Title, &event.Description, &event.ID, member.User_id)
+		rows.Scan(&group.Id, &group.Name, &group.Description,
+			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
+			&event.ID, &event.GroupId, &event.Title, &event.Description, &event.ID,
+		)
+		member.Username = utils.GetUserName(db, member.User_id)
 		members = append(members, member)
 		events = append(events, event)
 	}
 	group.Events = events
 	group.Members = members
 	fmt.Println(" group Data : ", group)
-	// fmt.Println(" events : ", events)
-	// fmt.Println(" members : ", members)
 	utils.WriteJSON(w, 200, group)
 }

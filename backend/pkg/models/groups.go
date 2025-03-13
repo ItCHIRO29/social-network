@@ -11,8 +11,9 @@ type Groups struct {
 type Member struct {
 	Id       int    `json:"id_member"`
 	User_id  int    `json:"user_id"`
+	Username string `json:"username"`
 	Group_id int    `json:"group_id"`
-	//Accepted bool   `json:"accepted"`
+	Accepted bool   `json:"accepted"`
 	// User     string `json:"user"`
 }
 

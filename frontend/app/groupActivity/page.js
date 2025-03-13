@@ -58,7 +58,7 @@ function Members({ groupData }) {
             <h2>Members</h2>
             <div>
                 {members ? members.map((member) => (
-                    <button key={member.id}>member {member.id}</button>
+                    <button key={member.id}>member {member.user_id}: {member.username}</button>
                 )) : <p>No members yet </p>}
             </div>
         </div>
@@ -79,8 +79,16 @@ function Events({ groupData }) {
         <div className="test1" id="events">
             <h2>Events</h2>
             <div>
-                {events ? events.map((event) => (
-                    <button key={event.id}>event {event.title}</button>
+                {(events || events.length != 0) ? events.map((event) => (
+                    <div key={event.id}>
+                        <button >event : {event.title}</button>
+                        <div>{event.description}</div>
+                        <div>{event.date}</div>
+                        <div id="attendence">
+                            <button className="going">Going</button>
+                            <button className="NotGoing">Not going</button>
+                        </div>
+                    </div>
                 )) : <p>No events yet </p>}
             </div>
         </div>

@@ -17,13 +17,16 @@ export default function JoinGroup() {
         <div id="joinGroup-container">
             {groups ? (
                 groups.map((group) => (
-                    <form id="joinGroup" key={group.id_group} onSubmit={(e) => sendInvit(e, group.id_group)} >
+                    <form id="joinGroup"  >
                         <h1>{group.name}</h1>
                         <div>
                             <h3>Group Description:</h3>
                             <p>{group.description}</p>
                         </div>
-                        <button className="joinButton" type="submit">
+                        <button id="join" className="joinButton" type="submit"
+                            key={group.id_group}
+                            onClick={(e) => sendInvit(e, group.id_group)}
+                        >
                             Join
                         </button>
                     </form>
@@ -47,5 +50,9 @@ async function sendInvit(e, id_group) {
             id_group: id_group,
         }),
     });
+    // const join = document.getElementById("join");
+    e.target.innerHTML = "request sent";
+    e.target.disabled = true;
+    e.target.style.backgroundColor = "red";
     console.log(response);
 }

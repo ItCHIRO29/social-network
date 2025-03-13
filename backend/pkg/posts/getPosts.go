@@ -106,7 +106,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// 	post.ProfileImage = strings.Trim(profile_image, "./")
 	// 	posts = append(posts, post)
 	// }
-	fmt.Println(" Get home posts =======>", posts)
+	// fmt.Println(" Get home posts =======>", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }
 
@@ -152,6 +152,6 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		post.ProfileImage = strings.Trim(profile_image, "./")
 		posts = append(posts, post)
 	}
-	fmt.Println("Get GroupPosts =======>", posts)
+	// fmt.Println("Get GroupPosts =======>", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }

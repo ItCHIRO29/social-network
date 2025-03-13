@@ -46,7 +46,7 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		utils.WriteJSON(w, http.StatusBadRequest, "Title and Content are required")
 		return
 	}
-	fmt.Println("GroupPost:", GroupPost)
+	// fmt.Println("GroupPost:", GroupPost)
 	// if len(strings.TrimSpace(GroupPost.Title)) < 10 || len(strings.TrimSpace(GroupPost.Content)) < 10 {
 	// 	utils.WriteJSON(w, http.StatusBadRequest, "Title and Content should be at least 10 characters long")
 	// 	return
@@ -62,7 +62,7 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.GroupId = group_id
 	fmt.Println("GroupPost.Image:", GroupPost.Image)
 	fmt.Println("UserID:", GroupPost.UserID)
-	fmt.Println("GroupPost:", GroupPost.GroupId)
+	// fmt.Println("GroupPost:", GroupPost.GroupId)
 	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image) VALUES ( ?, ?, ?, ?,?, ?)"
 	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image)
 	if err1 != nil {
@@ -78,6 +78,6 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		return
 	}
 	GroupPost.ProfileImage = strings.Trim(image, "./")
-	fmt.Println("GroupPost ========>", GroupPost)
+	// fmt.Println("GroupPost ========>", GroupPost)
 	utils.WriteJSON(w, http.StatusOK, GroupPost)
 }
