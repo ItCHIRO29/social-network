@@ -11,8 +11,8 @@ import (
 
 func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	fmt.Println("GetNotifications")
-	query := `SELECT * FROM notifications WHERE receiver_id = ? OR sender_id != ?`
-	rows, err := db.Query(query, userId, userId)
+	query := `SELECT * FROM notifications WHERE (receiver_id = $1 AND sender_id != $1)`
+	rows, err := db.Query(query, userId)
 	if err != nil {
 		fmt.Println("error in GetNotifications", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -31,9 +31,7 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		notification.UserId = userId
 		notification.Receiver_name = utils.GetUserName(db, notification.Receiver_id)
 		notification.Sender_name = utils.GetUserName(db, notification.Sender_id)
-		if notification.Receiver_id == userId {
-			notifications = append(notifications, notification)
-		}
+		notifications = append(notifications, notification)
 	}
 	fmt.Println("notifications", notifications)
 	utils.WriteJSON(w, 200, notifications)

@@ -8,14 +8,12 @@ import MyGroups from "../components/groupsComponents/Mygroups";
 import "./groups.css"
 export default function Page() {
     return (
-        <>
-            <main>
-                <Header />
-                <NavBar />
-                <CreateGroup />
-                <MyGroups />
-                <JoinGroup />
-            </main >
-        </>
+        <main>
+            <Header />
+            <NavBar />
+            <CreateGroup />
+            <MyGroups />
+            <JoinGroup />
+        </main >
     )
 }

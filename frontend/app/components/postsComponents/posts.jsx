@@ -44,7 +44,8 @@ export default function CreatePost({ userImage, userId }) {
     return (
         <>
             {
-                userId == 0 ? <div id="createPost">
+                //  <div id="createPost">
+                userId == 0 ?
                     <form id="creation" onSubmit={handleCreatePost}>
                         <img src={userImage} alt="profile" />
                         <section id="post-content">
@@ -62,8 +63,8 @@ export default function CreatePost({ userImage, userId }) {
                                 <option value="Private">Private</option>
                             </select>
                         </section>
-                    </form>
-                </div> : null
+                    </form> : null
+                /* </div>  */
             }
             {
                 userId != 0 ? <div className="posts" style={{ gridArea: "xx" }}>

@@ -36,8 +36,20 @@ type PublicProfile struct {
 	Email        string       `json:"email"`
 	Public       bool         `json:"public"`
 	FollowButton FollowButton `json:"follow_button"`
-	Followers    []string     `json:"followers"`
-	Following    []string     `json:"following"`
+	Followers    []Followers  `json:"followers"`
+	Following    []Following  `json:"following"`
+}
+
+type Followers struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Image    string `json:"image"`
+}
+
+type Following struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Image    string `json:"image"`
 }
 
 type FollowButton struct {

@@ -85,7 +85,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
             e.id, e.group_id, e.title, e.description ,e.date
         FROM groups g
         LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
-        LEFT JOIN events e ON g.id = e.group_id
+        LEFT JOIN events e ON (g.id = e.group_id)
         WHERE g.name = ?`
 	rows, err := db.Query(query, group_name)
 	if err != nil {

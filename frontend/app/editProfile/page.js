@@ -1,5 +1,5 @@
 'use client'
-import EditP from "../components/EditProfile";
+import EditP from "../components/userProfile/EditProfile";
 import Header from "../components/header";
 import UserActivity from "../components/userActivity";
 import "./edit.css"

@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faGear } from '@fortawesome/free-solid-svg-icons';
 import CreatePost from "../components/postsComponents/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
 import CreateGroup from '../components/groupsComponents/createGroup';
+import AboutUser from '../components/userProfile/aboutUser';
 import "./profile.css"
 
 export default function ProfilePage() {
@@ -14,7 +15,6 @@ export default function ProfilePage() {
     const id = url.split("=")[1];
     console.log("id :: ", id);
     const [userData, setUserData] = useState({}); // Store user data
-    const [followState, setFollowState] = useState("");
 
 
     useEffect(() => {
@@ -31,9 +31,9 @@ export default function ProfilePage() {
         }
         fetchUser();
     }, []);
-    const handleEditProfile = () => {
-        window.location.href = "/editProfile";
-    };
+    // const handleEditProfile = () => {
+    //     window.location.href = "/editProfile";
+    // };
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
     console.log("userData :: ", userData);
     return (
@@ -41,7 +41,7 @@ export default function ProfilePage() {
             <main>
                 <Header />
                 <UserActivity />
-                <div className="userInfo">
+                {/* <div className="userInfo">
                     <div className="left-infos">
                         <img className="profile-image" src={imagePath} alt="Profile" />
                         <h1>{userData.first_name} {userData.last_name}</h1>
@@ -54,7 +54,8 @@ export default function ProfilePage() {
                             Edit Profile
                         </button>
                     </div>
-                </div>
+                </div> */}
+                <AboutUser userData={userData} imagePath={imagePath} />
                 <div className="test1" id="chat">
                     <h2>Chats</h2>
                     <button >John Doe</button>
@@ -63,9 +64,9 @@ export default function ProfilePage() {
                     <button >Jane Smith</button>
                 </div>
                 <CreatePost userImage={imagePath} userId={id} />
-                <CreateGroup />
-                <FollowersComponent />
-                <div className='test2'>
+                {/* <CreateGroup /> */}
+                {/* <FollowersComponent /> */}
+                {/* <div className='test2'>
                     {userData.public == true ?
                         <>
                             <h2>about1</h2>
@@ -90,7 +91,7 @@ export default function ProfilePage() {
                         </>
                     }
 
-                </div>
+                </div> */}
             </main>
         </>
 
@@ -122,113 +123,46 @@ async function FetchData(category, id) {
     }
 }
 
-function FollowButton({ userData, followState, setFollowState }) {
-    const followButton = userData.follow_button
-    if (!followButton || followButton.state === 'none') {
-        return null
-    }
-    var referenceId = followButton.reference_id;
-    if (followState === "") {
-        setFollowState(followButton.state)
-    }
 
-    const handleFollow = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/users/follow?username=${userData.username}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            referenceId = data.reference_id;
-            setFollowState("pending");
-        } catch (error) {
-            console.error("Fetch Error:", error);
-        }
-    }
-
-    const handleUnfollow = async (reference_id) => {
-        console.log("reference_id :: ", reference_id);
-        try {
-            const response = await fetch(`http://localhost:8080/api/users/follow?reference_id=${reference_id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            setFollowState("follow");
-        } catch (error) {
-            console.error("Fetch Error:", error);
-        }
-    }
-
-    const handleClick = async () => {
-        if (followState === "follow") {
-            handleFollow(userData.username);
-        } else if (followState === "pending" || followState === "unfollow") {
-            await handleUnfollow(referenceId)
-        }
-    }
-
-    return (
-        <button className='commentButtons' onClick={handleClick}>
-            {followState == "follow" ? "Follow" : ''}
-            {followState == "unfollow" ? "Unfollow" : ''}
-            {followState == "pending" ? "Cancel Request" : ''}
-        </button>
-    )
-
-}
-
-function FollowersComponent() {
-    return (
-        <div className="followers">
-            <h2>Followers</h2>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Doe</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Jenny</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Doe</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Jenny</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Smith</button>
-            </div>
-        </div>
-    )
-}
+// function FollowersComponent() {
+//     return (
+//         <div className="followers">
+//             <h2>Followers</h2>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>John Doe</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>Jane Jenny</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>John Smith</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>Jane Smith</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>John Doe</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>Jane Jenny</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>John Smith</button>
+//             </div>
+//             <div id="follower">
+//                 <img src="/images/profile.png" alt="Profile" />
+//                 <button>Jane Smith</button>
+//             </div>
+//         </div>
+//     )
+// }
 
 export { FetchData };

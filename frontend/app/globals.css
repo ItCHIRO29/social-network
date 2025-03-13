@@ -69,6 +69,73 @@ header .logo {
   width: 50px;
 }
 
+header .notif-icon {
+  margin-right: 15px;
+  height: 35px;
+  width: 30px;
+  cursor: pointer;
+}
+
+header .right {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.notification {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  width: 40%;
+  background-color: rgb(255, 255, 255);
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid rgb(200, 200, 200);
+  z-index: 1000;
+  top: 5%;
+  left: 50%;
+  overflow-y: auto;
+  row-gap: 10px;
+  max-height: 300px;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  border-bottom: 1px solid rgb(0, 0, 0);
+  background-color: #ffffff;
+  padding: 10px;
+  color: rgb(0, 0, 0);
+  gap: 5px;
+}
+
+.notification-item .accept {
+  background-color: #008000;
+  color: #ffffff;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.notification-item .refuse {
+  background-color: #ff0000;
+  color: #ffffff;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.notification-item .right {
+  display: flex;
+  flex-direction: row;
+  float: right;
+  /* align-self: end; */
+  gap: 5px;
+}
+
 /* header {
   display: flex;
   position: relative;

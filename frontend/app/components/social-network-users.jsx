@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import "../home/home.css"
-import AllUsers from "./users";
+import AllUsers from "./userProfile/users";
 
 export default function SocialNetworkUsers() {
     const [users, setUsers] = useState([]);
