@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 var MaxUploadSize int64 = 10_485_760
@@ -130,4 +131,11 @@ func GetUserName(db *sql.DB, userId int) string {
 		return ""
 	}
 	return username
+}
+
+func InsertNotification(db *sql.DB, userId int, notificationType string) {
+	_, err := db.Exec("INSERT INTO notifications (receiver_id,sender_id, type,reference_id,content,seen,created_at) VALUES (?, ?, ?, ?, ?, ?, ?)", userId, 1, notificationType, 0, "", 0, time.Now().Format("2006-01-02 15:04:05.999999999Z07:00"))
+	if err != nil {
+		fmt.Println("Error inserting notification:", err)
+	}
 }
