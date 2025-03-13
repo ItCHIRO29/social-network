@@ -139,12 +139,11 @@ h1 {
 .post {
     display: flex;
     flex-direction: column;
-    /* grid-gap: 10px; */
     gap: 10px;
     width: 100%;
     background-color: #ffffff;
     padding: 1rem;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     box-shadow: 0 2px 4px rgba(255, 255, 255);
     position: relative;
     margin-bottom: 10px;
@@ -224,7 +223,7 @@ h1 {
     font-size: 40px;
 }
 
-#createPost {
+/* #createPost {
     border-radius: 5px;
     grid-area: create;
     border: 1px solid white;
@@ -252,7 +251,7 @@ h1 {
     width: 100%;
     color: #000000;
     background-color: white;
-}
+} */
 
 #createPost button {
     padding: 0.75rem 1.5rem;
@@ -277,12 +276,16 @@ h1 {
 }
 
 #creation {
-    width: 100%;
     height: auto;
+    grid-area: create;
     display: grid;
     grid-template-areas: "img post-content post-options";
-    grid-template-columns: 0.5fr 5fr 1fr;
+    grid-template-columns: 1fr 5fr 1fr;
     flex-direction: row;
+    border: 1px solid white;
+    padding: 15px;
+    background-color: #3d3d3d46;
+    height: 100%;
 }
 
 #creation #post-content {
@@ -298,7 +301,6 @@ h1 {
 }
 
 #creation #post-content textarea {
-    /* height: 50vh; */
     height: 100%;
     border-radius: 5px;
     border: 1px solid white;
@@ -316,7 +318,17 @@ h1 {
     align-items: center;
     grid-area: post-options;
     gap: 10px;
-    /* content: fill;     */
+}
+
+#creation input {
+    height: 5vh;
+    border-radius: 5px;
+    border: none;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background-color: white;
+    color: black;
 }
 
 .post-header {
@@ -408,9 +420,9 @@ h1 {
     grid-area: side2;
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
-    height: fit-content;
-    margin: 2%;
-    /* box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671); */
+    height: 100%;
+    margin-right: 2%;
+    margin-left: 2%;
 }
 
 #followers {

@@ -110,6 +110,12 @@ header .right {
   gap: 5px;
 }
 
+.notification-item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
 .notification-item .accept {
   background-color: #008000;
   color: #ffffff;

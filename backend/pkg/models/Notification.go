@@ -7,6 +7,7 @@ type Notification struct {
 	Receiver_name  string `json:"receiver_name"`
 	Sender_id      int    `json:"sender_id"`
 	Sender_name    string `json:"sender_name"`
+	Sender_image   string `json:"image"`
 	Type           string `json:"type"`
 	Reference_id   int    `json:"reference_id"`
 	Content        string `json:"content"`

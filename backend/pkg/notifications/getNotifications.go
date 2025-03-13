@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -31,6 +32,13 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		notification.UserId = userId
 		notification.Receiver_name = utils.GetUserName(db, notification.Receiver_id)
 		notification.Sender_name = utils.GetUserName(db, notification.Sender_id)
+		err = db.QueryRow("SELECT image FROM users WHERE id = ?", notification.Sender_id).Scan(&notification.Sender_image)
+		if err != nil {
+			fmt.Println("error in GetNotifications", err)
+			return
+		}
+		notification.Sender_image = strings.Trim(notification.Sender_image, "./")
+		fmt.Println("notification", notification.Sender_image)
 		notifications = append(notifications, notification)
 	}
 	fmt.Println("notifications", notifications)

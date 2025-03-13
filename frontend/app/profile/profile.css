@@ -145,7 +145,7 @@ main {
     width: 100%;
     background-color: #ffffff;
     padding: 1rem;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     box-shadow: 0 2px 4px rgba(255, 255, 255);
     position: relative;
     margin-bottom: 10px;

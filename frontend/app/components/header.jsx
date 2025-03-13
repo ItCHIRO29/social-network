@@ -43,6 +43,7 @@ export default function Header() {
                 notifi.type == "follow_request" ?
                     newNotif.innerHTML = `
                 <div class="notification-item">
+                    <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
                     <p>${notifi.receiver_name} has followed you</p>
                     <div class="right">
                         <button class="accept">Accept</button>

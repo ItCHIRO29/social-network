@@ -42,12 +42,6 @@ export default function HomeP() {
                 <button >Jane Smith</button>
                 <button >John Doe</button>
             </div>
-            <div className="test3" id="followers">
-                <h2>Followers</h2>
-                <button >John Doe</button>
-                <button >Jane Doe</button>
-                <button >John Smith</button>
-            </div>
             <CreatePost userImage={imagePath} userId={0} />
             <SocialNetworkUsers />
             <NavBar />
