@@ -25,7 +25,7 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "Invalid request"})
 		return
 	}
-	//fmt.Println("username:", username)
+	// fmt.Println("username:", username)
 	followingId, err := utils.GetUserIdFromUsername(db, username)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -75,6 +75,7 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
+	fmt.Println("id =======>", id)
 	err = notifications.SendNotification(tx, userId, followingId, notificationType, int(id))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

@@ -5,7 +5,7 @@
 import Comments from "../comments/comment";
 
 export default function Post({ post, postId }) {
-    //console.log("post :: ", post);
+    console.log("post :: ", post);
     let imagePath = "";
     let profileImage = "";
     if (post.Image != "") {
@@ -20,7 +20,7 @@ export default function Post({ post, postId }) {
     return (
         <div className="post" key={postId}>
             <section className="post-header">
-                <img id="user-icon" src={profileImage} alt="profile" onClick={() => { window.location.href = `/profile` }} />
+                <img id="user-icon" src={profileImage} alt="profile" onClick={() => { window.location.href = `/profile?id=${post.UserID}` }} />
                 <h2>{post.Post_creator}</h2>
                 <h1>ID : {post.ID}</h1>
             </section>
