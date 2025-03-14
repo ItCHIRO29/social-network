@@ -1,49 +1,35 @@
 "use client";
 import { useState, useEffect } from 'react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faGear } from '@fortawesome/free-solid-svg-icons';
-// import CreateGroup from '../components/groupsComponents/createGroup';
 import CreatePost from "../components/postsComponents/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
 import AboutUser from '../components/userProfile/aboutUser';
 import Chat from '../components/chat';
 import "./profile.css"
+import { useSearchParams } from 'next/navigation';
 
 export default function ProfilePage() {
-    const url = window.location.href;
-    console.log("url :: ", url);
-    const id = url.split("=")[1];
-    console.log("id :: ", id);
-    const [userData, setUserData] = useState({}); // Store user data
+    const [userData, setUserData] = useState({});
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
 
 
     useEffect(() => {
         async function fetchUser() {
-            if (id == 0) {
-                const data = await FetchData("profile", 0);
-                setUserData(data);
-            } else {
-                const data = await FetchData("profile", id);
-                setUserData(data);
-            }
-            // const data = await FetchData("profile", id);
-            // setUserData(data);
+            const data = await FetchData("profile", id);
+            setUserData(data);
         }
         fetchUser();
     }, []);
-    // const handleEditProfile = () => {
-    //     window.location.href = "/editProfile";
-    // };
+
+
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
-    console.log("userData :: ", userData);
     return (
         <>
             <main>
                 <Header />
                 <UserActivity />
                 <AboutUser userData={userData} imagePath={imagePath} />
-                
                 <CreatePost userImage={imagePath} userId={id} />
                 <Chat className={"test1"} id={"chat"} />
             </main>
@@ -64,7 +50,7 @@ async function FetchData(category, id) {
             });
 
             if (!response.ok) {
-                window.location.href = "/login";
+                console.log("response :: ", response);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();

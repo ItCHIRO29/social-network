@@ -4,17 +4,17 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 import "../../profile/profile.css";
 
 export default function AboutUser({ userData, imagePath }) {
-    const [followState, setFollowState] = useState("");
     const handleEditProfile = () => {
         window.location.href = "/editProfile";
     };
-    handleFollowers()
-    handleFollowing()
-    const followers = document.getElementById("followers");
-    const following = document.getElementById("following");
-    console.log("followers ===> ", followers);
-    console.log("following ===> ", following);
+    // handleFollowers()
+    // handleFollowing()
+    // const followers = document.getElementById("followers");
+    // const following = document.getElementById("following");
+    // console.log("followers ===> ", followers);
+    // console.log("following ===> ", following);
     return (
+        
         <div className="userInfo">
             <div className="left-infos">
                 <img className="profile-image" src={imagePath} alt="Profile" />
@@ -43,7 +43,10 @@ export default function AboutUser({ userData, imagePath }) {
                 </div>
                 <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
                 <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
-                <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
+                <div>
+                <FollowButton key={userData.id} userData={userData} />
+                </div>
+                
             </div>
             <div className="right-buttons">
                 <button className="commentButtons" onClick={handleEditProfile} >
@@ -55,15 +58,20 @@ export default function AboutUser({ userData, imagePath }) {
     );
 }
 
-function FollowButton({ userData, followState, setFollowState }) {
+function FollowButton({ userData}) {
     const followButton = userData.follow_button
     if (!followButton || followButton.state === 'none') {
         return null
     }
-    var referenceId = followButton.reference_id;
-    if (followState === "") {
-        setFollowState(followButton.state)
-    }
+    const [followState, setFollowState] = useState("");
+    const [referenceId, setReferenceId] = useState(followButton.reference_id);
+    useEffect(() => {
+        if (followState === "" && followButton?.state) {
+            setFollowState(followButton.state)
+
+        }
+    }, [followButton, followState, setFollowState]);
+     
 
     const handleFollow = async () => {
         try {
@@ -79,7 +87,7 @@ function FollowButton({ userData, followState, setFollowState }) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            referenceId = data.reference_id;
+            setReferenceId(data.reference_id);
             setFollowState("pending");
         } catch (error) {
             console.error("Fetch Error:", error);
@@ -125,13 +133,10 @@ function FollowButton({ userData, followState, setFollowState }) {
 }
 function handleFollowers() {
     useEffect(() => {
-
-        const FollowersList = document.createElement('div');
-        // Show(FollowersList);
+        let FollowersList = document.createElement('div');
         FollowersList.id = 'followers';
         FollowersList.style.display = 'none';
         FollowersList.className = 'followers';
-        // followers ? followers.map((follower) => {
         {
             FollowersList.innerHTML = `
             <h2>Followers</h2>
@@ -153,10 +158,9 @@ function handleFollowers() {
             </div>
                     `
         }
-        // }) : null
         document.body.appendChild(FollowersList);
-        // setFollowers(FollowersList);
     }, []);
+    return Followe
 }
 function handleFollowing() {
     useEffect(() => {

@@ -8,6 +8,7 @@ export async function getChat() {
             credentials: 'include',
         });
         if (!response.ok) {
+            console.log("response :: ", response, response.status);
             console.log('Error fetching chat data');
             return [];
         }

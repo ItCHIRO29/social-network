@@ -3,13 +3,15 @@ import Header from "../components/header";
 import NavBar from "../components/userActivity";
 import Post from "../components/postsComponents/post";
 import { fetchGroup, fetchGroupData } from "../helpers/fetchGroups";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect} from "react";
 import "./groupActivity.css"
+import { useSearchParams } from 'next/navigation';
+
 
 export default function GroupActivity() {
     const [groupData, setGroupData] = useState(null);
-    const url = window.location.href;
-    const id = url.split("=")[1];
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,10 +21,9 @@ export default function GroupActivity() {
         fetchData();
     }, []);
 
-    if (!groupData) {
+    if (!groupData || !id) {
         return <div>Loading...</div>;
     }
-    console.log("groupData : ", groupData);
     return (
         <main>
             <Header />
