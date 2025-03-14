@@ -16,11 +16,9 @@ export default function Followers() {
         <>
             {followers ?
                 followers.map((follower) => (
-                    <div id="follower">
-                        <div key={follower.id}>
-                            <img src="images/profile.png" alt="follower" />
-                            <p>{follower.username}</p>
-                        </div>
+                    <div id="follower" key={follower.id}>
+                        <img src="images/profile.png" alt="follower" />
+                        <p>{follower.username}</p>
                     </div>
                 )) : <p>No followers</p>}
         </>

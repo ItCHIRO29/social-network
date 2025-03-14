@@ -16,11 +16,11 @@ export default function Followings() {
         <>
             {followings ?
                 followings.map((following) => (
-                    <div id="follower">
-                        <div key={following.id}>
-                            <img src="images/profile.png" alt="follower" />
-                            <p>{following.username}</p>
-                        </div>
+                    <div id="follower" key={following.id}>
+                        {/* <div > */}
+                        <img src="images/profile.png" alt="follower" />
+                        <p>{following.username}</p>
+                        {/* </div> */}
                     </div>
                 )) : <p>No following</p>}
         </>
