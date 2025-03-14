@@ -1,11 +1,50 @@
-export default function FollowersPage() {
+'use client'
+import { useEffect, useState } from "react";
+
+export default function Followers() {
+    const [followers, setFollowers] = useState([]);
+
+    useEffect(() => {
+        async function fetchFollowers() {
+            const data = await GetFollowers();
+            setFollowers(data);
+            console.log("followers in component :: ", followers);
+        }
+        fetchFollowers();
+    }, []);
     return (
         <>
-            <img src="./images/profile.png" alt="profile" />
-            <button className="btn">John Doe</button>
-            <button className="btn">Jane Doe</button>
-            <button className="btn">John Smith</button>
-            <button className="btn">Jane Smith</button>
+            {followers ?
+                followers.map((follower) => (
+                    <div id="follower">
+                        <div key={follower.id}>
+                            <img src="images/profile.png" alt="follower" />
+                            <p>{follower.username}</p>
+                        </div>
+                    </div>
+                )) : <p>No followers</p>}
         </>
     );
+}
+
+async function GetFollowers() {
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/followers`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+        if (!response.ok) {
+            console.error(`HTTP error! Status: ${response.status}`);
+            return [];
+        }
+        const data = await response.json();
+        // setFollowers(data);
+        console.log("followers data :: ", data);
+        return data;
+    } catch (error) {
+        console.error("Fetch Error:", error);
+    }
 }

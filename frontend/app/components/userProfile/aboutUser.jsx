@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import Followers from "./followers";
+import Following from "./followings";
 import "../../profile/profile.css";
 
-export default function AboutUser({ userData, imagePath }) {
+export default function AboutUser({ userData, imagePath, id }) {
     const [followState, setFollowState] = useState("");
     const handleEditProfile = () => {
         window.location.href = "/editProfile";
     };
-    handleFollowers()
-    handleFollowing()
-    const followers = document.getElementById("followers");
-    const following = document.getElementById("following");
-    console.log("followers ===> ", followers);
-    console.log("following ===> ", following);
+    // handleFollowers(userData.id)
+    // handleFollowing(userData.id)
+    // const followers = document.getElementById("followers");
+    // const following = document.getElementById("following");
+    // console.log("followers ===> ", followers);
+    // console.log("following ===> ", following);
     return (
         <div className="userInfo">
             <div className="left-infos">
@@ -41,8 +43,14 @@ export default function AboutUser({ userData, imagePath }) {
                     }
                     {userData.public == false ? <h2>(Private Account)</h2> : null}
                 </div>
-                <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
-                <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
+                {
+                    id == 0 ?
+                        <>
+                            <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
+                            <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
+                        </>
+                        : null
+                }
                 <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
             </div>
             <div className="right-buttons">
@@ -50,6 +58,14 @@ export default function AboutUser({ userData, imagePath }) {
                     <FontAwesomeIcon icon={faGear} className="settings" />
                     Edit Profile
                 </button>
+            </div>
+            <div id="followers" className="followers" >
+                <button id="close" onClick={() => { hide() }}>X</button>
+                <Followers />
+            </div>
+            <div id="following" className="following" >
+                <button id="close" onClick={() => { hide() }}>X</button>
+                <Following />
             </div>
         </div>
     );
@@ -123,94 +139,8 @@ function FollowButton({ userData, followState, setFollowState }) {
     )
 
 }
-function handleFollowers() {
-    useEffect(() => {
 
-        const FollowersList = document.createElement('div');
-        // Show(FollowersList);
-        FollowersList.id = 'followers';
-        FollowersList.style.display = 'none';
-        FollowersList.className = 'followers';
-        // followers ? followers.map((follower) => {
-        {
-            FollowersList.innerHTML = `
-            <h2>Followers</h2>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Doe</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Jenny</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Smith</button>
-            </div>
-                    `
-        }
-        // }) : null
-        document.body.appendChild(FollowersList);
-        // setFollowers(FollowersList);
-    }, []);
-}
-function handleFollowing() {
-    useEffect(() => {
-        const following = document.createElement('div');
-        following.id = 'following';
-        following.style.display = 'none';
-        following.className = 'following';
-        // Show(following);
-        // notifications ? notifications.map((notifi) => {
-        // console.log("notifi :: ", notifi);
-        {
-            // notifi.type == "follow_request" ?
-            following.innerHTML = `
-            <h2>Following</h2>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Doe</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Jenny</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Doe</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Jenny</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>John Smith</button>
-            </div>
-            <div id="follower">
-                <img src="/images/profile.png" alt="Profile" />
-                <button>Jane Smith</button>
-            </div>
-                `
-            //  : null
-        }
-        // }) : null
-        document.body.appendChild(following);
-        // setFollowing(following);
-    }, []);
-}
+
 function Show(id1, id2) {
     const target1 = document.getElementById(id1);
     const target2 = document.getElementById(id2);
@@ -221,4 +151,10 @@ function Show(id1, id2) {
     } else {
         target1.style.display = "none";
     }
+}
+function hide() {
+    const target1 = document.getElementById("followers");
+    const target2 = document.getElementById("following");
+    target1.style.display = "none";
+    target2.style.display = "none";
 }

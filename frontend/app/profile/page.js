@@ -42,8 +42,7 @@ export default function ProfilePage() {
             <main>
                 <Header />
                 <UserActivity />
-                <AboutUser userData={userData} imagePath={imagePath} />
-                
+                <AboutUser userData={userData} imagePath={imagePath} id={id} />
                 <CreatePost userImage={imagePath} userId={id} />
                 <Chat className={"test1"} id={"chat"} />
             </main>
