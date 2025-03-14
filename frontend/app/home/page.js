@@ -5,6 +5,7 @@ import CreatePost from "../components/postsComponents/posts";
 import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
+import Chat from "../components/chat";
 import "./home.css"
 
 export default function HomeP() {
@@ -22,26 +23,7 @@ export default function HomeP() {
     return (
         <main>
             <Header />
-            <div className="test1" id="chat">
-                <h2>Chats</h2>
-                <button >John Doe</button>
-                <button >Jane Doe</button>
-                <button >John Smith</button>
-                <button >Jane Smith</button>
-                <button >John Doe</button>
-                <button >Jane Doe</button>
-                <button >John Smith</button>
-                <button >Jane Smith</button>
-                <button >John Doe</button>
-                <button >Jane Doe</button>
-                <button >John Smith</button>
-                <button >Jane Smith</button>
-                <button >John Doe</button>
-                <button >Jane Doe</button>
-                <button >John Smith</button>
-                <button >Jane Smith</button>
-                <button >John Doe</button>
-            </div>
+            <Chat className={"test1"} id={"chat"} />
             <CreatePost userImage={imagePath} userId={0} />
             <SocialNetworkUsers />
             <NavBar />

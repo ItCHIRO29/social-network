@@ -102,7 +102,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		var member models.Member
 		rows.Scan(&group.Id, &group.Name, &group.Description,
 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
-			&event.ID, &event.GroupId, &event.Title, &event.Description, &event.ID,
+			&event.EventID, &event.GroupId, &event.Title, &event.Description,
 		)
 		member.Username = utils.GetUserName(db, member.User_id)
 		members = append(members, member)

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"social-network/pkg/auth"
+	"social-network/pkg/chat"
 	comments "social-network/pkg/comment"
 	database "social-network/pkg/db/sqlite"
 	groups "social-network/pkg/groups"
@@ -28,6 +29,7 @@ func main() {
 	mainMux.Handle("/api/comment", http.StripPrefix("/api", comments.CreateCommentsMux(db)))
 	mainMux.Handle("/api/users/", http.StripPrefix("/api/users", users.CreateUsersMux(db)))
 	mainMux.Handle("/api/groups/", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db)))
+	mainMux.Handle("/api/chat/", http.StripPrefix("/api/chat", chat.CreateChatMux(db)))
 	mainMux.Handle("/api/notifications/", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db)))
 	// serve images
 	mainMux.Handle("/uploads/", http.StripPrefix("/uploads", http.FileServer(http.Dir("uploads"))))

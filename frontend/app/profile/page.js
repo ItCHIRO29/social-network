@@ -2,11 +2,12 @@
 import { useState, useEffect } from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faGear } from '@fortawesome/free-solid-svg-icons';
+// import CreateGroup from '../components/groupsComponents/createGroup';
 import CreatePost from "../components/postsComponents/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
-import CreateGroup from '../components/groupsComponents/createGroup';
 import AboutUser from '../components/userProfile/aboutUser';
+import Chat from '../components/chat';
 import "./profile.css"
 
 export default function ProfilePage() {
@@ -41,57 +42,10 @@ export default function ProfilePage() {
             <main>
                 <Header />
                 <UserActivity />
-                {/* <div className="userInfo">
-                    <div className="left-infos">
-                        <img className="profile-image" src={imagePath} alt="Profile" />
-                        <h1>{userData.first_name} {userData.last_name}</h1>
-                        {userData.public == false ? <h2>(Private Account)</h2> : null}
-                        <FollowButton userData={userData} followState={followState} setFollowState={setFollowState} />
-                    </div>
-                    <div className="right-buttons">
-                        <button className="commentButtons" onClick={handleEditProfile} >
-                            <FontAwesomeIcon icon={faGear} className="settings" />
-                            Edit Profile
-                        </button>
-                    </div>
-                </div> */}
                 <AboutUser userData={userData} imagePath={imagePath} />
-                <div className="test1" id="chat">
-                    <h2>Chats</h2>
-                    <button >John Doe</button>
-                    <button >Jane Doe</button>
-                    <button >John Smith</button>
-                    <button >Jane Smith</button>
-                </div>
+                
                 <CreatePost userImage={imagePath} userId={id} />
-                {/* <CreateGroup /> */}
-                {/* <FollowersComponent /> */}
-                {/* <div className='test2'>
-                    {userData.public == true ?
-                        <>
-                            <h2>about1</h2>
-                            <div className="center-user-infos" >
-                                <p>First Name: {userData.first_name}</p>
-                                <p>Last Name: {userData.last_name}</p>
-                                <p>Age: {userData.age}</p>
-                                <p>Gender: {userData.gender}</p>
-                                <p>Email: {userData.email}</p>
-                                <p>Profile: Public</p>
-                                <p>Bio: {userData.bio}</p>
-                            </div>
-                        </>
-                        :
-                        <>
-                            <h2>about2</h2>
-                            <div className="center-user-infos" >
-                                <p>First Name: {userData.first_name}</p>
-                                <p>Last Name: {userData.last_name}</p>
-                                <p>Profile: Private</p>
-                            </div>
-                        </>
-                    }
-
-                </div> */}
+                <Chat className={"test1"} id={"chat"} />
             </main>
         </>
 

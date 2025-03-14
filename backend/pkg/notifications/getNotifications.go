@@ -11,7 +11,7 @@ import (
 )
 
 func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetNotifications")
+	// fmt.Println("GetNotifications")
 	query := `SELECT * FROM notifications WHERE (receiver_id = $1 AND sender_id != $1)`
 	rows, err := db.Query(query, userId)
 	if err != nil {
@@ -38,9 +38,9 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 			return
 		}
 		notification.Sender_image = strings.Trim(notification.Sender_image, "./")
-		fmt.Println("notification", notification.Sender_image)
+		// fmt.Println("notification", notification.Sender_image)
 		notifications = append(notifications, notification)
 	}
-	fmt.Println("notifications", notifications)
+	// fmt.Println("notifications", notifications)
 	utils.WriteJSON(w, 200, notifications)
 }

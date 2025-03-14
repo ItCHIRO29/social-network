@@ -1,0 +1,16 @@
+package chat
+
+import (
+	"database/sql"
+	"net/http"
+	"time"
+
+	"social-network/pkg/auth"
+)
+
+func CreateChatMux(db *sql.DB) http.Handler {
+	mux := http.NewServeMux()
+	// mux.Handle("POST /chat", auth.Middleware(db, 1, 1, time.Millisecond, CreateComment))
+	mux.Handle("GET /GetChaters", auth.Middleware(db, 150, 150, time.Millisecond, GetChaters))
+	return mux
+}

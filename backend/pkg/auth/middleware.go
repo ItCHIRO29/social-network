@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"reflect"
+	"runtime"
 	"time"
 )
 
@@ -15,13 +17,17 @@ func Middleware(db *sql.DB, rate int, capacity int, limitertime time.Duration, n
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("token")
 		if err != nil {
-			fmt.Println("Cookie not found")
+			// just for debuggin (handler name that has teh issue)
+			name := getFunctionName(next)
+
+			fmt.Println("Cookie not found in :", name)
+			fmt.Println("handler error", err)
 			fmt.Fprintln(os.Stderr, err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		token := cookie.Value
-		//fmt.Println("Token:", token)
+		// fmt.Println("Token:", token)
 		var userId int
 		var expiresAtStr string
 		err = db.QueryRow("SELECT user_id, expires_at FROM sessions WHERE id=?", token).Scan(&userId, &expiresAtStr)
@@ -62,4 +68,8 @@ func Middleware(db *sql.DB, rate int, capacity int, limitertime time.Duration, n
 		}
 		next(w, r, db, userId)
 	}
+}
+
+func getFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
