@@ -43,9 +43,7 @@ export default function AboutUser({ userData, imagePath }) {
                 </div>
                 <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
                 <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
-                <div>
                 <FollowButton key={userData.id} userData={userData} />
-                </div>
                 
             </div>
             <div className="right-buttons">
@@ -88,7 +86,7 @@ function FollowButton({ userData}) {
             }
             const data = await response.json();
             setReferenceId(data.reference_id);
-            setFollowState("pending");
+            setFollowState(data.state);
         } catch (error) {
             console.error("Fetch Error:", error);
         }

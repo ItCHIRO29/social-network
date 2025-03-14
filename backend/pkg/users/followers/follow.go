@@ -90,5 +90,9 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
-	utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "follow", ReferenceId: int(id)})
+	if isPublic {
+		utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "unfollow", ReferenceId: int(id)})
+		return
+	}
+	utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "pending", ReferenceId: int(id)})
 }

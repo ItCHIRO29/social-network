@@ -53,7 +53,7 @@ type Following struct {
 }
 
 type FollowButton struct {
-	State       string `json:"state"` // "follow" || "unfollow" || "cancel request" || "none"
+	State       string `json:"state"` // "follow" || "unfollow" || "pending"
 	ReferenceId int    `json:"reference_id"`
 }
 

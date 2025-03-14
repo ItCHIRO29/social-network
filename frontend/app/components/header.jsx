@@ -4,9 +4,7 @@ import React, { useState, useEffect } from 'react';
 export default function Header() {
     const handleHomeRoute = (e) => {
         e.preventDefault();
-        useEffect(() => {
-            window.location.href = "/home";
-        }, []);
+        window.location.href = "/home";
     }
     const [notif, setNotif] = useState(null);
     const [notifications, setNotifications] = useState([]);
