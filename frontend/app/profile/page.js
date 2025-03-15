@@ -7,8 +7,10 @@ import AboutUser from '../components/userProfile/aboutUser';
 import Chat from '../components/chat';
 import "./profile.css"
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+    const router = useRouter();
     const [userData, setUserData] = useState({});
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
@@ -26,12 +28,12 @@ export default function ProfilePage() {
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
     return (
         <>
-            <main>
-                <Header />
+            <main key={`profile-main-${userData.id}`}>
+                <Header/>
                 <UserActivity />
-                <AboutUser userData={userData} imagePath={imagePath} />
-                <CreatePost userImage={imagePath} userId={id} />
-                <Chat className={"test1"} id={"chat"} />
+                <AboutUser  userData={userData} imagePath={imagePath} />
+                <CreatePost  userImage={imagePath} userId={id} />
+                <Chat  className={"test1"} id={"chat"} />
             </main>
         </>
 

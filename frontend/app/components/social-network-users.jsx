@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 // import "../home/home.css"
 import AllUsers from "./userProfile/users";
 
 export default function SocialNetworkUsers() {
+    let router = useRouter();
     const [users, setUsers] = useState([]);
 
     const getUsers = async () => {
@@ -15,7 +17,7 @@ export default function SocialNetworkUsers() {
             });
 
             if (!response.ok) {
-                window.location.href = "/login";
+                router.push("/login");
                 throw new Error("Failed to fetch users");
             }
 
@@ -40,7 +42,7 @@ export default function SocialNetworkUsers() {
         <div className="test2">
             <h3>People you might know:</h3>
             <div className="users-list">
-                <AllUsers users={users} />
+                <AllUsers key={`social-network-users`} users={users} />
             </div>
         </div>
     );

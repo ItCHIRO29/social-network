@@ -6,9 +6,11 @@ import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
 import Chat from "../components/chat";
+import { useRouter } from "next/navigation";
 import "./home.css"
 
 export default function HomeP() {
+    const router = useRouter();
     const [userData, setUserData] = useState({}); // Store user data
 
     useEffect(() => {
@@ -21,12 +23,12 @@ export default function HomeP() {
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
 
     return (
-        <main>
-            <Header />
-            <Chat className={"test1"} id={"chat"} />
-            <CreatePost userImage={imagePath} userId={0} />
-            <SocialNetworkUsers />
-            <NavBar />
+        <main key={`home-main-${userData.id}`}>
+            <Header  />
+            <Chat key={`home-chat-${userData.id}`} className={"test1"} id={"chat"} />
+            <CreatePost key={`home-createPost-${userData.id}`} userImage={imagePath} userId={0} />
+            <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
+            <NavBar key={`home-navBar-${userData.id}`} />
         </main>
     );
 }

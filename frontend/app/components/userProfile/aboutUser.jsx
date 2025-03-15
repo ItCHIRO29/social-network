@@ -43,7 +43,7 @@ export default function AboutUser({ userData, imagePath }) {
                 </div>
                 <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
                 <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
-                <FollowButton key={userData.id} userData={userData} />
+                <FollowButton key={`followButton-${userData.id}`} userData={userData} />
                 
             </div>
             <div className="right-buttons">

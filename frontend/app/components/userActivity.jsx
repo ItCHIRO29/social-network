@@ -1,14 +1,19 @@
+'use client';
+import { useRouter } from "next/navigation";
+import { use, useEffect } from "react";
 
 
 export default function NavBar() {
+    
+    let router = useRouter();
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
-            window.location.href = "/profile?id=0";
+            router.push("/profile?id=0");
         } else if (e.target.id === "Home") {
-            window.location.href = "/home";
+            router.push("/home");
         } else if (e.target.id === "Groups") {
-            window.location.href = "/groups";
+            router.push("/groups");
         } else if (e.target.id === "Logout") {
             fetch("http://localhost:8080/api/auth/logout", {
                 method: "POST",
@@ -16,7 +21,7 @@ export default function NavBar() {
             })
                 .then((response) => {
                     if (response.ok) {
-                        window.location.href = "/";
+                        router.push("/");
                     } else {
                         console.error("Logout failed");
                     }
@@ -24,7 +29,7 @@ export default function NavBar() {
                 .catch((error) => {
                     console.error("Error during logout:", error);
                 });
-            window.location.href = "/login";
+                router.push("/login");
         }
     }
     return (

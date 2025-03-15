@@ -1,9 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+
 export default function AllUsers(userInfo) {
+    let router = useRouter();
     let allusers = userInfo.users;
     const clickProfile = async (id) => {
-        window.location.href = `/profile?id=${id}`;
+        router.push(`/profile?id=${id}`);
     }
     const imagePath = "./images/profile.png"
     return (

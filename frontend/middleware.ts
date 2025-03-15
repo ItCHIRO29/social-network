@@ -1,28 +1,47 @@
-import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
 
-    // Skip middleware for certain routes
     if (
-        pathname.startsWith('/_next/') || // Next.js internals
-        pathname.startsWith('/images/') || // Static files
-        pathname.startsWith('/api/') ||    // API routes
-        pathname === '/login' ||           // Skip login page
-        pathname === '/register'          // Skip registration page
+        pathname.startsWith('/_next/') || 
+        pathname.startsWith('/api/') || 
+        pathname.startsWith('/static/') ||
+        pathname.startsWith('/favicon.ico') ||
+        pathname.startsWith('/images/')
     ) {
-        return NextResponse.next(); // Continue without checking token
+        return NextResponse.next();
+    }
+    let authenticated = false;
+
+    try {
+        const token = req.cookies.get('token')?.value;
+        if (!token) {
+            throw new Error('Token not found');
+        }
+
+        const response = await fetch('http://localhost:8080/api/auth/verify', {
+            method: 'GET', 
+            credentials: 'include',
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Invalid token');
+        }
+
+        authenticated = true;
+    } catch (error) {
+        if (pathname !== '/login' && pathname !== '/signup') {
+            return NextResponse.redirect(new URL('/login', req.url));
+        }
     }
 
-    // Token check for protected routes
-    const token = req.cookies.get('token');
-    if (!token) {
-        // Redirect to login if not authenticated
-        const url = req.nextUrl.clone();
-        url.pathname = '/login';
-        return NextResponse.redirect(url);
+    if (authenticated && (pathname === '/login' || pathname === '/signup')) {
+        return NextResponse.redirect(new URL('/', req.url));
     }
 
-    return NextResponse.next(); // Continue to the requested page
+    return NextResponse.next();
 }

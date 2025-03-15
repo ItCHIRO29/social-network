@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+"use client";
 
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+    const router = useRouter();
     const handleHomeRoute = (e) => {
         e.preventDefault();
-        window.location.href = "/home";
+        router.push("/home");
     }
     const [notif, setNotif] = useState(null);
     const [notifications, setNotifications] = useState([]);
