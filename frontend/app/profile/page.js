@@ -28,7 +28,7 @@ export default function ProfilePage() {
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
     return (
         <>
-            <main key={`profile-main-${userData.id}`}>
+            <main  key={`profile-main-${userData.id}`}>
                 <Header/>
                 <UserActivity />
                 <AboutUser userData={userData} imagePath={imagePath} id={id} />

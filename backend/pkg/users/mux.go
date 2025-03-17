@@ -20,6 +20,6 @@ func CreateUsersMux(db *sql.DB) http.Handler {
 	mux.Handle("PUT /follow", auth.Middleware(db, 10, 20, time.Second, followers.AcceptFollow))
 	mux.Handle("GET /followers", auth.Middleware(db, 10, 20, time.Second, followers.GetFollowers))
 	mux.Handle("GET /following", auth.Middleware(db, 10, 20, time.Second, followers.GetFollowing))
-	mux.Handle("GET /users", auth.Middleware(db, 10, 20, time.Second, users.GetUsers))
+	mux.Handle("GET /chat_users", auth.Middleware(db, 10, 20, time.Second, users.GetUsers))
 	return mux
 }
