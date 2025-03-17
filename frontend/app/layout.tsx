@@ -5,7 +5,7 @@ import "./globals.css";
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { WebSocketContext } from "./WebSocketContext";
+import { WebSocketContext, Ws } from "./WebSocketContext";
 
 
 export default function RootLayout({
@@ -13,13 +13,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [ws, setWs] = useState<Ws | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (!ws || ws?.readyState === WebSocket.CLOSED || ws?.readyState === WebSocket.CLOSING) {
-      const ws = new WebSocket("ws://localhost:8080/api/ws");
+    if (!ws) {
+      const ws = new Ws("ws://localhost:8080/api/ws");
       setWs(ws);
+    }else if (!ws?.socket || ws?.socket?.readyState === WebSocket.CLOSED || ws?.socket?.readyState === WebSocket.CLOSING) {
+      ws?.reconnect();
     }
   }, [router]);
   return (
