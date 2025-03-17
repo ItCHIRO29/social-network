@@ -565,7 +565,19 @@ main {
     /* transform: translateY(-2px); */
 }
 
-
+#close {
+    width: 40px;
+    height: 40px;
+    background-color: #b90000;
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0);
+    margin: 1%;
+    align-self: center;
+}
 
 #createGroup {
     display: flex;

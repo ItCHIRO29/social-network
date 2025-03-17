@@ -5,7 +5,7 @@
 import Comments from "../comments/comment";
 
 export default function Post({ post, postId }) {
-    console.log("post :: ", post);
+    // console.log("post :: ", post);
     let imagePath = "";
     let profileImage = "";
     if (post.Image != "") {

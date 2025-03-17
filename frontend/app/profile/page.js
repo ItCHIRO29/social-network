@@ -31,9 +31,9 @@ export default function ProfilePage() {
             <main key={`profile-main-${userData.id}`}>
                 <Header/>
                 <UserActivity />
-                <AboutUser  userData={userData} imagePath={imagePath} />
-                <CreatePost  userImage={imagePath} userId={id} />
-                <Chat  className={"test1"} id={"chat"} />
+                <AboutUser userData={userData} imagePath={imagePath} id={id} />
+                <CreatePost userImage={imagePath} userId={id} />
+                <Chat className={"test1"} id={"chat"} />
             </main>
         </>
 
