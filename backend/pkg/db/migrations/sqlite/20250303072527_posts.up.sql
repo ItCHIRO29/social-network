@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS posts (
     image TEXT,
     created_at TEXT NOT NULL,
     privacy TEXT,
+    can_see TEXT,
     CHECK (((privacy IS NOT NULL OR privacy != '') AND group_id IS NULL) OR ((privacy IS NULL OR privacy == '') AND group_id IS NOT NULL)),
     CHECK (privacy IN ('public', 'private', 'semi-private')),
     foreign key(group_id) references groups(id),

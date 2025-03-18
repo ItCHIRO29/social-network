@@ -2,6 +2,8 @@
 'use client';
 import Post from "./post";
 import { useEffect, useState } from "react";
+import SemiPrivateList from "./SemiPrivateList";
+import { selectedFollowers } from "./SemiPrivateList";
 export default function CreatePost({ userImage, userId }) {
     const [posts, setPosts] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
@@ -10,10 +12,14 @@ export default function CreatePost({ userImage, userId }) {
         e.preventDefault();
         const title = e.target.title.value.trim();
         const content = e.target.content.value.trim();
+        const checkbox = e.target.checkbox;
+        console.log("checkbox============>", checkbox);
         // const image = e.target.image.files[0];
         const privacy = e.target.privacy.value;
         if (!title || !content) return;
         const formData = new FormData(e.target);
+        formData.append("followers_ids", JSON.stringify(selectedFollowers || []));
+        console.log("formData", Object.fromEntries(formData));
         fetch("http://localhost:8080/api/posts/createPost", {
             method: "POST",
             credentials: "include",
@@ -31,6 +37,7 @@ export default function CreatePost({ userImage, userId }) {
         e.target.title.value = "";
         e.target.content.value = "";
         e.target.image.value = null;
+        document.getElementById("choose-followers").style.display = "none";
         setImagePreview(null);
     };
     useEffect(() => {
@@ -58,10 +65,18 @@ export default function CreatePost({ userImage, userId }) {
                         </section>
                         <section id="post-options">
                             <button className="btn" type="submit">Publish</button>
-                            <select name="privacy" className="btn">
+                            <select name="privacy" className="btn" onChange={(e) => {
+                                if (e.target.value === "semi-private") {
+                                    document.getElementById("choose-followers").style.display = "block";
+                                } else {
+                                    document.getElementById("choose-followers").style.display = "none";
+                                }
+                            }}>
                                 <option value="Public">Public</option>
                                 <option value="Private">Private</option>
+                                <option value="semi-private">Semi-Private</option>
                             </select>
+                            <SemiPrivateList />
                         </section>
                     </form> : null
                 /* </div>  */
