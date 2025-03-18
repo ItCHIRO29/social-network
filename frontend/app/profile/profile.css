@@ -367,6 +367,11 @@ main {
     color: black;
 }
 
+#creation input[type="checkbox"] {
+    height: 15px;
+    width: 15px;
+}
+
 .post-header {
     display: flex;
     align-items: center;

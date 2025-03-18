@@ -25,7 +25,7 @@ export default function Followers() {
     );
 }
 
-async function GetFollowers() {
+export async function GetFollowers() {
     try {
         const response = await fetch(`http://localhost:8080/api/users/followers`, {
             method: "GET",
