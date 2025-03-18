@@ -4,8 +4,8 @@ export default async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
 
     if (
-        pathname.startsWith('/_next/') || 
-        pathname.startsWith('/api/') || 
+        pathname.startsWith('/_next/') ||
+        pathname.startsWith('/api/') ||
         pathname.startsWith('/static/') ||
         pathname.startsWith('/favicon.ico') ||
         pathname.startsWith('/images/')
@@ -21,10 +21,10 @@ export default async function middleware(req: NextRequest) {
         }
 
         const response = await fetch('http://localhost:8080/api/auth/verify', {
-            method: 'GET', 
+            method: 'GET',
             credentials: 'include',
             headers: {
-                'Authorization': `Bearer ${token}`, 
+                'Authorization': `Bearer ${token}`,
             }
         });
 
@@ -34,7 +34,7 @@ export default async function middleware(req: NextRequest) {
 
         authenticated = true;
     } catch (error) {
-        if (pathname !== '/login' && pathname !== '/signup') {
+        if (pathname !== '/login' && pathname !== '/register') {
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }

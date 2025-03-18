@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DeleteUneusedCss } from './userActivity';
 
 export default function Header() {
     const router = useRouter();
     const handleHomeRoute = (e) => {
         e.preventDefault();
+        DeleteUneusedCss();
         router.push("/home");
     }
     const [notif, setNotif] = useState(null);
