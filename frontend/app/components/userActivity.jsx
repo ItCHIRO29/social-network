@@ -4,15 +4,18 @@ import { use, useEffect } from "react";
 
 
 export default function NavBar() {
-    
+
     let router = useRouter();
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target.id === "Profile") {
+            DeleteUneusedCss();
             router.push("/profile?id=0");
         } else if (e.target.id === "Home") {
+            DeleteUneusedCss();
             router.push("/home");
         } else if (e.target.id === "Groups") {
+            DeleteUneusedCss();
             router.push("/groups");
         } else if (e.target.id === "Logout") {
             fetch("http://localhost:8080/api/auth/logout", {
@@ -29,7 +32,8 @@ export default function NavBar() {
                 .catch((error) => {
                     console.error("Error during logout:", error);
                 });
-                router.push("/login");
+            localStorage.removeItem("jwt");
+            router.push("/login");
         }
     }
     return (
@@ -42,6 +46,24 @@ export default function NavBar() {
             </div >
         </>
     );
+}
+
+export function DeleteUneusedCss() {
+    const links = document.head.querySelectorAll("link");
+
+    if (links.length === 0) {
+        console.log("No assets found in <head>.");
+        return;
+    }
+
+    // console.log("Assets in <head>:");
+    links.forEach(link => {
+        const rel = link.getAttribute("rel");
+        const href = link.getAttribute("href");
+        if (rel === "stylesheet" && !href.includes("layout.css")) {
+            link.remove();
+        }
+    });
 }
 
 

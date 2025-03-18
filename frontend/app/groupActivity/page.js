@@ -3,12 +3,11 @@ import Header from "../components/header";
 import NavBar from "../components/userActivity";
 import Post from "../components/postsComponents/post";
 import { fetchGroup, fetchGroupData } from "../helpers/fetchGroups";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, Suspense} from "react";
 import "./groupActivity.css"
 import { useSearchParams } from 'next/navigation';
 
-
-export default function GroupActivity() {
+function Group() {
     const [groupData, setGroupData] = useState(null);
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
@@ -25,6 +24,8 @@ export default function GroupActivity() {
         return <div>Loading...</div>;
     }
     return (
+        // <Suspense fallback={<div>Loading...</div>}>
+            <>
         <main>
             <Header />
             <NavBar />
@@ -41,6 +42,16 @@ export default function GroupActivity() {
             <Members groupData={groupData} />
             <Events groupData={groupData} />
         </main>
+        </>
+        // </Suspense>
+    )
+}
+
+export default function GroupActivity() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Group />
+        </Suspense>
     )
 }
 

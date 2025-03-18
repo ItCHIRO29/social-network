@@ -1,15 +1,14 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import CreatePost from "../components/postsComponents/posts";
 import UserActivity from "../components/userActivity";
 import Header from '../components/header';
 import AboutUser from '../components/userProfile/aboutUser';
-import Chat from '../components/chat';
+import Chat from '../components/chatComponents/chat';
 import "./profile.css"
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from "next/navigation";
-
-export default function ProfilePage() {
+function Profile() {
     const router = useRouter();
     const [userData, setUserData] = useState({});
     const searchParams = useSearchParams();
@@ -28,8 +27,8 @@ export default function ProfilePage() {
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
     return (
         <>
-            <main  key={`profile-main-${userData.id}`}>
-                <Header/>
+            <main key={`profile-main-${userData.id}`}>
+                <Header />
                 <UserActivity />
                 <AboutUser userData={userData} imagePath={imagePath} id={id} />
                 <CreatePost userImage={imagePath} userId={id} />
@@ -37,6 +36,14 @@ export default function ProfilePage() {
             </main>
         </>
 
+    );
+}
+
+export default function ProfilePage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Profile />
+        </Suspense>
     );
 }
 
@@ -52,11 +59,11 @@ async function FetchData(category, id) {
             });
 
             if (!response.ok) {
-                console.log("response :: ", response);
+                //console.log("response :: ", response);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("data :: ", data);
+            //console.log("data :: ", data);
             return data; // Return the resolved object
         }
     } catch (error) {
@@ -107,4 +114,3 @@ async function FetchData(category, id) {
 //     )
 // }
 
-export { FetchData };

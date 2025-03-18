@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { fetchMyGroups } from "../../helpers/fetchGroups";
-import GroupActivity from "../../groupActivity/page";
 // import Header from "../header";
 // import NavBar from "../userActivity";
 // import CreateGroup from "./createGroup";

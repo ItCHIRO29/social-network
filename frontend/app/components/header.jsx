@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DeleteUneusedCss } from './userActivity';
 
 export default function Header() {
     const router = useRouter();
     const handleHomeRoute = (e) => {
         e.preventDefault();
+        DeleteUneusedCss();
         router.push("/home");
     }
     const [notif, setNotif] = useState(null);
@@ -27,7 +29,7 @@ export default function Header() {
                 }
 
                 const data = await response.json();
-                console.log("Notification data:", data);
+                // console.log("Notification data:", data);
                 setNotifications(data);
             } catch (error) {
                 console.error("Error fetching notifications:", error);
@@ -41,7 +43,7 @@ export default function Header() {
         newNotif.style.display = 'none';
         newNotif.className = 'notification';
         notifications ? notifications.map((notifi) => {
-            console.log("notifi :: ", notifi);
+            //console.log("notifi :: ", notifi);
             {
                 notifi.type == "follow_request" ?
                     newNotif.innerHTML = `
@@ -79,7 +81,7 @@ export default function Header() {
 }
 
 function ShowNotifications(notif) {
-    console.log("notif :", notif);
+    //console.log("notif :", notif);
     if (notif.style.display == 'none') {
         notif.style.display = 'flex';
     } else {

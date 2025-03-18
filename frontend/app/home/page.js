@@ -5,7 +5,7 @@ import CreatePost from "../components/postsComponents/posts";
 import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
-import Chat, { ChatWindowsContainer } from "../components/chat";
+import Chat, { ChatWindowsContainer } from "../components/chatComponents/chat";
 import { useRouter } from "next/navigation";
 import "./home.css"
 
@@ -21,10 +21,9 @@ export default function HomeP() {
         fetchUser();
     }, []);
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
-
     return (
         <main key={`home-main-${userData.id}`}>
-            <Header  />
+            <Header />
             <Chat key={`home-chat-${userData.id}`} className={"test1"} id={"chat"} />
             <CreatePost key={`home-createPost-${userData.id}`} userImage={imagePath} userId={0} />
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
@@ -48,7 +47,7 @@ async function FetchData(category, id) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("data :: ", data);
+            //console.log("data :: ", data);
             return data; // Return the resolved object
         }
     } catch (error) {
@@ -56,4 +55,3 @@ async function FetchData(category, id) {
         return null; // Handle errors gracefully
     }
 }
-
