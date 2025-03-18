@@ -46,7 +46,7 @@ export default function Chat({ className, id }) {
     useEffect(() => {
         const newUsers = new Map();
         
-        data.forEach(user => {
+        data?.forEach(user => {
             const username = user.username;
             const existingUser = users.get(username);
             
@@ -245,30 +245,31 @@ export default function Chat({ className, id }) {
   // Update your ChatWindowsContainer to use the modified CreateChatWindow
   export function ChatWindowsContainer() {
     return (
-      <div
-        className="chat-container chat-windows-container"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 'auto',
-          height: 'auto',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-end',
-          gap: '10px',
-          padding: '10px 10px 0px 10px',
-          zIndex: 1000,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}
-      >
-        <CreateChatWindow username="username" />
-        <CreateChatWindow username="username" />
-        <CreateChatWindow username="username" />
-        <CreateChatWindow username="username" />
-      </div>
+      <></>
+      // <div
+      //   className="chat-container chat-windows-container"
+      //   style={{
+      //     position: 'fixed',
+      //     bottom: 0,
+      //     left: '50%',
+      //     transform: 'translateX(-50%)',
+      //     width: 'auto',
+      //     height: 'auto',
+      //     display: 'flex',
+      //     flexDirection: 'row',
+      //     justifyContent: 'flex-start',
+      //     alignItems: 'flex-end',
+      //     gap: '10px',
+      //     padding: '10px 10px 0px 10px',
+      //     zIndex: 1000,
+      //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      //   }}
+      // >
+      //   <CreateChatWindow username="username" />
+      //   <CreateChatWindow username="username" />
+      //   <CreateChatWindow username="username" />
+      //   <CreateChatWindow username="username" />
+      // </div>
     );
   }
   
