@@ -37,6 +37,7 @@ export default function CreatePost({ userImage, userId, isPriv }) {
         e.target.title.value = "";
         e.target.content.value = "";
         e.target.image.value = null;
+        e.target.reset();
         document.getElementById("choose-followers").style.display = "none";
         setImagePreview(null);
     };
@@ -99,7 +100,16 @@ export default function CreatePost({ userImage, userId, isPriv }) {
 }
 
 async function GetPosts(id) {
-    const response = await fetch(`http://localhost:8080/api/posts/getPosts?id=${id}`, {
+    let link = "";
+    if (id) {
+        console.log("id :: ", id);
+        link = `http://localhost:8080/api/posts/getPosts?id=${id}`;
+    } else {
+        console.log("id :: ", id);
+
+        link = `http://localhost:8080/api/posts/getPosts`;
+    }
+    const response = await fetch(link, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 package models
 
 type Posts struct {
-	ID           int
+	ID           int64
 	UserID       int
 	Post_creator string
 	ProfileImage string
@@ -11,4 +11,5 @@ type Posts struct {
 	CreatedAt    string
 	Image        string
 	Type         string
+	Can_see      string
 }
