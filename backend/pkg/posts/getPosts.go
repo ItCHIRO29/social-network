@@ -64,8 +64,21 @@ ORDER BY posts.id DESC;`
 				utils.WriteJSON(w, http.StatusBadRequest, "Invalid user ID")
 				return
 			}
-			query = "SELECT id, user_id, title, content, created_at, image  FROM posts WHERE  AND user_id = ? ORDER BY id DESC"
-			rows, err = db.Query(query, specific_id)
+
+			query := `
+    SELECT id, user_id, title, content, created_at, image
+    FROM posts
+    WHERE 
+        (privacy != 'semi-private' AND user_id = ?)
+        OR 
+        (privacy = 'semi-private' AND EXISTS (
+            SELECT 1
+            FROM json_each(posts.can_see)
+            WHERE json_each.value = ?
+        ) AND user_id = ?)
+    ORDER BY id DESC;`
+
+			rows, err = db.Query(query, specific_id, userId, specific_id)
 			if err != nil {
 				fmt.Println("error in GetPosts:", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -99,42 +112,6 @@ ORDER BY posts.id DESC;`
 		post.ProfileImage = strings.Trim(profile_image, "./")
 		posts = append(posts, post)
 	}
-	// privatePosts, err := db.Query(`SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.image, p.privacy
-	// 								FROM posts p
-	// 								INNER JOIN private_posts pp ON p.id = pp.post_id
-	// 								WHERE pp.can_see = ?
-	// 								ORDER BY p.id DESC`, userId)
-	// if err != nil {
-	// 	fmt.Println("error in GetPosts2:", err)
-	// 	utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-	// 	return
-	// }
-	// defer privatePosts.Close()
-	// for privatePosts.Next() {
-	// 	var post models.Posts
-	// 	post.GroupId = 1
-	// 	err := privatePosts.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image, &post.Type)
-	// 	if err != nil {
-	// 		fmt.Println("error in GetPosts:", err)
-	// 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-	// 		return
-	// 	}
-	// 	query := "SELECT first_name,last_name, image FROM users WHERE id = ?"
-	// 	err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image)
-	// 	if err != nil {
-	// 		fmt.Println("error in GetPosts:", err)
-	// 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-	// 		return
-	// 	}
-	// 	if post.Image != "" {
-	// 		post.Image = strings.Trim(post.Image, "./")
-	// 	}
-	// 	creator := creator_first_name + " " + creator_last_name
-	// 	post.Post_creator = creator
-	// 	post.ProfileImage = strings.Trim(profile_image, "./")
-	// 	posts = append(posts, post)
-	// }
-	// fmt.Println(" Get home posts =======>", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }
 
