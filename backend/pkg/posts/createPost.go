@@ -27,10 +27,11 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		return
 	}
 	author = first_name + " " + last_name
-	// fmt.Println("author:", author)
 	post.Title = r.FormValue("title")
 	post.Content = r.FormValue("content")
 	post.Type = r.FormValue("privacy")
+	post.Can_see = r.FormValue("followers_ids")
+	fmt.Println("post.Can_see:", post.Can_see)
 	post.Post_creator = author
 	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 	if post.Title == "" || post.Content == "" {
@@ -54,20 +55,14 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	// fmt.Println("post.Image:", post.Image)
 	post.UserID = userId
 	// fmt.Println("post::::::::", post)
-	query = "INSERT INTO posts (user_id, title, content, created_at, image, privacy) VALUES ( ?, ?, ?, ?,?, ?)"
-	_, err1 := db.Exec(query, post.UserID, Title, Content, createdAt, post.Image, post.Type)
+	query = "INSERT INTO posts (user_id, title, content, created_at, image, privacy , can_see) VALUES ( ?, ?, ?, ?,?, ? , ?)"
+	res, err1 := db.Exec(query, post.UserID, Title, Content, createdAt, post.Image, post.Type, post.Can_see)
 	if err1 != nil {
 		fmt.Println("error in db.Exec:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting post: "+err1.Error())
 		return
 	}
-	query1 := "SELECT id FROM posts WHERE user_id = ? ORDER BY id DESC LIMIT 1"
-	err2 := db.QueryRow(query1, userId).Scan(&post.ID)
-	if err2 != nil {
-		fmt.Println("error in db.QueryRow:", err2)
-		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting post: "+err2.Error())
-		return
-	}
+	post.ID, _ = res.LastInsertId()
 	post.ProfileImage = strings.Trim(image, "./")
 	// fmt.Println("post:", post)
 	utils.WriteJSON(w, http.StatusOK, post)

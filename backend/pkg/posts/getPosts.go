@@ -12,6 +12,7 @@ import (
 )
 
 func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	fmt.Println("GetPosts")
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
@@ -21,9 +22,26 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var err error
 	query := ""
 	user_id_str := r.URL.Query().Get("id")
-	if user_id_str == "" || user_id_str == "0" {
-		query = "SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' AND user_id = ? ORDER BY id DESC"
-		rows, err = db.Query(query, userId)
+	if user_id_str == "" {
+		query = `SELECT 
+    posts.id, 
+    posts.user_id, 
+    posts.title, 
+    posts.content, 
+    posts.created_at, 
+    posts.image
+FROM posts
+LEFT JOIN json_each(posts.can_see) ON true
+WHERE 
+    posts.privacy = 'public' 
+    OR (posts.privacy = 'private' AND posts.user_id IN (
+        SELECT following_id
+        FROM followers
+        WHERE follower_id = ? AND accepted = 1
+    ))
+    OR (posts.privacy = 'semi-private' AND json_each.value = ?)
+ORDER BY posts.id DESC;`
+		rows, err = db.Query(query, userId, userId)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -31,18 +49,28 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		}
 		// return
 	} else {
-		specific_id, err1 := strconv.Atoi(user_id_str)
-		if err1 != nil {
-			fmt.Println("error in GetPosts:", err1)
-			utils.WriteJSON(w, http.StatusBadRequest, "Invalid user ID")
-			return
-		}
-		query = "SELECT id, user_id, title, content, created_at, image, privacy  FROM posts WHERE privacy = 'public' AND user_id = ? ORDER BY id DESC"
-		rows, err = db.Query(query, specific_id)
-		if err != nil {
-			fmt.Println("error in GetPosts:", err)
-			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-			return
+		if user_id_str == "0" {
+			query = "SELECT id, user_id, title, content, created_at, image  FROM posts WHERE user_id = ? ORDER BY id DESC"
+			rows, err = db.Query(query, userId)
+			if err != nil {
+				fmt.Println("error in GetPosts:", err)
+				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
+		} else {
+			specific_id, err1 := strconv.Atoi(user_id_str)
+			if err1 != nil {
+				fmt.Println("error in GetPosts:", err1)
+				utils.WriteJSON(w, http.StatusBadRequest, "Invalid user ID")
+				return
+			}
+			query = "SELECT id, user_id, title, content, created_at, image  FROM posts WHERE  AND user_id = ? ORDER BY id DESC"
+			rows, err = db.Query(query, specific_id)
+			if err != nil {
+				fmt.Println("error in GetPosts:", err)
+				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
 		}
 	}
 
@@ -50,7 +78,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	for rows.Next() {
 		var post models.Posts
 		post.GroupId = 1
-		err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image, &post.Type)
+		err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
