@@ -34,7 +34,8 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									u.image,
 									u.email, 
 									u.public,
-									(SELECT COUNT(id) FROM followers WHERE follower_id = 1 OR following_id = 1) as followers_cont,
+									(SELECT COUNT(id) FROM followers WHERE following_id = u.id) AS following_cont, 
+									(SELECT COUNT(id) FROM followers WHERE follower_id = u.id) AS followers_cont,
 									COALESCE(f.id, 0) AS reference_id,
 									CASE
 										WHEN u.id = $1 THEN 'none'
@@ -44,7 +45,7 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									END AS follow_state
 									FROM users u
 									LEFT JOIN followers f ON (f.follower_id =$1 AND f.following_id = u.id)
-									WHERE u.id=$2;`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public, &user.Followers, &user.FollowButton.ReferenceId, &user.FollowButton.State)
+									WHERE u.id=$2;`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public, &user.Followings_count, &user.Followers_count, &user.FollowButton.ReferenceId, &user.FollowButton.State)
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +71,7 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									LEFT JOIN followers f ON (f.follower_id =$1 AND f.following_id = u.id)
 									WHERE u.id=$2;
 		`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Image, &user.Public, &user.Followings_count, &user.Followers_count, &user.FollowButton.ReferenceId, &user.FollowButton.State)
-		fmt.Println("rtttttttttttttttttttttttttttttttttttttt",user)
+		
 		if err != nil {
 			return nil, err
 		}
