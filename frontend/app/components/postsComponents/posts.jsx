@@ -4,7 +4,7 @@ import Post from "./post";
 import { useEffect, useState } from "react";
 import SemiPrivateList from "./SemiPrivateList";
 import { selectedFollowers } from "./SemiPrivateList";
-export default function CreatePost({ userImage, userId }) {
+export default function CreatePost({ userImage, userId, isPriv }) {
     const [posts, setPosts] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
 

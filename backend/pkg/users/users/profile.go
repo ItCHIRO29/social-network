@@ -48,7 +48,7 @@ func Profile(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 			utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "Invalid request"})
 			return
 		}
-		//fmt.Println("id:", id)
+		// fmt.Println("id:", id)
 		profile, err := GetUserData(db, &userId, &id)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error in GetUserData:", err)

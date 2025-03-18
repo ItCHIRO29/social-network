@@ -57,7 +57,8 @@ header {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  background-color: #dd0000da;
+  background-color: #0000;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 1);
   color: #ffffff;
   padding: 0 2rem 0 1rem;
   text-align: center;

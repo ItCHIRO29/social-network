@@ -51,6 +51,10 @@ export class Ws {
 
 
     }
+
+    getSocket() {
+        return this.socket;
+    }
 }
 
 export const WebSocketContext = React.createContext<Ws | null>(null);

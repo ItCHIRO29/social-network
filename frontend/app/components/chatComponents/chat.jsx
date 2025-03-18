@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./styles.css"
 import styles from './EmojiSelector.module.css';
+import {emojiMap} from './emojiMap.js';
+import { WebSocketContext } from "../../WebSocketContext.tsx";
 
 
 class User {
@@ -92,160 +94,202 @@ export default function Chat({ className, id }) {
     );
 }
 
-function CreateChatWindow({username}) {
-    return (
-        <div className="chat-container">
-          <div className="chat-header">
-            <div className="header-left">
-              <img
-                src="https://via.placeholder.com/40"
-                alt="profile"
-                className="profile-pic"
-              />
-              <div className="header-info">
-                <h3>sidi hjaj</h3>
-                <p>online</p>
-              </div>
-            </div>
-            <div className="header-right">
-              <button className="icon-btn">❌</button>
-            </div>
-          </div>
-    
-          <div className="chat-messages">
-            <div className="message message-received">
-              <img
-                src="https://via.placeholder.com/28"
-                alt="profile"
-                className="message-pic"
-              />
-              <div className="message-content">
-                wsuup
-              </div>
-            </div>
-            <div className="message message-sent">
-              <div className="message-content">
-                That's the right attitude
-              </div>
-            </div>
-            <div className="message message-received">
-              <img
-                src="https://via.placeholder.com/28"
-                alt="profile"
-                className="message-pic"
-              />
-              <div className="message-content">
-                HI
-              </div>
-            </div>
-            <div className="message message-sent">
-              <div className="message-content">
-                Proud of you brother ❤️
-              </div>
-            </div>
-            <div className="message-status">
-              <p>02:000</p>
-            </div>
-          </div>
-    
-          <div className="chat-input">
-            <input type="text" placeholder="Aa"/>
-            <button className="input-icon">😊</button>
-            <button className="send-btn"></button>
 
+
+
+// export function ChatWindowsContainer() {
+//     return (
+//       <div className="chat-container chat-windows-container"
+//         style={{
+//           position: 'fixed',
+//           bottom: 0,
+//           left: '50%',
+//           transform: 'translateX(-50%)',
+//           width: '100%',
+//           height: '50%',
+//           display: 'flex',
+//           flexDirection: 'row',
+//           justifyContent: 'flex-start',
+//           alignItems: 'flex-end',
+//           gap: '10px',
+//           padding: '10px',
+//           zIndex: 1000,
+//         //   pointerEvents: 'none',
+//           backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//         }}
+//       >
+        
+//             <CreateChatWindow username={"username"}>
+//             </CreateChatWindow>
+//             <EmojiSelector onEmojiSelect={onEmojiSelect} />
+        
+//       </div>
+//     );
+//   }
+
+
+  function CreateChatWindow({ username }) {
+    const ws = useContext(WebSocketContext);
+    const socket = ws?.socket;
+
+    setTimeout(() => {
+    socket?.send(JSON.stringify({
+      type: 'chat',
+      data: {
+        message: 'Hello from the client!',
+        sender: 'Client',
+        timestamp: new Date().toISOString(),
+      },
+    }));
+  },  2000);
+    const [message, setMessage] = useState("");
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const inputRef = useRef(null);
+  
+    const handleEmojiSelect = (emoji) => {
+      setMessage(prev => prev + emoji);
+      setShowEmojiPicker(false); 
+      inputRef.current.focus(); 
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (message.trim()) {
+        console.log("Sending:", message);
+        setMessage("");
+      }
+    };
+  
+    return (
+      <div className="chat-container" style={{ position: 'relative' }}>
+        <div className="chat-header">
+          <div className="header-left">
+            <img
+              src="https://via.placeholder.com/40"
+              alt="profile"
+              className="profile-pic"
+            />
+            <div className="header-info">
+              <h3>{username || "sidi hjaj"}</h3>
+              <p>online</p>
+            </div>
+          </div>
+          <div className="header-right">
+            <button className="icon-btn">❌</button>
           </div>
         </div>
-      );
-}
-
-
-
-export function ChatWindowsContainer() {
+  
+        <div className="chat-messages">
+          <div className="message message-received">
+            <img
+              src="https://via.placeholder.com/28"
+              alt="profile"
+              className="message-pic"
+            />
+            <div className="message-content">wsuup</div>
+          </div>
+          <div className="message message-sent">
+            <div className="message-content">That's the right attitude</div>
+          </div>
+          <div className="message message-received">
+            <img
+              src="https://via.placeholder.com/28"
+              alt="profile"
+              className="message-pic"
+            />
+            <div className="message-content">HI</div>
+          </div>
+          <div className="message message-sent">
+            <div className="message-content">Proud of you brother ❤️</div>
+          </div>
+          <div className="message-status">
+            <p>02:00</p>
+          </div>
+        </div>
+  
+        <div className="chat-input">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', width: '100%' }}>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Aa"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              style={{ flex: 1 }}
+            />
+            <button
+              type="button"
+              className="input-icon"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              😊
+            </button>
+            <button type="submit" className="send-btn"></button>
+          </form>
+        </div>
+  
+        {showEmojiPicker && (
+          <div style={{
+            position: 'absolute',
+            bottom: '60px', 
+            right: '10px',
+            zIndex: 1001,
+          }}>
+            <EmojiSelector onEmojiSelect={handleEmojiSelect} />
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+  // Update your ChatWindowsContainer to use the modified CreateChatWindow
+  export function ChatWindowsContainer() {
     return (
-      <div className="chat-container chat-windows-container"
+      <div
+        className="chat-container chat-windows-container"
         style={{
           position: 'fixed',
           bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '100%',
-          height: '50%',
+          width: 'auto',
+          height: 'auto',
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'flex-start',
           alignItems: 'flex-end',
           gap: '10px',
-          padding: '10px',
+          padding: '10px 10px 0px 10px',
           zIndex: 1000,
-        //   pointerEvents: 'none',
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
       >
-        
-            <CreateChatWindow username={"username"}>
-            </CreateChatWindow>
-        
+        <CreateChatWindow username="username" />
+        <CreateChatWindow username="username" />
+        <CreateChatWindow username="username" />
+        <CreateChatWindow username="username" />
       </div>
     );
   }
-
-
-function onEmojiSelect(emoji) {
-  const input = document.getElementById('chat-input');
-  input.value += emoji;
-}
-
-
-function EmojiSelector({ onEmojiSelect }) {
-  const emojiMap = {
-    "Smileys & Emotions": [
-      "😀", "😊", "😂", "🤣", "😍", "🥰", "😘", "😜",
-      "😢", "😭", "😡", "😣", "🥳", "🤓", "😎", "😤"
-    ],
-    "People & Body": [
-      "👋", "👍", "👎", "👊", "✊", "👌", "🙌", "👏",
-      "🙏", "💪", "👈", "👉", "👆", "👇", "✌️", "🤘"
-    ],
-    "Animals & Nature": [
-      "🐶", "🐱", "🐭", "🐰", "🦊", "🐻", "🐼", "🐨",
-      "🌸", "🌹", "🌻", "🌴", "🌈", "⭐", "☀️", "🌙"
-    ],
-    "Food & Drink": [
-      "🍎", "🍌", "🍇", "🍉", "🍕", "🍔", "🍟", "🌮",
-      "🍣", "🍦", "🍰", "☕", "🍵", "🍺", "🍷", "🥂"
-    ],
-    "Activities": [
-      "⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏓", "🏸",
-      "🎮", "🎲", "🎯", "🎸", "🎤", "🎧", "🎨", "📷"
-    ],
-    "Travel & Places": [
-      "✈️", "🚗", "🚀", "🚢", "🏍️", "🚲", "🚤", "🏖️",
-      "🏕️", "🏠", "🏰", "🗺️", "🗽", "⛰️", "🏝️", "🌋"
-    ],
-    "Objects": [
-      "💡", "📱", "💻", "⌚", "📷", "🎥", "📺", "📻",
-      "🔑", "🔒", "🔔", "✂️", "📚", "✏️", "🔍", "💰"
-    ],
-    "Symbols": [
-      "❤️", "💔", "⭐", "✨", "⚡", "💥", "🔥", "💦",
-      "✅", "❌", "➡️", "⬅️", "⬆️", "⬇️", "↗️", "↘️"
-    ]
-  };
-
-  return (
-    <div className={styles.emojiSelector}>
-      {Object.entries(emojiMap).map(([category, emojis]) => (
-        <div key={category} className={styles.emojiCategory}>
-          <h3>{category}</h3>
-          <div className={styles.emojiGrid}>
-            {emojis.map((emoji) => (
-              <button key={emoji} onClick={() => onEmojiSelect(emoji)}>
-                {emoji}
-              </button>
-            ))}
+  
+  // Keep your EmojiSelector as is, but here's it for completeness
+  function EmojiSelector({ onEmojiSelect }) {
+    
+  
+    return (
+      <div className={styles.emojiSelector}>
+        {Object.entries(emojiMap).map(([category, emojis]) => (
+          <div key={category} className={styles.emojiCategory}>
+            <h3>{category}</h3>
+            <div className={styles.emojiGrid}>
+              {emojis.map((emoji) => (
+                <button key={emoji} onClick={() => onEmojiSelect(emoji)}>
+                  {emoji}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+        ))}
+      </div>
+    );
+  }
