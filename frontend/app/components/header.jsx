@@ -27,7 +27,7 @@ export default function Header() {
                 }
 
                 const data = await response.json();
-                console.log("Notification data:", data);
+                // console.log("Notification data:", data);
                 setNotifications(data);
             } catch (error) {
                 console.error("Error fetching notifications:", error);
@@ -41,7 +41,7 @@ export default function Header() {
         newNotif.style.display = 'none';
         newNotif.className = 'notification';
         notifications ? notifications.map((notifi) => {
-            console.log("notifi :: ", notifi);
+            //console.log("notifi :: ", notifi);
             {
                 notifi.type == "follow_request" ?
                     newNotif.innerHTML = `
@@ -79,7 +79,7 @@ export default function Header() {
 }
 
 function ShowNotifications(notif) {
-    console.log("notif :", notif);
+    //console.log("notif :", notif);
     if (notif.style.display == 'none') {
         notif.style.display = 'flex';
     } else {

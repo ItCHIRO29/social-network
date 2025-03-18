@@ -21,10 +21,10 @@ export default function HomeP() {
         fetchUser();
     }, []);
     const imagePath = userData.image ? `http://localhost:8080${userData.image.replace('./', '/')}` : './images/profile.png';
-
+    logHeadAssets();
     return (
         <main key={`home-main-${userData.id}`}>
-            <Header  />
+            <Header />
             <Chat key={`home-chat-${userData.id}`} className={"test1"} id={"chat"} />
             <CreatePost key={`home-createPost-${userData.id}`} userImage={imagePath} userId={0} />
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
@@ -47,7 +47,7 @@ async function FetchData(category, id) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("data :: ", data);
+            //console.log("data :: ", data);
             return data; // Return the resolved object
         }
     } catch (error) {
@@ -56,3 +56,22 @@ async function FetchData(category, id) {
     }
 }
 
+function logHeadAssets() {
+    const links = document.head.querySelectorAll("link");
+
+    if (links.length === 0) {
+        console.log("No assets found in <head>.");
+        return;
+    }
+
+    // console.log("Assets in <head>:");
+    links.forEach(link => {
+        if (link.getAttribute("rel") === "stylesheet") {
+            console.log("links =========>", {
+                rel: link.getAttribute("rel"),
+                href: link.getAttribute("href"),
+                type: link.getAttribute("data-precedence")
+            });
+        }
+    });
+}

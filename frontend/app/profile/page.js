@@ -52,11 +52,11 @@ async function FetchData(category, id) {
             });
 
             if (!response.ok) {
-                console.log("response :: ", response);
+                //console.log("response :: ", response);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("data :: ", data);
+            //console.log("data :: ", data);
             return data; // Return the resolved object
         }
     } catch (error) {

@@ -46,15 +46,17 @@ export default function Chat({ className, id }) {
             const ref = listRefs.current.get(username);
             userObj.setListItemRef(ref);
         });
+        // console.log('listRefs:', listRefs.current);
+        // console.log('users:', users);
     }, [users]); 
 
     return (
         <div className={className} id={id}>
             <h2>Chat</h2>
             {users.size > 0 ? (
-                <ul className="users-list">
+                <div className="users-list">
                     {Array.from(users.entries()).map(([username, userObj]) => (
-                        <li
+                        <button
                             key={username}
                             ref={(el) => listRefs.current.set(username, el)} 
                             className={`list-item ${username}`}
@@ -62,9 +64,9 @@ export default function Chat({ className, id }) {
                             
                         >
                             {userObj.userData.firstname} {userObj.userData.lastname}
-                        </li>
+                        </button>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <button>No Chats</button>
             )}

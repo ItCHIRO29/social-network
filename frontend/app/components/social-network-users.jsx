@@ -22,7 +22,7 @@ export default function SocialNetworkUsers() {
             }
 
             const data = await response.json();
-            console.log("Fetched Users:", data.users);
+            //console.log("Fetched Users:", data.users);
             return data.users || []; // Ensure it's always an array
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -37,7 +37,7 @@ export default function SocialNetworkUsers() {
         }
         fetchUsers();
     }, []);
-    console.log("users :: ", users);
+    //console.log("users :: ", users);
     return (
         <div className="test2">
             <h3>People you might know:</h3>
