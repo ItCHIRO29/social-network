@@ -47,8 +47,9 @@ export default function AboutUser({ userData, imagePath, id }) {
                 {
                     id == 0 ?
                         <>
-                            <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") }}>(10)Followres</button>
-                            <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>(12)Following</button>
+                            <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") 
+                            }}> {userData.followers_count} Followres</button>
+                            <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>{userData.followings_count} Following</button>
                         </>
                         : null
                 }

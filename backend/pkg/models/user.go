@@ -20,6 +20,8 @@ type PrivateProfile struct {
 	LastName     string       `json:"last_name"`
 	Image        string       `json:"image"`
 	FollowButton FollowButton `json:"follow_button"`
+	Followers_count int `json:"followers_count"`
+	Followings_count int `json:"followings_count"`
 	Public       bool         `json:"public"`
 }
 
@@ -36,6 +38,8 @@ type PublicProfile struct {
 	Email        string       `json:"email"`
 	Public       bool         `json:"public"`
 	FollowButton FollowButton `json:"follow_button"`
+	Followers_count int `json:"followers_count"`
+	Followings_count int `json:"followings_count"`
 	Followers    []Followers  `json:"followers"`
 	Following    []Following  `json:"following"`
 }
