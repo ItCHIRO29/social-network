@@ -5,7 +5,7 @@ import CreatePost from "../components/postsComponents/posts";
 import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
-import Chat from "../components/chat";
+import Chat, { ChatWindowsContainer } from "../components/chat";
 import { useRouter } from "next/navigation";
 import "./home.css"
 
@@ -29,6 +29,7 @@ export default function HomeP() {
             <CreatePost key={`home-createPost-${userData.id}`} userImage={imagePath} userId={0} />
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
             <NavBar key={`home-navBar-${userData.id}`} />
+            <ChatWindowsContainer></ChatWindowsContainer>
         </main>
     );
 }
