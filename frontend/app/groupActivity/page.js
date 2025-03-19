@@ -3,7 +3,7 @@ import Header from "../components/header";
 import NavBar from "../components/userActivity";
 import Post from "../components/postsComponents/post";
 import { fetchGroup, fetchGroupData } from "../helpers/fetchGroups";
-import React, { useState, useEffect, Suspense} from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import "./groupActivity.css"
 import { useSearchParams } from 'next/navigation';
 
@@ -15,35 +15,34 @@ function Group() {
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchGroupData(id);
+            // console.log("data  ====>", data);
             setGroupData(data);
         };
         fetchData();
     }, []);
-
+    console.log("groupData ==>", groupData);
     if (!groupData || !id) {
         return <div>Loading...</div>;
     }
     return (
-        // <Suspense fallback={<div>Loading...</div>}>
-            <>
-        <main>
-            <Header />
-            <NavBar />
-            <div className="groupInfo">
-                <div className="left-infos">
-                    <img className="profile-image" src="/images/profile.png" alt="Profile" />
-                    <div style={{ display: "flex", flexDirection: "column", fontSize: "20px" }}>
-                        <h1>{groupData.name}</h1>
-                        <p>{groupData.description}</p>
+        <>
+            <main>
+                <Header />
+                <NavBar />
+                <div className="groupInfo">
+                    <div className="left-infos">
+                        <img className="profile-image" src="/images/profile.png" alt="Profile" />
+                        <div style={{ display: "flex", flexDirection: "column", fontSize: "20px" }}>
+                            <h1>{groupData.name}</h1>
+                            <p>{groupData.description}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <CreateGroupPost id={groupData.id_group} />
-            <Members groupData={groupData} />
-            <Events groupData={groupData} />
-        </main>
+                <CreateGroupPost id={groupData.id_group} />
+                <Events groupData={groupData} />
+                <Members groupData={groupData} />
+            </main>
         </>
-        // </Suspense>
     )
 }
 
@@ -77,35 +76,68 @@ function Members({ groupData }) {
     );
 }
 
+// function Events({ groupData }) {
+//     const [events, setEvents] = useState([]);
+//     useEffect(() => {
+//         const fetchEvents = async () => {
+//             // const data = await fetchGroup(groupData.id);
+//             setEvents(groupData.Events);
+//         };
+//         fetchEvents();
+//     }, []);
+//     // setEvents(groupData.events);
+//     return (
+//         <div className="test1" id="events">
+//             <h2>Events</h2>
+//             <div>
+//                 {(events || events.length != 0) ? events.map((event) => (
+//                     <div key={event.id}>
+//                         <button >event : {event.title}</button>
+//                         <div>{event.description}</div>
+//                         <div>{event.date}</div>
+//                         <div id="attendence">
+//                             <button className="going">Going</button>
+//                             <button className="NotGoing">Not going</button>
+//                         </div>
+//                     </div>
+//                 )) : <p>No events yet </p>}
+//             </div>
+//         </div>
+//     );
+// }
 function Events({ groupData }) {
     const [events, setEvents] = useState([]);
+
     useEffect(() => {
-        const fetchEvents = async () => {
-            // const data = await fetchGroup(groupData.id);
+        if (groupData?.Events && events.length === 0) {
             setEvents(groupData.Events);
-        };
-        fetchEvents();
-    }, []);
-    // setEvents(groupData.events);
+        }
+    }, [groupData]); // Ensure effect re-runs when `groupData` changes
+
     return (
         <div className="test1" id="events">
             <h2>Events</h2>
             <div>
-                {(events || events.length != 0) ? events.map((event) => (
-                    <div key={event.id}>
-                        <button >event : {event.title}</button>
-                        <div>{event.description}</div>
-                        <div>{event.date}</div>
-                        <div id="attendence">
-                            <button className="going">Going</button>
-                            <button className="NotGoing">Not going</button>
+                {events.length > 0 ? (
+                    events.map((event) => (
+                        <div key={event.id}>
+                            <button>event: {event.title}</button>
+                            <div>{event.description}</div>
+                            <div>{event.date}</div>
+                            <div id="attendence">
+                                <button className="going">Going</button>
+                                <button className="NotGoing">Not going</button>
+                            </div>
                         </div>
-                    </div>
-                )) : <p>No events yet </p>}
+                    ))
+                ) : (
+                    <p>No events yet</p>
+                )}
             </div>
         </div>
     );
 }
+
 function CreateGroupPost({ id }) {
     const [posts, setPosts] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);

@@ -58,8 +58,5 @@ func CreateComment(w http.ResponseWriter, r *http.Request, db *sql.DB, userId in
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to create comment"})
 		return
 	}
-	fmt.Println("Comment created successfully", coment)
-	// utils.WriteJSON(w, http.StatusCreated, map[string]string{"message": "Comment created successfully"})
 	utils.WriteJSON(w, http.StatusCreated, coment)
-	// w.WriteHeader(http.StatusCreated)
 }

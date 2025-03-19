@@ -37,6 +37,7 @@ export async function fetchAllGroups() {
         });
 }
 export async function fetchGroupData(group_name) {
+    console.log("group_name", group_name);
     return await fetch(`http://localhost:8080/api/groups/getGroupActivity?group=${group_name}`, {
         method: "GET",
         headers: {
@@ -48,7 +49,9 @@ export async function fetchGroupData(group_name) {
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-            return response.json();
+            const data = response.json();
+            console.log("data for group ===>", data);
+            return data
         })
         .catch((error) => {
             console.error("Fetch error:", error);
