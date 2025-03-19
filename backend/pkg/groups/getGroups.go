@@ -17,7 +17,7 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
     SELECT g.* 
     FROM groups g
     LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
-    WHERE g.admin_id = ? OR gm.user_id = ?`, userId, userId)
+    WHERE gm.user_id = ?`, userId)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)
@@ -80,13 +80,11 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	group_name := r.URL.Query().Get("group")
 	fmt.Println("Group name:", group_name)
 
-	// Validate input
 	if group_name == "" {
 		http.Error(w, "Missing group name", http.StatusBadRequest)
 		return
 	}
 
-	// Query to get group details with members and events
 	query := `
 	SELECT 
     g.id, g.name, g.description,
@@ -110,10 +108,14 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	group.Events = []models.Event{}
 	group.Members = []models.Member{}
 
-	// Process rows
-	var event models.Event
+	// Maps to track unique events and members
+	eventMap := make(map[int]bool)
+	memberMap := make(map[int]bool)
+
 	for rows.Next() {
+		var event models.Event
 		var member models.Member
+
 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
 			&event.EventID, &event.GroupId, &event.Title, &event.Description,
 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
@@ -122,30 +124,117 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 			fmt.Println("Error scanning row:", err)
 			continue
 		}
-		if member.Id != 0 {
-			member.Username = utils.GetUserName(db, member.User_id)
+
+		// Add unique events
+		if event.EventID != 0 && !eventMap[event.EventID] {
+			group.Events = append(group.Events, event)
+			eventMap[event.EventID] = true
+		}
+
+		// Add unique members
+		if member.Id != 0 && !memberMap[member.Id] {
+			member.Username, err = utils.GetFullNameFromId(db, member.User_id)
+			if err != nil {
+				fmt.Println("Error getting username:", err)
+				continue
+			}
 			group.Members = append(group.Members, member)
+			memberMap[member.Id] = true
 		}
 	}
-	// Avoid adding empty event/member records
-	if event.EventID != 0 {
-		group.Events = append(group.Events, event)
-	}
-	
-	// Check for errors after looping
+
 	if err := rows.Err(); err != nil {
 		fmt.Println("Error iterating rows:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	// If no group data was found
+	// If no group found
 	if group.Id == 0 {
 		http.Error(w, "Group not found", http.StatusNotFound)
 		return
 	}
-	fmt.Println("Group Data:", group)
-	fmt.Println("Group Events:", group.Events)
-	fmt.Println("Group Members:", group.Members)
+
+	fmt.Println("Final Group Data:", group)
 	utils.WriteJSON(w, http.StatusOK, group)
 }
+
+// func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+// 	fmt.Println("Get One group activity")
+
+// 	group_name := r.URL.Query().Get("group")
+// 	fmt.Println("Group name:", group_name)
+
+// 	// Validate input
+// 	if group_name == "" {
+// 		http.Error(w, "Missing group name", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Query to get group details with members and events
+// 	query := `
+// 	SELECT
+//     g.id, g.name, g.description,
+//     COALESCE(e.id, 0), COALESCE(e.group_id, 0), COALESCE(e.title, ''), COALESCE(e.description, ''),
+//     COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0)
+// 	FROM groups g
+// 	LEFT JOIN events e ON g.id = e.group_id
+// 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
+// 	WHERE g.name = ?;
+// 	`
+
+// 	rows, err := db.Query(query, group_name)
+// 	if err != nil {
+// 		fmt.Println("Error getting group data:", err)
+// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer rows.Close()
+
+// 	var group models.Group
+// 	group.Events = []models.Event{}
+// 	group.Members = []models.Member{}
+// 	// Process rows
+// 	for rows.Next() {
+// 		var event models.Event
+// 		var member models.Member
+// 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
+// 			&event.EventID, &event.GroupId, &event.Title, &event.Description,
+// 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
+// 		)
+// 		if err != nil {
+// 			fmt.Println("Error scanning row:", err)
+// 			continue
+// 		}
+// 		// Avoid adding empty event/member records
+// 		if event.EventID != 0 {
+// 			group.Events = append(group.Events, event)
+// 		}
+// 		if member.Id != 0 {
+// 			member.Username, err = utils.GetFullNameFromId(db, member.User_id)
+// 			if err != nil {
+// 				fmt.Println("Error getting username:", err)
+// 				continue
+// 			}
+// 			group.Members = append(group.Members, member)
+// 		}
+
+// 	}
+
+// 	// Check for errors after looping
+// 	if err := rows.Err(); err != nil {
+// 		fmt.Println("Error iterating rows:", err)
+// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	// If no group data was found
+// 	if group.Id == 0 {
+// 		http.Error(w, "Group not found", http.StatusNotFound)
+// 		return
+// 	}
+// 	fmt.Println("Group Data:", group)
+// 	fmt.Println("Group Events:", group.Events)
+// 	fmt.Println("Group Members:", group.Members)
+// 	utils.WriteJSON(w, http.StatusOK, group)
+// }

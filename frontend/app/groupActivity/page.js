@@ -69,7 +69,7 @@ function Members({ groupData }) {
             <h2>Members</h2>
             <div>
                 {members ? members.map((member) => (
-                    <button key={member.id}>member {member.user_id}: {member.username}</button>
+                    <button key={member.id}>id {member.user_id}: {member.username}</button>
                 )) : <p>No members yet </p>}
             </div>
         </div>
