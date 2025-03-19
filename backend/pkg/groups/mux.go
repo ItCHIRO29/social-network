@@ -22,7 +22,7 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	// Accept invitation
 	mux.Handle("PUT /invitation", auth.Middleware(db, 10, 20, time.Second, AcceptInvitation))
 	// insert vote
-	mux.Handle("POST /insertVote", auth.Middleware(db, 20, 20, 20*time.Millisecond, InsertVote))
+	mux.Handle("POST /insert_vote", auth.Middleware(db, 20, 20, 20*time.Millisecond, InsertVote))
 	// Send invitation to join group
 	mux.Handle("POST /invitation", auth.Middleware(db, 1, 1, 20*time.Millisecond, SendInvitation))
 

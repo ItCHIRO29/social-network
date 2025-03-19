@@ -599,6 +599,7 @@ main {
     width: auto;
     height: auto;
 }
+
 .going {
     color: green;
     /* width: 70px; */
@@ -609,7 +610,7 @@ main {
     /* cursor: pointer; */
 }
 
-.NotGoing{
+.NotGoing {
     /* width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -618,6 +619,17 @@ main {
     cursor: pointer; */
     color: red;
 }
+
+input[type="radio"] {
+    margin: 5px;
+}
+
+input[type="radio"]:checked+label {
+    color: blueviolet;
+    /* Default label color */
+    cursor: pointer;
+}
+
 
 #search-input {
     font-size: 16px;

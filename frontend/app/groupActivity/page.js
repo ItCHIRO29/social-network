@@ -132,7 +132,7 @@ function Events({ groupData }) {
                             <h2>event: {event.title}</h2>
                             <div>{event.description}</div>
                             <div>{event.date}</div>
-                            <EventAttendance event={event} />
+                            <EventAttendance event={event} key={`att-${event.id}`} />
                         </div>
                     ))
                 ) : (

@@ -40,6 +40,7 @@ func GetVotes(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var vote models.Event_members
 	action := r.URL.Query().Get("action")
+	fmt.Println("actioooooooooooooooooon", action)
 
 	if action != "going" {
 		err := json.NewDecoder(r.Body).Decode(&vote)
@@ -67,7 +68,7 @@ func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		err = db.QueryRow("SELECT going FROM event_members WHERE user_id = ? AND event_id = ?", userId, vote.EventID).Scan(&currentGoing)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				_, err = db.Exec("INSERT OR IGNORE INTO event_members (user_id, event_id, going) VALUES (?, ?, ?)", userId, vote.EventID, vote.Going)
+				_, err = db.Exec("INSERT INTO event_members (user_id, event_id, going) VALUES (?, ?, ?)", userId, vote.EventID, true)
 				if err != nil {
 					fmt.Println("error in insert vote2 : ", err)
 					http.Error(w, "internal server error", 500)
