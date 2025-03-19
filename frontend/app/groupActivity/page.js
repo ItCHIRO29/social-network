@@ -58,18 +58,19 @@ function Members({ groupData }) {
     const [members, setMembers] = useState([]);
     useEffect(() => {
         const fetchMembers = async () => {
-            // const data = await fetchGroup(groupData.id);
-            setMembers(groupData.Members);
+            if (groupData?.Members && members.length === 0) {
+                setMembers(groupData.Members);
+            }
         };
         fetchMembers();
-    }, []);
+    }, [groupData]);
     // setMembers(groupData.members);
     return (
         <div className="members" id="members">
             <h2>Members</h2>
             <div>
                 {members ? members.map((member) => (
-                    <button key={member.id}>id {member.user_id}: {member.username}</button>
+                    <button key={member.id_member}>id {member.user_id}: {member.username}</button>
                 )) : <p>No members yet </p>}
             </div>
         </div>
@@ -121,7 +122,7 @@ function Events({ groupData }) {
                 {events.length > 0 ? (
                     events.map((event) => (
                         <div key={event.id}>
-                            <button>event: {event.title}</button>
+                            <h2>event: {event.title}</h2>
                             <div>{event.description}</div>
                             <div>{event.date}</div>
                             <div id="attendence">
