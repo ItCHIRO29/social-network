@@ -425,7 +425,7 @@ main {
 
 .test1 {
     /* background-color: #1c1b1a; */
-    display: flex;
+    /* display: flex; */
     background-color: #f4f4f4;
     grid-area: side1;
     border: 1px solid rgba(112, 102, 102, 0.897);
@@ -446,6 +446,7 @@ main {
     width: 100%;
     height: 50px;
     border: 1px solid white;
+    background-color: #000000;
     font-size: 15px;
     cursor: pointer;
 }
@@ -474,7 +475,6 @@ main {
     position: absolute;
     display: none;
     flex-direction: column;
-    /* top: 50%; */
     left: 50%;
     width: 50%;
     transform: translate(-50%, 50%);
@@ -486,7 +486,7 @@ main {
     height: fit-content;
     border-radius: 5px;
     border: 1px solid black;
-    /* max-height: 500px; */
+    max-height: 500px;
     overflow-y: auto;
 }
 
@@ -511,7 +511,7 @@ main {
     border-radius: 50%;
 }
 
-.following {
+#following {
     position: absolute;
     display: none;
     flex-direction: column;
@@ -550,10 +550,12 @@ main {
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: #6b6b6b;
+    background-color: #000000;
     border: 1px solid white;
     margin: 1%;
-    padding: 2px;
+    font-size: 17px;
+    padding: 7px;
+    border: 1px solid white;
 }
 
 #follower img {
@@ -566,8 +568,6 @@ main {
 #follower:hover {
     color: #ffffff;
     border: none;
-    /* transition: all 0.3s ease; */
-    /* transform: translateY(-2px); */
 }
 
 #close {
@@ -680,4 +680,17 @@ main {
     outline: none;
     border-color: #ffffff;
     box-shadow: 0 0 5px #ffffff;
+}
+
+#choose-followers {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 15px;
+    z-index: 1;
 }

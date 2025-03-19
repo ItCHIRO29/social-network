@@ -11,7 +11,7 @@ import (
 
 func GetFollowing(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	fmt.Println("GetFollowing!!!!")
-	query := `SELECT following_id FROM followers WHERE follower_id = $1`
+	query := `SELECT following_id FROM followers WHERE follower_id = $1 AND accepted = 1`
 	rows, err := db.Query(query, userId)
 	if err != nil {
 		http.Error(w, "Failed to get followers", http.StatusInternalServerError)
