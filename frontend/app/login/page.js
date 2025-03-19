@@ -40,12 +40,6 @@ async function submitFormHandler(e) {
     e.preventDefault();
     console.log("Form submitted");
     const formData = Object.fromEntries(new FormData(e.target));
-    const email = formData.email;
-    const password = formData.password;
-    const credentials = btoa(`${email}:${password}`);
-    localStorage.setItem("jwt", credentials);
-    // console.log("formdata : ", formData);
-    //console.log("Form Data:", formData);
 
     const response = await fetch('http://localhost:8080/api/auth/login', {
         method: "POST",

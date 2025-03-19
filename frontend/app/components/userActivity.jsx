@@ -32,7 +32,6 @@ export default function NavBar() {
                 .catch((error) => {
                     console.error("Error during logout:", error);
                 });
-            localStorage.removeItem("jwt");
             router.push("/login");
         }
     }

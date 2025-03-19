@@ -595,23 +595,41 @@ main {
     width: 100%;
 }
 
-#attendence .going {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: green;
-    font-size: 14px;
-    cursor: pointer;
+#attendence input[type="radio"] {
+    width: auto;
+    height: auto;
 }
 
-#attendence .NotGoing {
-    width: 70px;
+.going {
+    color: green;
+    /* width: 70px; */
+    /* height: 70px; */
+    /* border-radius: 50%; */
+    /* background-color: green; */
+    /* font-size: 14px; */
+    /* cursor: pointer; */
+}
+
+.NotGoing {
+    /* width: 70px;
     height: 70px;
     border-radius: 50%;
     background-color: red;
     font-size: 14px;
+    cursor: pointer; */
+    color: red;
+}
+
+input[type="radio"] {
+    margin: 5px;
+}
+
+input[type="radio"]:checked+label {
+    color: blueviolet;
+    /* Default label color */
     cursor: pointer;
 }
+
 
 #search-input {
     font-size: 16px;

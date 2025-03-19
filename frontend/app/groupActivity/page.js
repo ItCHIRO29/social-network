@@ -6,6 +6,7 @@ import { fetchGroup, fetchGroupData } from "../helpers/fetchGroups";
 import React, { useState, useEffect, Suspense } from "react";
 import "./groupActivity.css"
 import { useSearchParams } from 'next/navigation';
+import { EventAttendance } from "../components/eventAttendance";
 
 function Group() {
     const [groupData, setGroupData] = useState(null);
@@ -114,7 +115,13 @@ function Events({ groupData }) {
             setEvents(groupData.Events);
         }
     }, [groupData]); // Ensure effect re-runs when `groupData` changes
+    const [isGoing, setIsGoing] = useState(event.going);
 
+    const handleVote = (e, eventId, voteValue) => {
+        e.preventDefault();
+        setIsGoing(voteValue === "going"); // Update the state
+        InsertVote(e, eventId, voteValue); // Call your function
+    };
     return (
         <div className="test1" id="events">
             <h2>Events</h2>
@@ -125,10 +132,7 @@ function Events({ groupData }) {
                             <h2>event: {event.title}</h2>
                             <div>{event.description}</div>
                             <div>{event.date}</div>
-                            <div id="attendence">
-                                <button className="going">Going</button>
-                                <button className="NotGoing">Not going</button>
-                            </div>
+                            <EventAttendance event={event} key={`att-${event.id}`} />
                         </div>
                     ))
                 ) : (

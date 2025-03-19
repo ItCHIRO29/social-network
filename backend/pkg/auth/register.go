@@ -37,12 +37,30 @@ func Register(db *sql.DB) http.HandlerFunc {
 		// 	return
 		// }
 		// fmt.Println("user data", userData.Password)
+<<<<<<< HEAD
 		_, err = db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password, last_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password, time.Now().Format("2006-01-02 15:04:05"))
+=======
+		res, err := db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password)
+>>>>>>> 1299a99c6fb31f285cabc07d0c888289eab79e4a
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "In Exec", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+		userId, err := res.LastInsertId()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "In LastInsertId", err)
+			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		cookie, err := generateSessionToken(int(userId), db)
+		if err != nil {
+			fmt.Println("Error while generating session token")
+			fmt.Fprintln(os.Stderr, err)
+			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+			return
+		}
+		http.SetCookie(w, cookie)
 		utils.WriteJSON(w, http.StatusCreated, "User created successfully")
 	}
 }

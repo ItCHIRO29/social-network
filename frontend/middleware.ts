@@ -5,7 +5,6 @@ export default async function middleware(req: NextRequest) {
 
     if (
         pathname.startsWith('/_next/') ||
-        pathname.startsWith('/api/') ||
         pathname.startsWith('/static/') ||
         pathname.startsWith('/favicon.ico') ||
         pathname.startsWith('/images/')

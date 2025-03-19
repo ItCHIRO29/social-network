@@ -1,30 +1,34 @@
-
 'use client'
-import "./register.css"
-
-async function HandleRegister(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target)
-    try {
-        await fetch('http://localhost:8080/api/auth/register',
-            {
-                method: 'POST',
-                body: formData,
-            }
-        ).then(response => response.json())
-            .then(data => {
-                console.log("registered successfully");
-                console.log(data);
-                e.target.reset();
-            })
-
-    } catch (error) {
-        console.error(error);
-    }
-}
-
+import "./register.css";
+import { useRouter } from "next/navigation"; // Correct import for Next.js 13+
 
 export default function RegisterPage() {
+    const router = useRouter(); // Initialize the router at the top level
+
+    async function HandleRegister(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                router.push('/'); // Redirect to the homepage on successful registration
+            } else {
+                const data = await response.json();
+                console.log("Registration failed:", data);
+                alert(data || "Registration failed. Please try again."); // Display error message
+            }
+        } catch (error) {
+            console.error("An error occurred during registration:", error);
+            alert("An unexpected error occurred. Please try again."); // Display generic error message
+        }
+    }
+
     return (
         <>
             <div className="Container">
@@ -46,7 +50,7 @@ export default function RegisterPage() {
                         <input type="number" name="age" placeholder="age" />
                         <input type="text" name="email" placeholder="Email" />
                         <input type="password" name="password" placeholder="Password" />
-                        <label >(optional)</label>
+                        <label>(optional)</label>
                         <input type="file" accept="image/*" name="image" placeholder="Avatar" />
                         <label>(optional)</label>
                         <input type="text" name="nickname" placeholder="Nickname" />
@@ -58,7 +62,5 @@ export default function RegisterPage() {
                 </div>
             </div>
         </>
-
     );
 }
-
