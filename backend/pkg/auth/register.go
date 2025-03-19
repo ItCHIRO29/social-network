@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -35,8 +36,8 @@ func Register(db *sql.DB) http.HandlerFunc {
 		// 	utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 		// 	return
 		// }
-		//fmt.Println("user data", userData.Password)
-		_, err = db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password)
+		// fmt.Println("user data", userData.Password)
+		_, err = db.Exec(`INSERT INTO users (first_name, last_name, nickname, age, gender, bio, image, username, email, password, last_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.Age, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password, time.Now().Format("2006-01-02 15:04:05"))
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "In Exec", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")

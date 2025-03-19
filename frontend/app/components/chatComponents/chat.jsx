@@ -70,14 +70,7 @@ export default function Chat({ className, id }) {
               key={username}
               ref={(el) => listRefs.current.set(username, el)}
               className={`list-item ${username}`}
-              // style={
-              //   {
-              //     cursor: 'pointer',
-              //     backgroundColor: 'black',
-              //     marginBottom: '10px',
-              //     width: '100%',
-              //   }
-              // }
+                
               onClick={() => {
                 const chatWindow = document.getElementById('chat-window');
                 chatWindow.style.display = 'block';
@@ -93,6 +86,12 @@ export default function Chat({ className, id }) {
       )}
     </div>
   );
+}
+
+class chatWindow {
+  constructor(username) {
+    this.component = document.createElement('div');
+  }
 }
 
 

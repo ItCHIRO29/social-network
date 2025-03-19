@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"time"
 
 	"social-network/pkg/utils"
 	ws "social-network/pkg/websocket"
@@ -20,6 +21,7 @@ type User struct {
 	Online        bool   `json:"online"`
 	Notify        bool   `json:"notify"`
 	LastMessageId int
+	LastActive    time.Time `json:"lastActive"`
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
@@ -36,6 +38,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
     u.first_name, 
     u.last_name, 
     u.image,
+	u.last_active,
     COALESCE(
         (SELECT m2.seen 
          FROM private_messages m2 
@@ -70,11 +73,19 @@ WHERE
 	var users []User
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.LastMessageId, &user.Username, &user.FirstName, &user.LastName, &user.Image, &user.Notify); err != nil {
+		lastActive := ""
+		if err := rows.Scan(&user.LastMessageId, &user.Username, &user.FirstName, &user.LastName, &user.Image, &lastActive, &user.Notify); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		user.LastActive, err = time.Parse("2006-01-02 15:04:05", lastActive)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 		ws.Hub.Mu.Lock()
 		_, user.Online = ws.Hub.Clients[user.Username]
 		ws.Hub.Mu.Unlock()

@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS users (
     image TEXT,
     email TEXT NOT NULL,
     public BOOLEAN DEFAULT false,
+    last_active TEXT NOT NULL, 
     password TEXT NOT NULL
 );
