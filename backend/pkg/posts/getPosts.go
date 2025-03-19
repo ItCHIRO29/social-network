@@ -66,19 +66,24 @@ ORDER BY posts.id DESC;`
 			}
 
 			query := `
-    SELECT id, user_id, title, content, created_at, image
-    FROM posts
-    WHERE 
-        (privacy != 'semi-private' AND user_id = ?)
-        OR 
-        (privacy = 'semi-private' AND EXISTS (
-            SELECT 1
-            FROM json_each(posts.can_see)
-            WHERE json_each.value = ?
-        ) AND user_id = ?)
-    ORDER BY id DESC;`
-
-			rows, err = db.Query(query, specific_id, userId, specific_id)
+   					 SELECT id, user_id, title, content, created_at, image
+						FROM posts
+						WHERE 
+   						(privacy = 'public' AND user_id = ?) 
+    					OR 
+  					    (privacy = 'semi-private' AND EXISTS (
+        				SELECT 1
+        				FROM json_each(posts.can_see)
+       					WHERE json_each.value = ?
+   						) AND user_id = ?)
+    					OR 
+    					(privacy = 'private' AND user_id IN (
+       					SELECT following_id
+       					FROM followers
+        				WHERE follower_id = ? AND accepted = 1
+    					))
+						ORDER BY id DESC;`
+			rows, err = db.Query(query, specific_id, userId, specific_id, userId)
 			if err != nil {
 				fmt.Println("error in GetPosts:", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
