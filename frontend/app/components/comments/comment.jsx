@@ -15,13 +15,12 @@ export default function Comments({ postid }) {
             alert("Please enter a comment.");
             return;
         }
-        const newComment = {
-            id: Date.now().toString(),
-            content: comment,
-            // author: , 
-            CreatedAt: new Date().toISOString(),
-        };
-        setComments((prevComments) => [...prevComments, newComment]);
+        // const newComment = {
+        //     id: Date.now().toString(),
+        //     content: comment,
+        //     // author: , 
+        //     CreatedAt: new Date().toISOString(),
+        // };
         const res = await fetch("http://localhost:8080/api/comment", {
             method: "POST",
             credentials: "include",
@@ -36,6 +35,10 @@ export default function Comments({ postid }) {
 
         if (res.ok) {
             console.log("Comment posted successfully!");
+            const newComment = await res.json();
+            console.log("newComment", newComment);
+            setComments((prevComments) => [...prevComments, newComment]);
+
             inputElement.value = "";
         } else {
             console.error("Failed to post comment:", res.statusText);
@@ -45,6 +48,7 @@ export default function Comments({ postid }) {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             const inputElement = e.target;
+            console.log("inputElement", inputElement);
             handleClick(inputElement);
             setShowComments(true);
         }

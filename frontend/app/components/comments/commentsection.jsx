@@ -42,15 +42,15 @@ export default function CommentsSection({ postid, comments, setComments }) {
 
     return (
         <>
-            {comments ?
+            {comments && comments.length > 0 ?
                 <>
                     <div className="comment-section" >
                         <h3>Comments :</h3>
                         <div className="comment-list">
                             {comments.map((comment) => (
-                                //console.log(comment),
+                                console.log("comment ====>", comment),
                                 <div key={comment.ID} className="comment-item"> {/* Add unique key */}
-                                    <h3><strong>{comment.AuthorName}</strong></h3>
+                                    <h3 style={{ color: "red" }}><strong>{comment.AuthorName}</strong></h3>
                                     <small>{new Date(comment.CreatedAt).toLocaleString()}</small>
                                     <p>{comment.content}</p>
                                 </div>

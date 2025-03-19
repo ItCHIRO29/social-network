@@ -10,7 +10,7 @@ import (
 )
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int) {
-	//fmt.Println("GetAllUsers triggered!")
+	// fmt.Println("GetAllUsers triggered!")
 
 	// Initialize the struct properly
 	type User struct {
@@ -22,10 +22,17 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		Users []User `json:"users"`
 	}
 
-	query := "SELECT id ,first_name, last_name, image FROM users WHERE id != ?"
-	rows, err := db.Query(query, userID)
+	query := `SELECT id, first_name, last_name, image
+FROM users
+WHERE id != ? 
+AND id NOT IN (
+    SELECT follower_id FROM followers WHERE following_id = ?
+    UNION
+    SELECT following_id FROM followers WHERE follower_id = ?
+);`
+	rows, err := db.Query(query, userID, userID, userID)
 	if err != nil {
-		fmt.Println("Error executing query:", err)
+		fmt.Println("Error executing query ===>", err)
 		http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
 		return
 	}
@@ -56,6 +63,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		return
 	}
 
-	//fmt.Println("All Users:", AllUsers)
+	// fmt.Println("All Users:", AllUsers)
 	utils.WriteJSON(w, http.StatusOK, AllUsers)
 }

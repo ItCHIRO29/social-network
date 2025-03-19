@@ -28,7 +28,7 @@ export default function CreatePost({ userImage, userId, isPriv }) {
             .then((res) => res.json())
             .then((data) => {
                 console.log("post created:", data);
-                if (posts && privacy == "Public") {
+                if (posts) {
                     setPosts([data, ...posts]);
                 } else {
                     setPosts([data]);
