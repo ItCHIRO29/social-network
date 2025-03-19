@@ -122,7 +122,7 @@ function Events({ groupData }) {
                 {events.length > 0 ? (
                     events.map((event) => (
                         <div key={event.id}>
-                            <button>event: {event.title}</button>
+                            <h2>event: {event.title}</h2>
                             <div>{event.description}</div>
                             <div>{event.date}</div>
                             <div id="attendence">

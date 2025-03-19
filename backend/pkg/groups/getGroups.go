@@ -89,11 +89,14 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	SELECT 
     g.id, g.name, g.description,
     COALESCE(e.id, 0), COALESCE(e.group_id, 0), COALESCE(e.title, ''), COALESCE(e.description, ''),
-    COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0)
+    COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0),
+	COUNT(em.id) 
 	FROM groups g
 	LEFT JOIN events e ON g.id = e.group_id
 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
-	WHERE g.name = ?;
+	LEFT JOIN event_members em ON e.id = em.event_id
+	WHERE g.name = ?
+	GROUP BY g.id, e.id, m.id;
 	`
 
 	rows, err := db.Query(query, group_name)
@@ -119,12 +122,13 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
 			&event.EventID, &event.GroupId, &event.Title, &event.Description,
 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
+			&event.Count,
 		)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
 		}
-
+		fmt.Println("event.Count ===>", event.Count)
 		// Add unique events
 		if event.EventID != 0 && !eventMap[event.EventID] {
 			group.Events = append(group.Events, event)
