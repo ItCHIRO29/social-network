@@ -90,7 +90,8 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
     g.id, g.name, g.description,
     COALESCE(e.id, 0), COALESCE(e.group_id, 0), COALESCE(e.title, ''), COALESCE(e.description, ''),
     COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0),
-	COUNT(em.id) 
+	COUNT(em.id) ,
+	 em.going NOT NULL
 	FROM groups g
 	LEFT JOIN events e ON g.id = e.group_id
 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
@@ -122,7 +123,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
 			&event.EventID, &event.GroupId, &event.Title, &event.Description,
 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
-			&event.Count,
+			&event.Count, &event.Going,
 		)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
@@ -131,6 +132,11 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		fmt.Println("event.Count ===>", event.Count)
 		// Add unique events
 		if event.EventID != 0 && !eventMap[event.EventID] {
+			event.Going, err = CheckVote(db, userId, event.EventID)
+			if err != nil {
+				fmt.Println("Error getting vote:", err)
+				continue
+			}
 			group.Events = append(group.Events, event)
 			eventMap[event.EventID] = true
 		}
@@ -163,82 +169,21 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	utils.WriteJSON(w, http.StatusOK, group)
 }
 
-// func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-// 	fmt.Println("Get One group activity")
-
-// 	group_name := r.URL.Query().Get("group")
-// 	fmt.Println("Group name:", group_name)
-
-// 	// Validate input
-// 	if group_name == "" {
-// 		http.Error(w, "Missing group name", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	// Query to get group details with members and events
-// 	query := `
-// 	SELECT
-//     g.id, g.name, g.description,
-//     COALESCE(e.id, 0), COALESCE(e.group_id, 0), COALESCE(e.title, ''), COALESCE(e.description, ''),
-//     COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0)
-// 	FROM groups g
-// 	LEFT JOIN events e ON g.id = e.group_id
-// 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
-// 	WHERE g.name = ?;
-// 	`
-
-// 	rows, err := db.Query(query, group_name)
-// 	if err != nil {
-// 		fmt.Println("Error getting group data:", err)
-// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	defer rows.Close()
-
-// 	var group models.Group
-// 	group.Events = []models.Event{}
-// 	group.Members = []models.Member{}
-// 	// Process rows
-// 	for rows.Next() {
-// 		var event models.Event
-// 		var member models.Member
-// 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
-// 			&event.EventID, &event.GroupId, &event.Title, &event.Description,
-// 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
-// 		)
-// 		if err != nil {
-// 			fmt.Println("Error scanning row:", err)
-// 			continue
-// 		}
-// 		// Avoid adding empty event/member records
-// 		if event.EventID != 0 {
-// 			group.Events = append(group.Events, event)
-// 		}
-// 		if member.Id != 0 {
-// 			member.Username, err = utils.GetFullNameFromId(db, member.User_id)
-// 			if err != nil {
-// 				fmt.Println("Error getting username:", err)
-// 				continue
-// 			}
-// 			group.Members = append(group.Members, member)
-// 		}
-
-// 	}
-
-// 	// Check for errors after looping
-// 	if err := rows.Err(); err != nil {
-// 		fmt.Println("Error iterating rows:", err)
-// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	// If no group data was found
-// 	if group.Id == 0 {
-// 		http.Error(w, "Group not found", http.StatusNotFound)
-// 		return
-// 	}
-// 	fmt.Println("Group Data:", group)
-// 	fmt.Println("Group Events:", group.Events)
-// 	fmt.Println("Group Members:", group.Members)
-// 	utils.WriteJSON(w, http.StatusOK, group)
-// }
+func CheckVote(db *sql.DB, userId int, eventId int) (bool, error) {
+	Qyery := `SELECT going FROM event_members WHERE user_id = ? AND event_id = ?`
+	rows, err := db.Query(Qyery, userId, eventId)
+	if err != nil {
+		fmt.Println("Error getting groups", err)
+		return false, err
+	}
+	defer rows.Close()
+	var going bool
+	for rows.Next() {
+		err = rows.Scan(&going)
+		if err != nil {
+			fmt.Println("Error getting groups ==>", err)
+			return false, err
+		}
+	}
+	return going, nil
+}

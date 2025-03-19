@@ -125,9 +125,25 @@ function Events({ groupData }) {
                             <h2>event: {event.title}</h2>
                             <div>{event.description}</div>
                             <div>{event.date}</div>
-                            <div id="attendence">
-                                <button className="going">Going</button>
-                                <button className="NotGoing">Not going</button>
+                            <div id={"attendence" + event.id} >
+                                <label htmlFor="going">Going</label>
+                                <input
+                                    type="radio"
+                                    id="going"
+                                    className="going"
+                                    //data-submited={event.going ? "true" : "false"}
+                                    checked={event.going ? true : false}
+                                    onChange={(e) => {InsertVote(e, event.id, "going")}}
+                                    name={"attendence" + event.id} value="going" />
+                                <label htmlFor="NotGoing">Not Going</label>
+                                <input
+                                    type="radio"
+                                    id="NotGoing"
+                                    className="NotGoing"
+                                    //data-submited={event.going ? "true" : "false"}
+                                    checked={!event.going ? true : false}
+                                    onChange={(e) => {InsertVote(e, event.id, "going")}}
+                                    name={"attendence" + event.id} value="NotGoing" />
                             </div>
                         </div>
                     ))
@@ -221,3 +237,41 @@ async function GetPosts(id) {
     return data
 }
 
+function InsertVote(e, eventid, vote) {
+    // let action = "";
+    // let button = document.querySelector(`.${vote}`);
+    let action = e.target.id;
+    console.log("action:", action);
+    // console.log("button :", button);
+
+    // let type = button.getAttribute("data-submited");
+
+    // if (type === "true") {
+    //     action = "remove";
+    //     button.setAttribute("data-submited", "false");
+    // } else {
+    //     action = "add";
+    //     button.setAttribute("data-submited", "true");
+    // }
+
+    fetch(`http://localhost:8080/api/groups/insertVote?action=${action}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            event_id: eventid,
+            going: vote === "going" ? true : false,
+        }),
+        credentials: "include",
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("vote inserted:", data);
+            e.target.checked = data
+            // e.target.style.display = "none";
+        })
+        .catch((error) => {
+            console.error("Error inserting vote:", error);
+        });
+}
