@@ -20,7 +20,7 @@ export default function Followers() {
                         <img src="images/profile.png" alt="follower" />
                         <p>{follower.username}</p>
                     </div>
-                )) : <p>No followers</p>}
+                )) : <p style={{ color: "black" }}>No followers</p>}
         </>
     );
 }

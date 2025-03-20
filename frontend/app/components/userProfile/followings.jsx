@@ -22,7 +22,7 @@ export default function Followings() {
                         <p>{following.username}</p>
                         {/* </div> */}
                     </div>
-                )) : <p>No following</p>}
+                )) : <p style={{ color: "black" }}>No following</p>}
         </>
     );
 }
