@@ -51,14 +51,13 @@ h1 {
     display: grid;
     grid-template-areas:
         "head head head "
-        "info info info "
         "side1 nav nav "
-        "side1 xx side3 "
-        "side1 xx side3 "
-        "side1 xx side2 ";
+        "side1 xx xx "
+        "side1 xx xx "
+    ;
     height: 100vh;
-    grid-template-rows: 5% 20% 5% 25% 25%;
-    grid-template-columns: 20% 60% auto;
+    grid-template-rows: 6% 10% 80% auto;
+    grid-template-columns: 30% 60% auto;
 }
 
 .profile-image {
@@ -85,8 +84,8 @@ h1 {
     color: #fff;
     background-color: #3d3d3d46;
     margin: 2%;
-    margin-left: 20%;
-    margin-right: 20%;
+    /* margin-left: 20%; */
+    /* margin-right: 20%; */
 }
 
 #Edit-container img {
@@ -388,12 +387,10 @@ h1 {
     cursor: pointer;
 }
 
-.userInfo {
+/* .userInfo {
     display: flex;
     justify-content: space-between;
     align-items: end;
-    /* border-radius: 5px; */
-    /* border: 1px solid white; */
     border: none;
     padding: 10px;
     color: #fff;
@@ -401,18 +398,17 @@ h1 {
     width: auto;
     background-color: #000000;
     grid-area: info;
-}
+} */
 
 
 .test1 {
-    /* background-color: #1c1b1a; */
-    display: flex;
+    /* display: flex; */
     background-color: #f4f4f4;
     grid-area: side1;
     border: 1px solid rgba(112, 102, 102, 0.897);
     border-radius: 5px;
     margin-right: 1%;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     height: 100%;
     padding: 10px;

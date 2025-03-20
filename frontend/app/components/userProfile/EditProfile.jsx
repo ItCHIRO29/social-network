@@ -15,19 +15,21 @@ export default function EditP() {
         })
             .then((response) => {
                 if (!response.ok) {
+                    alert("An error occurred while submitting the form.", response.status);
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
             })
             .catch((error) => {
                 console.error("Fetch Error:", error);
+                alert("An error occurred while submitting the form.");
             });
-        window.location.href = "/profile";
+        window.location.href = "/profile?id=0";
     }
 
     return (
         <form id="Edit-container" onSubmit={handleSubmit}>
-            <input type="text" id="username" name="username" placeholder="Username" />
-            <input type="email" id="email" name="email" placeholder="Email" />
+            <input type="text" id="username" name="username" placeholder="Username" required />
+            <input type="email" id="email" name="email" placeholder="Email" required />
             <select name="public" id="public">
                 <option value="public">Public</option>
                 <option value="private">Private</option>

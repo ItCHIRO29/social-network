@@ -25,6 +25,10 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 			utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 			return
 		}
+		if NewData.Username == "" || NewData.Email == "" {
+			utils.WriteJSON(w, http.StatusBadRequest, map[string]string{"error": "Username and email are required"})
+			return
+		}
 		// fmt.Println("NewData:", NewData)
 		stmt, err := db.Prepare("UPDATE users SET username = ?, email = ?, public = ? WHERE id = ?")
 		if err != nil {

@@ -387,18 +387,14 @@ input[type="file"] {
 }
 
 .test1 {
-    /* background-color: #1c1b1a; */
-    /* display: flex; */
     background-color: #ffffff;
     grid-area: side1;
     border: 1px solid rgba(112, 102, 102, 0.897);
-    /* border-radius: 5px; */
     margin-right: 1%;
     flex-direction: column;
     align-items: center;
     height: 100%;
     padding: 10px;
-    /* box-shadow: 1px 4px 7px rgba(255, 255, 255, 0.671); */
     word-wrap: break-word;
     margin: 2%;
 }
@@ -465,12 +461,13 @@ input[type="file"] {
 
 #follower-section {
     display: flex;
+    background-color: #000000;
     flex-direction: row;
     align-items: center;
-    background-color: #6b6b6b;
+    /* background-color: #6b6b6b; */
     border: 1px solid white;
     margin: 1%;
-    padding: 2px;
+    padding: 12px;
     height: 50px;
     font-size: 15px;
 }
@@ -485,11 +482,16 @@ input[type="file"] {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    border: 1px solid white;
 }
 
 #follower-section button {
     font-size: 15px;
+    border: none;
+    background-color: #000000;
     cursor: pointer;
+    padding: 1%;
+    margin: 1%;
 }
 
 #follower-section button:hover {
