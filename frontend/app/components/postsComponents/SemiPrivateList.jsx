@@ -24,9 +24,7 @@ export default function SemiPrivateList() {
                         onChange={(e) => {
                             if (e.target.checked) {
                                 selectedFollowers.push(follower.id);
-                            }/*  else {
-                                selectedFollowers = selectedFollowers.filter((f) => f.id !== follower.id);
-                            } */
+                            }
                         }}
                     />
                     <span>{follower.username}</span>

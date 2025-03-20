@@ -18,6 +18,10 @@ export default function CreatePost({ userImage, userId, isPriv }) {
         const privacy = e.target.privacy.value;
         if (!title || !content) return;
         const formData = new FormData(e.target);
+        if (!selectedFollowers || selectedFollowers.length === 0 && privacy === "semi-private") {
+            alert("Please select at least one follower.");
+            return;
+        }
         formData.append("followers_ids", JSON.stringify(selectedFollowers || []));
         console.log("formData", Object.fromEntries(formData));
         fetch("http://localhost:8080/api/posts/createPost", {
