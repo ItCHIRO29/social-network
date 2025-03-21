@@ -4,7 +4,7 @@ export default function EditP() {
         const form = e.target;
         const formData = new FormData(form);
         const changes = Object.fromEntries(formData);
-        console.log(changes);
+        // console.log(changes);
         fetch("http://localhost:8080/api/users/EditProfile", {
             method: "POST",
             headers: {

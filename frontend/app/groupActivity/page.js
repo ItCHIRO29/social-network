@@ -22,7 +22,6 @@ function Group() {
         };
         fetchData();
     }, []);
-    console.log("groupData ==>", groupData);
     if (!groupData || !id) {
         return <div>Loading...</div>;
     }

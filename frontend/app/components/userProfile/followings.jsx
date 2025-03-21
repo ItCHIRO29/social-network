@@ -8,7 +8,6 @@ export default function Followings() {
         async function fetchFollowing() {
             const data = await GetFollowing();
             setFollowings(data);
-            console.log("following", followings);
         }
         fetchFollowing();
     }, []);
@@ -43,7 +42,6 @@ async function GetFollowing() {
         }
         const data = await response.json();
 
-        console.log("following data :: ", data);
         return data;
     } catch (error) {
         console.error("Fetch Error:", error);

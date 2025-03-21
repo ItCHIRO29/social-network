@@ -16,7 +16,7 @@ export default function MyGroups() {
     useEffect(() => {
         const loadMyGroups = async () => {
             const data = await fetchMyGroups();
-            console.log(data);
+            // console.log(data);
             setMyGroups(data);
         };
         loadMyGroups();

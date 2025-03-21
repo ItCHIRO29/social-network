@@ -34,9 +34,9 @@ export default function Comments({ postid }) {
         });
 
         if (res.ok) {
-            console.log("Comment posted successfully!");
+            // console.log("Comment posted successfully!");
             const newComment = await res.json();
-            console.log("newComment", newComment);
+            // console.log("newComment", newComment);
             setComments((prevComments) => [...prevComments, newComment]);
 
             inputElement.value = "";
@@ -70,7 +70,7 @@ export default function Comments({ postid }) {
                     const inputElement = e.target.previousElementSibling;
                     setShowComments(!showComments);
                     setOpened(opened === 1 ? 0 : 1);
-                    console.log("opened");
+                    // console.log("opened");
                 }}
                 style={{ cursor: 'pointer' }}
             />

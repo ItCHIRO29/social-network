@@ -76,8 +76,6 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 			fmt.Println("error in GetUserData Private Prof:", err)
 			return nil, err
 		}
-		fmt.Println("user Followers count====>", user.Followers_count)
-		fmt.Println("user Followig count ====>", user.Followings_count)
 		return user, nil
 	}
 }

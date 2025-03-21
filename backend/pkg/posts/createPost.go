@@ -31,7 +31,6 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	post.Content = r.FormValue("content")
 	post.Type = r.FormValue("privacy")
 	post.Can_see = r.FormValue("followers_ids")
-	fmt.Println("post.Can_see:", post.Can_see)
 	post.Post_creator = author
 	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 	if post.Title == "" || post.Content == "" {

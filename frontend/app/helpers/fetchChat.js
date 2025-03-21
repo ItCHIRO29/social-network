@@ -13,7 +13,6 @@ export async function getChat() {
             return [];
         }
         const data = await response.json();
-        // console.log("chat data :: ", data);
         return data;
     } catch (error) {
         console.log(error);

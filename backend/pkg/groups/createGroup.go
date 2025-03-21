@@ -19,14 +19,14 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		utils.WriteJSON(w, 400, "bad request")
 		return
 	}
-	fmt.Println("Groups", Groups)
+	// fmt.Println("Groups", Groups)
 	Groups.Admin, err = utils.GetUsernameFromId(db, userId)
 	if err != nil {
 		fmt.Println("error in get username in create group", err)
 		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
-	fmt.Println("in create group", Groups)
+	// fmt.Println("in create group", Groups)
 	// err = InsertNewGroup(&Groups, userId, db, r)
 	if len(Groups.Name) < 3 {
 		fmt.Println("invalid Name length")

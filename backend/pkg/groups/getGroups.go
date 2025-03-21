@@ -37,7 +37,6 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		AllGroups = append(AllGroups, group)
 	}
-	fmt.Println("groups ==>I", AllGroups)
 	utils.WriteJSON(w, 200, AllGroups)
 }
 
@@ -68,17 +67,14 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		AllGroups = append(AllGroups, group)
 	}
 
-	fmt.Println("groups Not joined ==>", AllGroups)
 	utils.WriteJSON(w, 200, AllGroups)
 }
 
 // `http://localhost:8080/api/groups/groupActivity?group=${group_name}
 
 func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("Get One group activity")
 
 	group_name := r.URL.Query().Get("group")
-	fmt.Println("Group name:", group_name)
 
 	if group_name == "" {
 		http.Error(w, "Missing group name", http.StatusBadRequest)
@@ -129,7 +125,6 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 			fmt.Println("Error scanning row:", err)
 			continue
 		}
-		fmt.Println("event.Count ===>", event.Count)
 		// Add unique events
 		if event.EventID != 0 && !eventMap[event.EventID] {
 			event.Going, err = CheckVote(db, userId, event.EventID)
@@ -165,7 +160,6 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		return
 	}
 
-	fmt.Println("Final Group Data:", group)
 	utils.WriteJSON(w, http.StatusOK, group)
 }
 

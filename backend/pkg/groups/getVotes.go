@@ -40,7 +40,6 @@ func GetVotes(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var vote models.Event_members
 	action := r.URL.Query().Get("action")
-	fmt.Println("actioooooooooooooooooon", action)
 
 	if action != "going" {
 		err := json.NewDecoder(r.Body).Decode(&vote)

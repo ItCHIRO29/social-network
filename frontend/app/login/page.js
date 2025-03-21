@@ -38,7 +38,6 @@ function isValidPassword(password) {
 
 async function submitFormHandler(e) {
     e.preventDefault();
-    console.log("Form submitted");
     const formData = Object.fromEntries(new FormData(e.target));
 
     const response = await fetch('http://localhost:8080/api/auth/login', {
