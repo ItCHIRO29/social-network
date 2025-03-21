@@ -5,9 +5,9 @@ import CreatePost from "../components/postsComponents/posts";
 import NavBar from "../components/userActivity";
 import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
-import Chat, { ChatWindowsContainer } from "../components/chatComponents/chat";
 import { useRouter } from "next/navigation";
 import "./home.css"
+import {ChatManager} from '../components/chatComponents/ChatManager.jsx';
 
 export default function HomeP() {
     const router = useRouter();
@@ -24,11 +24,11 @@ export default function HomeP() {
     return (
         <main key={`home-main-${userData.id}`}>
             <Header />
-            <Chat key={`home-chat-${userData.id}`} className={"test1"} id={"chat"} />
             <CreatePost key={`home-createPost-${userData.id}`} userImage={imagePath} userId={0} />
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
             <NavBar key={`home-navBar-${userData.id}`} />
-            <ChatWindowsContainer></ChatWindowsContainer>
+            {/* <ChatWindowsContainer></ChatWindowsContainer> */}
+            <ChatManager className={"test1"} id={"chat1"}></ChatManager>
         </main>
     );
 }

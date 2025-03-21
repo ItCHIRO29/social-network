@@ -399,7 +399,7 @@ input[type="file"] {
     margin: 2%;
 }
 
-.test1 button {
+.test1 #chatButtons {
     width: 100%;
     height: 50px;
     border: 1px solid white;
@@ -409,7 +409,7 @@ input[type="file"] {
     padding: 2%;
 }
 
-.test1 button:hover {
+.test1 #chatButtons:hover {
     background-color: #ff0000da;
     color: #ffffff;
     border: 1px solid white;

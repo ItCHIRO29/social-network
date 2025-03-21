@@ -1,0 +1,94 @@
+/* ChatManager.module.css */
+.chatManager {
+    padding: 20px;
+    background-color: #181818;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  
+  .usersList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #202020;
+    border-radius: 8px;
+  }
+  
+  .usersListItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .listItem {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #303030;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s ease;
+  }
+  
+  .listItem:hover {
+    background-color: #404040;
+  }
+  
+  .onlineIndicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+    display: inline-block;
+    visibility: hidden;
+  }
+  
+  .noChatsButton {
+    padding: 10px 15px;
+    background-color: #303030;
+    border: none;
+    border-radius: 6px;
+    color: #aaaaaa;
+    font-size: 15px;
+    cursor: default;
+    width: 100%;
+  }
+  
+  .chatWindowsContainer {
+    /* Styles can be kept inline as they are positioning-related */
+  }
+
+  .avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .notify{
+    width: 30%;
+    height: 20px;
+    border-radius: 20%;
+    background-color: red;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    visibility: hidden;
+  }
+
+  .notify.active{
+    visibility: visible;
+  }
+
+  .onlineIndicator.active{
+    visibility: visible;
+  }
+  

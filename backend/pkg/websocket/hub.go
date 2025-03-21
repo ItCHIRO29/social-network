@@ -29,9 +29,10 @@ type Message map[string]any
 
 func (message Message) isValidPrivateMessage() bool {
 	receiver, ok1 := message["receiver"].(string)
-	_, ok2 := message["content"].(string)
+	_, ok2 := message["message"].(string)
 	_, ok3 := message["id"].(float64)
 	if !ok1 || !ok2 || !ok3 || receiver == "" {
+		fmt.Println("invalid message")
 		return false
 	}
 	return true
@@ -240,17 +241,21 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			fmt.Fprintln(os.Stderr, err)
 			break
 		}
+		fmt.Println("eeeeeeeeeeeee", message)
 		messageType, ok := message["type"].(string)
 		if !ok {
+			fmt.Fprintln(os.Stderr, "invalid message type")
 			continue
 		}
 		if messageType == "message" {
+			fmt.Println("is message", message)
 			ok := message.isValidPrivateMessage()
 			if !ok {
+				fmt.Fprintln(os.Stderr, "invalid message")
 				continue
 			}
 
-			if len(message["content"].(string)) == 0 || len(message["content"].(string)) > 500 {
+			if len(message["message"].(string)) == 0 || len(message["message"].(string)) > 500 {
 				sendChatError(userName, message["receiver"].(string), message["id"].(float64))
 				continue
 			}
@@ -297,13 +302,15 @@ func saveInDb(db *sql.DB, senderId int, message Message) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	query := `INSERT INTO messages (sender_id, receiver_id, content, created_at) VALUES (?, ?, ?, ?)`
-	res, err := db.Exec(query, senderId, reciverId, message["content"].(string), message["creation_date"].(string))
+	query := `INSERT INTO private_messages (sender_id, receiver_id, message, created_at) VALUES (?, ?, ?, ?)`
+	res, err := db.Exec(query, senderId, reciverId, message["message"].(string), message["creation_date"].(string))
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return 0, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return 0, err
 	}
 

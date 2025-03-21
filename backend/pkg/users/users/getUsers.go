@@ -21,7 +21,7 @@ type User struct {
 	Online        bool   `json:"online"`
 	Notify        bool   `json:"notify"`
 	LastMessageId int
-	LastActive    time.Time `json:"lastActive"`
+	LastActive    time.Time `json:"last_active"`
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {

@@ -8,6 +8,7 @@ import Chat from '../components/chatComponents/chat';
 import "./profile.css"
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from "next/navigation";
+import { ChatManager } from '../components/chatComponents/ChatManager';
 function Profile() {
     const router = useRouter();
     const [userData, setUserData] = useState({});
@@ -32,7 +33,7 @@ function Profile() {
                 <UserActivity />
                 <AboutUser userData={userData} imagePath={imagePath} id={id} />
                 <CreatePost userImage={imagePath} userId={id} />
-                <Chat className={"test1"} id={"chat"} />
+                <ChatManager className={"test1"} id={"chat1"}></ChatManager>
             </main>
         </>
 
