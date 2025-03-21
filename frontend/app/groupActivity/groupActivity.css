@@ -474,6 +474,8 @@ main {
     font-family: serif;
     border-radius: 5px;
     max-height: 500px;
+    overflow-y: auto;
+    width: 30%;
     height: fit-content;
 }
 
@@ -490,6 +492,8 @@ main {
     margin: 1%;
     align-self: center;
 }
+
+
 
 .test2 {
     position: relative;
@@ -536,21 +540,61 @@ main {
     border-radius: 50%;
 }
 
-#follower {
-    display: flex;
+/* #follower {
+    display:flex;
     flex-direction: row;
+    justify-content: space-around;
     align-items: center;
-    background-color: #6b6b6b;
     border: 1px solid white;
     margin: 1%;
     padding: 2px;
 }
 
-#follower:hover {
-    color: #ffffff;
-    border: none;
-    /* transition: all 0.3s ease; */
-    /* transform: translateY(-2px); */
+#follower #follower-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+#follower img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid white;
+} */
+
+#follower {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Ensures even spacing */
+    border: 1px solid white;
+    margin: 1%;
+    padding: 8px;
+    /* Increased padding for better spacing */
+    border-radius: 5px;
+    /* Slightly rounded corners for better UI */
+    width: 100%;
+    /* Ensures consistent width */
+    max-width: 400px;
+    /* Prevents excessive stretching */
+}
+
+#invit-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    /* Adds space between the image and name */
+}
+
+#follower img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid white;
+    object-fit: cover;
 }
 
 #createGroup {

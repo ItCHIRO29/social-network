@@ -6,6 +6,7 @@ type Groups struct {
 	Admin       string `json:"admin"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Invited     []int  `json:"invited_ids"`
 }
 
 type Member struct {

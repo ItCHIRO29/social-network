@@ -13,14 +13,14 @@ import (
 func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var Groups models.Groups
 	fmt.Println("Received request to send invitation")
-
 	// Decode the request body
 	err := json.NewDecoder(r.Body).Decode(&Groups)
 	if err != nil {
+		fmt.Println("Error decoding request body:", err)
 		utils.WriteJSON(w, 400, "Bad request: Invalid JSON")
 		return
 	}
-
+	fmt.Println("Received request to send invitation", Groups)
 	// Check if the user is already a member or invited
 	var existingID int
 	query := `SELECT user_id FROM group_members WHERE user_id = ? AND group_id = ?`

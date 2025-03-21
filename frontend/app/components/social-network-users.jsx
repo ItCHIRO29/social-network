@@ -4,31 +4,8 @@ import { useRouter } from "next/navigation";
 import AllUsers from "./userProfile/users";
 
 export default function SocialNetworkUsers() {
-    let router = useRouter();
+    // let router = useRouter();
     const [users, setUsers] = useState([]);
-
-    const getUsers = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/users/GetAllUsers", {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                router.push("/login");
-                throw new Error("Failed to fetch users");
-            }
-
-            const data = await response.json();
-            //console.log("Fetched Users:", data.users);
-            return data.users || []; // Ensure it's always an array
-        } catch (error) {
-            console.error("Error fetching users:", error);
-            return [];
-        }
-    };
 
     useEffect(() => {
         async function fetchUsers() {
@@ -47,3 +24,26 @@ export default function SocialNetworkUsers() {
         </div>
     );
 }
+
+async function getUsers() {
+    try {
+        const response = await fetch("http://localhost:8080/api/users/GetAllUsers", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            router.push("/login");
+            throw new Error("Failed to fetch users");
+        }
+
+        const data = await response.json();
+        //console.log("Fetched Users:", data.users);
+        return data.users || []; // Ensure it's always an array
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return [];
+    }
+};
