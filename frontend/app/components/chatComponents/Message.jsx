@@ -3,8 +3,10 @@
 import { useRouter } from 'next/navigation';
 
 const Message = ({ message, myData, opponentData }) => {
-    
+
   const router = useRouter();
+  console.log(myData.username);
+  console.log(message);
   const isSent = message.sender === myData.username;
 
   const handleImageClick = () => {

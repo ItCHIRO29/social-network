@@ -17,6 +17,8 @@ func Open() *sql.DB {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	db.Exec("PRAGMA foreign_keys = ON")
 	err = runMigrations(db)
 	if err != nil {
 		log.Fatalln(err)

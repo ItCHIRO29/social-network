@@ -33,8 +33,11 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         return;
       }
       const data = await response.json();
-      setOffset(data.offset);
-      for (const message of data.messages) {
+      setOffset(data?.offset);
+      if (data.offset === -1) {
+          return;
+      }
+      for (const message of data?.messages) {
         addMessage(message, myData, opponentData);
       }
     } catch (error) {
@@ -84,6 +87,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
       const newMessage = {
         type: 'message',
           message: messageInput,
+          sender : myData.username,
           receiver: username,
 
           id: sentMaxId
@@ -102,6 +106,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
     setShowEmojiPicker(false);
     inputRef.current.focus();
   };
+
 
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
@@ -123,7 +128,16 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         </div>
       </div>
 
-      <div className="chat-messages" ref={messagesContainerRef}>
+      <div className="chat-messages" ref={messagesContainerRef} onScroll={(e)=>{
+          if (offset === -1)  return;
+            console.log("scrollEvent");
+            const { scrollTop, scrollHeight, clientHeight } = e.target;
+        
+            if (scrollTop === 0) {
+              fetchMessages();
+              e.target.scrollTop = 1;
+            }
+      }}>
         {Array.from(messages.values()).map((message) => (
             <div key={`wrrapper-${message.id}`}>
             {new Date(message.timestamp) - lastMessageTime > 10000 ??  <p>{new Date().toLocaleString()}</p>}

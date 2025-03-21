@@ -264,6 +264,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			message["creation_date"] = time.Now().Format("2006-01-02 15:04")
 			id, err := saveInDb(db, userId, message)
 			if err != nil {
+				// fmt.Println("error in saving in db")
 				fmt.Fprintln(os.Stderr, err)
 				sendChatError(userName, message["receiver"].(string), message["id"].(float64))
 				continue
@@ -300,16 +301,21 @@ func getUserId(db *sql.DB, username string) (int, error) {
 func saveInDb(db *sql.DB, senderId int, message Message) (int, error) {
 	reciverId, err := getUserId(db, message["receiver"].(string))
 	if err != nil {
+		fmt.Println("error in getting reciver id")
+		fmt.Fprintln(os.Stderr, err)
 		return 0, err
 	}
 	query := `INSERT INTO private_messages (sender_id, receiver_id, message, created_at) VALUES (?, ?, ?, ?)`
 	res, err := db.Exec(query, senderId, reciverId, message["message"].(string), message["creation_date"].(string))
 	if err != nil {
+		fmt.Println("error in saving in db")
+
 		fmt.Fprintln(os.Stderr, err)
 		return 0, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		fmt.Println("error in getting last insert id")
 		fmt.Fprintln(os.Stderr, err)
 		return 0, err
 	}

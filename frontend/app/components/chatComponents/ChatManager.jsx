@@ -4,13 +4,13 @@ import ChatWindow from './ChatWindow';
 import { WebSocketContext } from '../../WebSocketContext';
 import styles from './ChatManager.module.css'; // Import the module CSS
 
-const ChatManager = ({ className, id }) => {
+const ChatManager = ({ className, id, userData }) => {
   const [chatWindows, setChatWindows] = useState(new Map());
   const [users, setUsers] = useState(new Map());
   const [data, setData] = useState([]);
   const ws = useContext(WebSocketContext);
   const socket = ws?.socket;
-  const myData = { username: 'me' }; // Replace with actual user data
+  const myData = userData;
 
   useEffect(() => {
     const getUsers = async () => {
@@ -29,7 +29,7 @@ const ChatManager = ({ className, id }) => {
         setData(data);
       } catch (error) {
         console.log('Error:', error);
-        
+
         setUsers(new Map());
       }
     console.log("users :: ", users)
