@@ -603,21 +603,9 @@ main {
 
 .going {
     color: green;
-    /* width: 70px; */
-    /* height: 70px; */
-    /* border-radius: 50%; */
-    /* background-color: green; */
-    /* font-size: 14px; */
-    /* cursor: pointer; */
 }
 
 .NotGoing {
-    /* width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: red;
-    font-size: 14px;
-    cursor: pointer; */
     color: red;
 }
 
@@ -652,4 +640,38 @@ input[type="radio"]:checked+label {
     outline: none;
     border-color: #ffffff;
     box-shadow: 0 0 5px #ffffff;
+}
+
+#event-data {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    border-bottom: 1px double #000000;
+    border-top: 1px solid #000000;
+}
+
+#event-data h2 {
+    color: red;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+fieldset {
+    position: relative;
+    padding: 2%;
+    margin-bottom: 10px;
+}
+
+fieldset label {
+    color: #000000;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+fieldset legend {
+    color: #000000;
+    font-size: 15px;
+    font-weight: 600;
 }

@@ -128,9 +128,9 @@ function Events({ groupData }) {
             <div>
                 {events.length > 0 ? (
                     events.map((event) => (
-                        <div key={event.id}>
-                            <h2>event: {event.title}</h2>
-                            <div>{event.description}</div>
+                        <div key={event.id} id="event-data">
+                            <h2>{event.title}</h2>
+                            <div> About the event : {event.description}</div>
                             <div>{event.date}</div>
                             <EventAttendance event={event} key={`att-${event.id}`} />
                         </div>
