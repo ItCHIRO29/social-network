@@ -24,7 +24,6 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		utils.WriteJSON(w, http.StatusBadRequest, "Invalid group ID")
 		return
 	}
-	fmt.Println("group_id:", group_id)
 	var first_name string
 	var last_name string
 	var author string
@@ -60,9 +59,6 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "GroupPost", str+author)
 	GroupPost.UserID = userId
 	GroupPost.GroupId = group_id
-	fmt.Println("GroupPost.Image:", GroupPost.Image)
-	fmt.Println("UserID:", GroupPost.UserID)
-	// fmt.Println("GroupPost:", GroupPost.GroupId)
 	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image) VALUES ( ?, ?, ?, ?,?, ?)"
 	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image)
 	if err1 != nil {
@@ -78,6 +74,5 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		return
 	}
 	GroupPost.ProfileImage = strings.Trim(image, "./")
-	// fmt.Println("GroupPost ========>", GroupPost)
 	utils.WriteJSON(w, http.StatusOK, GroupPost)
 }

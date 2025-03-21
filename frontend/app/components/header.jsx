@@ -45,17 +45,25 @@ export default function Header() {
         notifications ? notifications.map((notifi) => {
             //console.log("notifi :: ", notifi);
             {
-                notifi.type == "follow_request" ?
+                if (notifi.type == "follow_request") {
                     newNotif.innerHTML = `
-                <div class="notification-item">
-                    <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
-                    <p>${notifi.receiver_name} has followed you</p>
-                    <div class="right">
-                        <button class="accept">Accept</button>
-                        <button class="refuse">Reject</button>
-                    </div>
-                </div>
-                ` : null
+                  <div class="notification-item">
+                  <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
+                  <p>${notifi.sender_name} has followed you</p>
+                  <div class="right">
+                  <button class="accept">Accept</button>
+                  <button class="refuse">Reject</button>
+                  </div>
+                  </div>
+                  `
+                } else if (notifi.type == "follow") {
+                    newNotif.innerHTML = `
+                  <div class="notification-item">
+                  <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
+                  <p>${notifi.sender_name} has followed you</p>
+                  </div>
+                  `
+                }
             }
         }) : null
         document.body.appendChild(newNotif);

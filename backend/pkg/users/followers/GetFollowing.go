@@ -2,7 +2,6 @@ package followers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"social-network/pkg/models"
@@ -10,7 +9,6 @@ import (
 )
 
 func GetFollowing(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetFollowing!!!!")
 	query := `SELECT following_id FROM followers WHERE follower_id = $1 AND accepted = 1`
 	rows, err := db.Query(query, userId)
 	if err != nil {
@@ -33,6 +31,5 @@ func GetFollowing(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		}
 		followings = append(followings, following)
 	}
-	fmt.Println("followings ====>", followings)
 	utils.WriteJSON(w, http.StatusOK, followings)
 }

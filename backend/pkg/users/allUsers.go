@@ -69,12 +69,10 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 	// 	return
 	// }
 
-	fmt.Println("All Users:", AllUsers)
 	utils.WriteJSON(w, http.StatusOK, AllUsers)
 }
 
 func GetAllUserToJoinGroup(db *sql.DB, userID int) ([]User, error) {
-	fmt.Println("GetAllUserToJoinGroup triggered!")
 	var AllUsers []User
 	query := `SELECT id, first_name, last_name, image FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM group_members WHERE group_id = ?);`
 	rows, err := db.Query(query, userID, userID)

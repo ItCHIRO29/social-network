@@ -83,7 +83,6 @@ function FollowButton({ userData}) {
     useEffect(() => {
         if (followState === "" && followButton?.state) {
             setFollowState(followButton.state)
-
         }
     }, [followButton, followState, setFollowState]);
      

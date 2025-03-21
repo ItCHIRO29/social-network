@@ -12,7 +12,6 @@ import (
 )
 
 func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetPosts")
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
@@ -121,7 +120,6 @@ ORDER BY posts.id DESC;`
 }
 
 func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetPostsByGroup")
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string

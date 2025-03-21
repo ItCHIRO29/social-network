@@ -10,7 +10,7 @@ import (
 )
 
 func GetChaters(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetChaters")
+	// fmt.Println("GetChaters")
 	rows, err := db.Query(`SELECT 
 							id,
 						    CASE 
@@ -51,6 +51,6 @@ func GetChaters(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		}
 		chaters = append(chaters, chater)
 	}
-	fmt.Println("chaters  ====>", chaters)
+	// fmt.Println("chaters  ====>", chaters)
 	utils.WriteJSON(w, 200, chaters)
 }

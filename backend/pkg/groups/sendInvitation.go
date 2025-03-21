@@ -13,7 +13,6 @@ import (
 func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var Groups models.Groups
 	// var existingMembers bool
-	fmt.Println("Received request to send invitation")
 	// Decode the request body
 	err := json.NewDecoder(r.Body).Decode(&Groups)
 	if err != nil {
@@ -21,7 +20,6 @@ func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId i
 		utils.WriteJSON(w, 400, "Bad request: Invalid JSON")
 		return
 	}
-	fmt.Println("Received structure:", Groups)
 	existingMembers, err := CheckExistingInvitation(db, Groups.Invited_user_id, Groups.Id)
 	if err != nil {
 		fmt.Println("Error checking existing members:", err)
@@ -55,7 +53,6 @@ func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId i
 		return
 	}
 
-	fmt.Println("Invitation sent successfully to user:", Groups.Invited_user_id, "for group:", Groups.Id)
 	utils.WriteJSON(w, 200, Groups)
 }
 
@@ -65,8 +62,6 @@ func CheckExistingInvitation(db *sql.DB, userId int, groupId int) (bool, error) 
 	query := `SELECT user_id FROM group_members WHERE user_id = ? AND group_id = ?`
 	err := db.QueryRow(query, userId, groupId).Scan(&existingID)
 	if err == nil {
-		fmt.Println("userId that is in group :", existingID)
-		fmt.Println("userId that is in group :", userId)
 		fmt.Println("User is already a member or has a pending invitation.")
 		return true, err
 	} else if err != sql.ErrNoRows {
