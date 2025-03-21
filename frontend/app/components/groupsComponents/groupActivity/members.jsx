@@ -36,7 +36,6 @@ export default function Members({ groupData }) {
 }
 
 function AddMembers({ groupId }) {
-    console.log("groupId ===>", groupId);
     const [users, setUsers] = useState([]);
     // const [selectedUsers, setSelectedUsers] = useState([]);
     useEffect(() => {
@@ -100,11 +99,6 @@ async function GetInviteMembers() {
 
 async function InviteMembers(e, userID, groupId) {
     e.preventDefault();
-    console.log("group data ==> ", {
-        "group_id": groupId,
-        "invited_user_id": userID,
-    }
-    );
 
     const response = await fetch("http://localhost:8080/api/groups/invitation", {
         method: "POST",
@@ -127,7 +121,6 @@ async function InviteMembers(e, userID, groupId) {
 }
 function Show(e, id) {
     const target1 = document.getElementById(id);
-    console.log("target1 ===> ", target1);
     if (target1.style.display != "flex") {
         target1.style.display = "flex";
     } else {

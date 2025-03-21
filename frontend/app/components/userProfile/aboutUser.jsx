@@ -17,7 +17,7 @@ export default function AboutUser({ userData, imagePath, id }) {
     // console.log("followers ===> ", followers);
     // console.log("following ===> ", following);
     return (
-        
+
         <div className="userInfo">
             <div className="left-infos">
                 <img className="profile-image" src={imagePath} alt="Profile" />
@@ -47,7 +47,8 @@ export default function AboutUser({ userData, imagePath, id }) {
                 {
                     id == 0 ?
                         <>
-                            <button className="commentButtons" type="button" onClick={() => { Show("followers", "following") 
+                            <button className="commentButtons" type="button" onClick={() => {
+                                Show("followers", "following")
                             }}> {userData.followers_count} Followres</button>
                             <button className="commentButtons" type="button" onClick={() => { Show("following", "followers") }}>{userData.followings_count} Following</button>
                         </>
@@ -73,7 +74,7 @@ export default function AboutUser({ userData, imagePath, id }) {
     );
 }
 
-function FollowButton({ userData}) {
+function FollowButton({ userData }) {
     const followButton = userData.follow_button
     if (!followButton || followButton.state === 'none') {
         return null
@@ -85,7 +86,7 @@ function FollowButton({ userData}) {
             setFollowState(followButton.state)
         }
     }, [followButton, followState, setFollowState]);
-     
+
 
     const handleFollow = async () => {
         try {
@@ -103,6 +104,7 @@ function FollowButton({ userData}) {
             const data = await response.json();
             setReferenceId(data.reference_id);
             setFollowState(data.state);
+            console.log("Followed successfully!", data);
         } catch (error) {
             console.error("Fetch Error:", error);
         }

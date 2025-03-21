@@ -13,7 +13,6 @@ export default function CreatePost({ userImage, userId, isPriv }) {
         const title = e.target.title.value.trim();
         const content = e.target.content.value.trim();
         const checkbox = e.target.checkbox;
-        console.log("checkbox============>", checkbox);
         // const image = e.target.image.files[0];
         const privacy = e.target.privacy.value;
         if (!title || !content) return;
@@ -23,7 +22,7 @@ export default function CreatePost({ userImage, userId, isPriv }) {
             return;
         }
         formData.append("followers_ids", JSON.stringify(selectedFollowers || []));
-        console.log("formData", Object.fromEntries(formData));
+        // console.log("formData", Object.fromEntries(formData));
         fetch("http://localhost:8080/api/posts/createPost", {
             method: "POST",
             credentials: "include",
@@ -31,7 +30,7 @@ export default function CreatePost({ userImage, userId, isPriv }) {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("post created:", data);
+                // console.log("post created:", data);
                 if (posts) {
                     setPosts([data, ...posts]);
                 } else {
@@ -106,11 +105,8 @@ export default function CreatePost({ userImage, userId, isPriv }) {
 async function GetPosts(id) {
     let link = "";
     if (id) {
-        console.log("id :: ", id);
         link = `http://localhost:8080/api/posts/getPosts?id=${id}`;
     } else {
-        console.log("id :: ", id);
-
         link = `http://localhost:8080/api/posts/getPosts`;
     }
     const response = await fetch(link, {

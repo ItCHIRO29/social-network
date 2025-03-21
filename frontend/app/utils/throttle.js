@@ -4,7 +4,6 @@ export function throttle(func, delay) {
     return function (...args) {
         const now = new Date().getTime();
         if (now - lastTime >= delay) {
-            console.log("lastTime :: ", lastTime);
             lastTime = now;
             func(...args);
         }

@@ -23,7 +23,7 @@ export default function CreateGroupPost({ id }) {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("post created:", data);
+                // console.log("post created:", data);
                 if (posts) {
                     setPosts([data, ...posts]);
                 } else {
@@ -42,7 +42,7 @@ export default function CreateGroupPost({ id }) {
         }
         fetchUser();
     }, []);
-    console.log("posts", posts);
+    // console.log("posts", posts);
     return (
         <>
 

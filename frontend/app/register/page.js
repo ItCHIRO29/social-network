@@ -20,7 +20,6 @@ export default function RegisterPage() {
                 router.push('/'); // Redirect to the homepage on successful registration
             } else {
                 const data = await response.json();
-                console.log("Registration failed:", data);
                 alert(data || "Registration failed. Please try again."); // Display error message
             }
         } catch (error) {

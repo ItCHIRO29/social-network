@@ -10,7 +10,7 @@ export function EventAttendance({ event }) {
         InsertVote(eventId, goingStatus, setIsGoing);
     };
 
-    console.log("is going", event.id, isGoing);
+    // console.log("is going", event.id, isGoing);
 
     return (
         <div id={`attendance-${event.id}`} key={`attendance-${event.id}`}>
@@ -47,7 +47,7 @@ export function EventAttendance({ event }) {
 function InsertVote(eventId, goingStatus, setIsGoing) {
     // Define the action based on the goingStatus
     const action = goingStatus ? "going" : "not-going";
-    console.log(eventId)
+    // console.log(eventId)
     fetch(`http://localhost:8080/api/groups/insert_vote?action=${action}`, {
         method: "POST",
         headers: {
@@ -65,7 +65,7 @@ function InsertVote(eventId, goingStatus, setIsGoing) {
             }
         })
         .then((data) => {
-            console.log("vote inserted:", goingStatus);
+            // console.log("vote inserted:", goingStatus);
             setIsGoing(goingStatus); // Update state to match the selected option
         })
         .catch((error) => {

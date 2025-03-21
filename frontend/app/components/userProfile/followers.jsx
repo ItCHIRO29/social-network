@@ -8,7 +8,6 @@ export default function Followers() {
         async function fetchFollowers() {
             const data = await GetFollowers();
             setFollowers(data);
-            console.log("followers in component :: ", followers);
         }
         fetchFollowers();
     }, []);
@@ -40,7 +39,6 @@ export async function GetFollowers() {
         }
         const data = await response.json();
         // setFollowers(data);
-        console.log("followers data :: ", data);
         return data;
     } catch (error) {
         console.error("Fetch Error:", error);
