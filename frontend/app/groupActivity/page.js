@@ -1,12 +1,13 @@
 "use client";
+import React, { useState, useEffect, Suspense } from "react";
 import Header from "../components/header";
 import NavBar from "../components/userActivity";
-import Post from "../components/postsComponents/post";
-import { fetchGroup, fetchGroupData } from "../helpers/fetchGroups";
-import React, { useState, useEffect, Suspense } from "react";
-import "./groupActivity.css"
+import { fetchGroupData } from "../helpers/fetchGroups";
+import Events from "../components/groupsComponents/groupActivity/events";
+import Members from "../components/groupsComponents/groupActivity/members";
+import CreateGroupPost from "../components/groupsComponents/groupActivity/createGroupPost";
 import { useSearchParams } from 'next/navigation';
-import { EventAttendance } from "../components/eventAttendance";
+import "./groupActivity.css"
 
 function Group() {
     const [groupData, setGroupData] = useState(null);
@@ -55,173 +56,24 @@ export default function GroupActivity() {
     )
 }
 
-function Members({ groupData }) {
-    const [members, setMembers] = useState([]);
-    useEffect(() => {
-        const fetchMembers = async () => {
-            if (groupData?.Members && members.length === 0) {
-                setMembers(groupData.Members);
-            }
-        };
-        fetchMembers();
-    }, [groupData]);
-    // setMembers(groupData.members);
+
+
+function AddMembers() {
     return (
-        <div className="members" id="members">
-            <h2>Members</h2>
-            <div>
-                {members ? members.map((member) => (
-                    <button key={member.id_member}>id {member.user_id}: {member.username}</button>
-                )) : <p>No members yet </p>}
-            </div>
-        </div>
-    );
-}
-
-// function Events({ groupData }) {
-//     const [events, setEvents] = useState([]);
-//     useEffect(() => {
-//         const fetchEvents = async () => {
-//             // const data = await fetchGroup(groupData.id);
-//             setEvents(groupData.Events);
-//         };
-//         fetchEvents();
-//     }, []);
-//     // setEvents(groupData.events);
-//     return (
-//         <div className="test1" id="events">
-//             <h2>Events</h2>
-//             <div>
-//                 {(events || events.length != 0) ? events.map((event) => (
-//                     <div key={event.id}>
-//                         <button >event : {event.title}</button>
-//                         <div>{event.description}</div>
-//                         <div>{event.date}</div>
-//                         <div id="attendence">
-//                             <button className="going">Going</button>
-//                             <button className="NotGoing">Not going</button>
-//                         </div>
-//                     </div>
-//                 )) : <p>No events yet </p>}
-//             </div>
-//         </div>
-//     );
-// }
-function Events({ groupData }) {
-    const [events, setEvents] = useState([]);
-
-    useEffect(() => {
-        if (groupData?.Events && events.length === 0) {
-            setEvents(groupData.Events);
-        }
-    }, [groupData]); // Ensure effect re-runs when `groupData` changes
-    const [isGoing, setIsGoing] = useState(event.going);
-
-    const handleVote = (e, eventId, voteValue) => {
-        e.preventDefault();
-        setIsGoing(voteValue === "going"); // Update the state
-        InsertVote(e, eventId, voteValue); // Call your function
-    };
-    return (
-        <div className="test1" id="events">
-            <h2>Events</h2>
-            <div>
-                {events.length > 0 ? (
-                    events.map((event) => (
-                        <div key={event.id} id="event-data">
-                            <h2>{event.title}</h2>
-                            <div> About the event : {event.description}</div>
-                            <div>{event.date}</div>
-                            <EventAttendance event={event} key={`att-${event.id}`} />
-                        </div>
-                    ))
-                ) : (
-                    <p>No events yet</p>
-                )}
-            </div>
-        </div>
-    );
-}
-
-function CreateGroupPost({ id }) {
-    const [posts, setPosts] = useState([]);
-    const [imagePreview, setImagePreview] = useState(null);
-
-    const handleCreatePost = (e) => {
-        e.preventDefault();
-        const title = e.target.title.value.trim();
-        const content = e.target.content.value.trim();
-        // const image = e.target.image.files[0];
-        // const privacy = e.target.privacy.value;
-        if (!title || !content) return;
-        const formData = new FormData(e.target);
-        fetch("http://localhost:8080/api/posts/CreateGroupPost?groupId=" + id, {
-            method: "POST",
-            credentials: "include",
-            body: formData,
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("post created:", data);
-                if (posts) {
-                    setPosts([data, ...posts]);
-                } else {
-                    setPosts([data]);
-                }
-            })
-        e.target.title.value = "";
-        e.target.content.value = "";
-        e.target.image.value = null;
-        setImagePreview(null);
-    };
-    useEffect(() => {
-        async function fetchUser() {
-            const data = await GetPosts(id);
-            setPosts(data);
-        }
-        fetchUser();
-    }, []);
-    console.log("posts", posts);
-    return (
-        <>
-
-            <form id="creation" onSubmit={handleCreatePost}>
-                <section id="post-content">
-                    <input type="text" name="title" placeholder="Title" />
-                    <textarea name="content" placeholder="Content" />
-                    <input id="post-file" type="file" name="image" accept="image/*" />
-                    {imagePreview
-                        &&
-                        <img id="preview" src={imagePreview} alt="Post preview" name="image" />}
-                </section>
-                <section id="post-options">
-                    <button className="btn" type="submit">Publish</button>
-                </section>
+        <div>
+            <h2>Add Members</h2>
+            <form>
+                <label htmlFor="username">Username:</label>
+                <input type="text" id="username" name="username" />
+                <button type="submit">Add Member</button>
             </form>
-
-            {
-                <div className="posts">
-                    {(!posts) ? <h1>No posts yet</h1> : posts.map((post) => (
-                        <Post key={post.ID} post={post} postId={post.ID} />
-                    ))}
-                </div>
-
-            }
-
-        </>
-
+        </div>
     );
 }
 
-async function GetPosts(id) {
-    const response = await fetch(`http://localhost:8080/api/posts/getPostsByGroup?groupId=${id}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "include",
-    })
-    const data = await response.json()
-    return data
-}
+
+
+
+
+
 
