@@ -58,20 +58,6 @@ export default function GroupActivity() {
 
 
 
-function AddMembers() {
-    return (
-        <div>
-            <h2>Add Members</h2>
-            <form>
-                <label htmlFor="username">Username:</label>
-                <input type="text" id="username" name="username" />
-                <button type="submit">Add Member</button>
-            </form>
-        </div>
-    );
-}
-
-
 
 
 

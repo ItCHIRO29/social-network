@@ -12,11 +12,11 @@ export default function Events({ groupData }) {
     }, [groupData]); // Ensure effect re-runs when `groupData` changes
     const [isGoing, setIsGoing] = useState(event.going);
 
-    const handleVote = (e, eventId, voteValue) => {
-        e.preventDefault();
-        setIsGoing(voteValue === "going"); // Update the state
-        InsertVote(e, eventId, voteValue); // Call your function
-    };
+    // const handleVote = (e, eventId, voteValue) => {
+    //     e.preventDefault();
+    //     setIsGoing(voteValue === "going"); // Update the state
+    //     InsertVote(e, eventId, voteValue); // Call your function
+    // };
     return (
         <div className="test1" id="events">
             <h2>Events</h2>
