@@ -247,7 +247,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			fmt.Fprintln(os.Stderr, "invalid message type")
 			continue
 		}
-		if messageType == "message" {
+		if messageType == "private message" {
 			fmt.Println("is message", message)
 			ok := message.isValidPrivateMessage()
 			if !ok {

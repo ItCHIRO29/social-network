@@ -85,13 +85,14 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
     e.preventDefault();
     if (messageInput.trim() && socket) {
       const newMessage = {
-        type: 'message',
+        type: 'private message',
           message: messageInput,
           sender : myData.username,
           receiver: username,
 
           id: sentMaxId
       };
+
       const sendMessageEvent = new CustomEvent('sendMessage', { detail: newMessage });
 
       addMessage(newMessage);
