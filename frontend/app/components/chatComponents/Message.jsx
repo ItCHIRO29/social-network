@@ -1,12 +1,7 @@
-'use client'
-
 import { useRouter } from 'next/navigation';
 
 const Message = ({ message, myData, opponentData }) => {
-
   const router = useRouter();
-  console.log(myData.username);
-  console.log(message);
   const isSent = message.sender === myData.username;
 
   const handleImageClick = () => {
@@ -26,7 +21,12 @@ const Message = ({ message, myData, opponentData }) => {
           />
         </div>
       )}
-      <div className="message-content">{message.message || message.content}</div>
+      <div className="message-content">
+        {message.message || message.content}
+        {message.status === 'pending' && (
+          <span className="message-status">Sending...</span>
+        )}
+      </div>
     </div>
   );
 };

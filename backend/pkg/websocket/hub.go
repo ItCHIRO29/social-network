@@ -216,7 +216,7 @@ func (h *HubType) BroadcastMessage(message any, client *Client, delayFunc func(c
 
 func getUsername(db *sql.DB, userId int) (string, error) {
 	var username string
-	query := `SELECT nickname FROM users WHERE id = ?;`
+	query := `SELECT username FROM users WHERE id = ?;`
 	err := db.QueryRow(query, &userId).Scan(&username)
 	return username, err
 }
@@ -293,7 +293,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 
 func getUserId(db *sql.DB, username string) (int, error) {
 	var id int
-	query := `SELECT id FROM users WHERE (nickname = ?);`
+	query := `SELECT id FROM users WHERE (username = ?);`
 	err := db.QueryRow(query, &username).Scan(&id)
 	return id, err
 }
