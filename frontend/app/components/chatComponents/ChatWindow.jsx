@@ -16,7 +16,7 @@ function dateFormat(timestamp) {
     const days = Math.floor(diff / 86400000);
     return `${days} ${days === 1 ? 'day' : 'days'} ago`;
   }
-}  
+}
 
 const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   const opponentData = users.get(username)?.userData || {};
@@ -62,11 +62,11 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
           const previousScrollTop = messagesContainerRef.current.scrollTop;
 
           // Prepend older messages
-          data.messages
-            // .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-            .forEach(msg => {
-              newMap.set(msg.id, createMessageObject({ ...msg, status: 'sent' }));
-            });
+          console.log(data.messages)
+          // .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+          data.messages.forEach(msg => {
+            newMap.set(msg.id, createMessageObject({ ...msg, status: 'sent' }));
+          });
 
           if (offset > 0) {
             requestAnimationFrame(() => {
@@ -153,7 +153,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         newMap.set(messageObj.id, { ...messageObj, status: 'failed' });
         return newMap;
       });
-      socket.dispatchEvent(new CustomEvent('receiveError', { 
+      socket.dispatchEvent(new CustomEvent('receiveError', {
         detail: { messageId: messageObj.id }
       }));
     }
@@ -189,7 +189,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         status: 'pending',
         retryCount: (oldMessage.retryCount || 0) + 1
       };
-      
+
       newMap.delete(messageId);
       newMap.set(newMessage.id, newMessage);
       sendMessage(newMessage);
@@ -207,7 +207,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   const handleScroll = (e) => {
     if (offset === -1 || isLoadingOlder) return;
     const { scrollTop } = e.target;
-    
+
     if (scrollTop < 50) {
       fetchMessages();
     }
@@ -233,13 +233,13 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         </div>
       </div>
 
-      <div 
-        className="chat-messages" 
+      <div
+        className="chat-messages"
         ref={messagesContainerRef}
         onScroll={handleScroll}
       >
         {Array.from(messages.entries())
-          .sort((a, b) => a[1].timestamp - b[1].timestamp)
+          .sort((a, b) => a[1].id - b[1].id)
           .map(([id, message]) => (
             <div key={`wrapper-${id}`}>
               <Message
@@ -250,7 +250,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
               {message.status === 'failed' && (
                 <div className="message-error">
                   <span>Failed to send</span>
-                  <button 
+                  <button
                     onClick={() => handleRetry(id)}
                     className="retry-btn"
                   >
@@ -286,8 +286,8 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
       </div>
 
       {showEmojiPicker && (
-        <div 
-          className="emoji-picker-container" 
+        <div
+          className="emoji-picker-container"
           style={{
             position: 'absolute',
             bottom: '60px',

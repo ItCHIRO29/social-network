@@ -73,7 +73,7 @@ const ChatManager = ({ className, id, userData }) => {
       return newMap;
     });
   };
-
+  
   return (
     <div className={`${styles.chatManager} ${className}`} id={id}>
       <h2>Chat</h2>
