@@ -28,7 +28,7 @@ export default function HomeP() {
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
             <NavBar key={`home-navBar-${userData.id}`} />
             {/* <ChatWindowsContainer></ChatWindowsContainer> */}
-            <ChatManager className={"test1"} id={"chat1"} userData={userData}></ChatManager>
+            <ChatManager  userData={userData}></ChatManager>
         </main>
     );
 }

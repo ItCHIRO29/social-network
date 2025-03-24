@@ -2,25 +2,27 @@ module social-network
 
 go 1.23.0
 
-toolchain go1.23.6
+toolchain go1.23.7
 
 require (
-	github.com/gofrs/uuid v4.4.0+incompatible // indirect
-	github.com/golang-migrate/migrate v3.5.4+incompatible // indirect
-	github.com/golang-migrate/migrate/v4 v4.18.2 // indirect
+	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/golang-migrate/migrate/v4 v4.18.2
+	github.com/gorilla/websocket v1.5.3
+	github.com/mattn/go-sqlite3 v1.14.24
+	golang.org/x/crypto v0.36.0
+)
+
+require (
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
-	github.com/mattn/go-sqlite3 v1.14.24 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
-	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.36.3 // indirect

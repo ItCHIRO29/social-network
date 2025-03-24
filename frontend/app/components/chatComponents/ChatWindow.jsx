@@ -3,6 +3,21 @@ import Message from './Message';
 import EmojiSelector from './EmojiSelector';
 import './ChatWindow.css';
 
+function dateFormat(timestamp) {
+  if (!timestamp) return 'now';
+  if (typeof timestamp === 'string') timestamp = new Date(timestamp);
+
+  const now = new Date();
+  const diff = now.getTime() - timestamp.getTime();
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)} hr ago`;
+  if (diff < 604800000) {
+    const days = Math.floor(diff / 86400000);
+    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+  }
+}  
+
 const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   const opponentData = users.get(username)?.userData || {};
   const [messages, setMessages] = useState(new Map());
@@ -12,6 +27,8 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   const inputRef = useRef(null);
   const [offset, setOffset] = useState(0);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+
+  console.log("opponentData :: ", opponentData)
 
   const createMessageObject = (message) => ({
     ...message,
@@ -51,14 +68,12 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
               newMap.set(msg.id, createMessageObject({ ...msg, status: 'sent' }));
             });
 
-          // Maintain scroll position when loading older messages
           if (offset > 0) {
             requestAnimationFrame(() => {
               const newHeight = messagesContainerRef.current.scrollHeight;
               messagesContainerRef.current.scrollTop = newHeight - previousHeight + previousScrollTop;
             });
           } else {
-            // Initial load - scroll to bottom
             requestAnimationFrame(() => scrollToBottom());
           }
 
@@ -209,7 +224,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
           />
           <div className="header-info">
             <h3>{username}</h3>
-            <p>{opponentData.online ? "online" : opponentData.last_active ? `active since ${opponentData.last_active}` : "offline"}</p>
+            <p>{opponentData.online ? "online" : opponentData.last_active ? `Online ${dateFormat(opponentData.last_active)}` : "offline"}</p>
           </div>
         </div>
         <div className="header-right">

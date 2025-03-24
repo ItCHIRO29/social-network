@@ -26,6 +26,17 @@ func AcceptFollow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "internal server Error"})
 		return
 	}
+
+	// NEED TO BE TESTED !!
+
+	// _, err = tx.Exec(`INSERT INTO followers (follower_id, following_id, accepted) VALUES (?, ?, ?)
+	// 	ON CONFLICT (follower_id, following_id) DO UPDATE SET accepted = 1`, userId, referenceId, true)
+	// if err != nil {
+	// 	fmt.Fprintln(os.Stderr, err)
+	// 	tx.Rollback()
+	// 	utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "internal server Error"})
+	// 	return
+	// }
 	res, err := tx.Exec(`UPDATE followers SET accepted = 1 WHERE (id = ? AND following_id = ?)`, referenceId, userId)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

@@ -60,9 +60,9 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 
 		var path string
 		if imageType == "profile" {
-			path = "/uploads/profileImages/" + filename + extension
+			path = "./uploads/profileImages/" + filename + extension
 		} else if imageType == "post" {
-			path = "/uploads/postsImages/" + filename + extension
+			path = "./uploads/postsImages/" + filename + extension
 		}
 		dest, err := os.Create(path)
 		if err != nil {
