@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/mattn/go-sqlite3"
 )
 
 type HubType struct {
@@ -106,7 +107,7 @@ func (h *HubType) Run() {
 	}
 }
 
-func (h *HubType) PingService() {
+func (h *HubType) PingService(db *sql.DB) {
 	ticker := time.NewTicker(time.Second * 20)
 	defer ticker.Stop()
 
@@ -117,6 +118,8 @@ func (h *HubType) PingService() {
 				if err := conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
 					fmt.Fprintln(os.Stderr, err)
 					Hub.Unregister <- client
+					UpdateLastActive(db, client.UserId)
+
 				}
 			}
 		}
@@ -226,6 +229,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		Hub.Unregister <- Client{Conns: nil, Username: userName}
+		UpdateLastActive(db, userId)
 		return
 	}
 
@@ -238,6 +242,8 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 		var message Message
 		if err := conn.ReadJSON(&message); err != nil {
 			Hub.Unregister <- Client{Conns: []*websocket.Conn{conn}, Username: userName}
+			UpdateLastActive(db, userId)
+
 			fmt.Fprintln(os.Stderr, err)
 			break
 		}
@@ -321,4 +327,28 @@ func saveInDb(db *sql.DB, senderId int, message Message) (int, error) {
 	}
 
 	return int(id), err
+}
+
+func UpdateLastActive(db *sql.DB, userId int) {
+	retries := 5
+	var err error
+
+	for i := 0; i < retries; i++ {
+		fmt.Println("in update last active, user id", userId)
+		_, err = db.Exec("UPDATE users SET last_active = ? WHERE id = ?", time.Now().Format("2006-01-02 15:04:05"), userId)
+		if err == nil {
+			return
+		}
+
+		if sqliteError, ok := err.(sqlite3.Error); ok && sqliteError.Code == sqlite3.ErrLocked {
+			fmt.Fprintln(os.Stderr, "Database is locked. Retrying...")
+
+			time.Sleep(time.Duration(i+1) * time.Second)
+		} else {
+			fmt.Fprintln(os.Stderr, err)
+			return
+		}
+	}
+
+	fmt.Fprintln(os.Stderr, "Failed to update after retries:", err)
 }

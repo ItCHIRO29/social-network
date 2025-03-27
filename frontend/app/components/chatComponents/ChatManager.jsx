@@ -13,6 +13,17 @@ const ChatManager = ({ className, id, userData }) => {
   const myData = userData;
 
   useEffect(() => {
+    document.addEventListener("status", (event) => {
+      if (event instanceof CustomEvent) {
+        const message = event.detail;
+        const user = users.get(message.username);
+        user.online = message.online;
+        users.set(message.username, user);
+      }
+    })
+  });
+
+  useEffect(() => {
     const getUsers = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/users/chat_users', {

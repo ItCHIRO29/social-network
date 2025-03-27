@@ -92,21 +92,24 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   }, []);
 
   useEffect(() => {
-    if (!socket) return;
+      document.addEventListener("privateMessage", (event) => {
+        const message = event.detail;
+        addMessage(message);
+      });
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'private message') {
-        addMessage({ ...data, status: 'sent' });
-      } else if (data.type === 'receiveError') {
-        handleMessageError(data.messageId);
-      }
-    };
+      document.addEventListener("groupMessage", (event) => {
+        // Handle group message event
+      });
 
-    return () => {
-      socket.onmessage = null;
-    };
-  }, [socket]);
+
+      document.addEventListener("error", (event) => {
+        // Handle error event
+      });
+
+      document.addEventListener("status", (event) => {
+        // Handle status event
+      })
+  }, []);
 
   const addMessage = (message) => {
     const messageObj = createMessageObject({
@@ -279,9 +282,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
           >
             😊
           </button>
-          <button type="submit" className="send-btn">
-            {/* Send icon or text could go here */}
-          </button>
+          <button type="submit" className="send-btn"></button>
         </form>
       </div>
 
