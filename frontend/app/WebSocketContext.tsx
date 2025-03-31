@@ -35,7 +35,7 @@ export class Ws {
                 document.dispatchEvent(gEvent);
             break;
             case 'status':
-                const sEvent = new CustomEvent('status', { detail: message });
+                const sEvent = new CustomEvent(`status`, { detail: message });
                 document.dispatchEvent(sEvent);
             case 'notification':
                 const nEvent = new CustomEvent('notification', { detail: message });

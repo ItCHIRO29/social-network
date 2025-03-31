@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import Message from './Message';
+import {Message, TypingIndicator} from './Message';
 import EmojiSelector from './EmojiSelector';
 import './ChatWindow.css';
 
@@ -17,16 +17,57 @@ function dateFormat(timestamp) {
   return `${days} ${days === 1 ? 'day' : 'days'} ago`;
 }
 
-const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
-  const opponentData = users.get(username)?.userData || {};
+const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide }) => {
+  const [opponentData, setOpponentData] = useState({});
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesContainerRef = useRef(null);
+  const typingIndicatorRef = useRef(null);
   const inputRef = useRef(null);
   const [offset, setOffset] = useState(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isAppending, setIsAppending] = useState(true);
+
+  // Update opponentData when users Map changes
+  useEffect(() => {
+    console.log("Users map in ChatWindow:", users);
+    console.log("Users map size:", users.size);
+    
+    if (users.size > 0) {
+      const opponent = users.get(username);
+      if (opponent && opponent.userData) {
+        console.log("Found opponent data:", opponent.userData);
+        setOpponentData(opponent.userData);
+      } 
+    } else {
+      console.log("Users map is empty, fetching opponent data directly");
+    }
+  }, [users, username]);
+
+  // Listen for status events specific to this chat window
+  useEffect(() => {
+    const handleStatusEvent = (event) => {
+      if (event instanceof CustomEvent && event.detail.username === username) {
+        const message = event.detail;
+
+        setOpponentData(prevData => (
+          
+          {
+          ...prevData,
+          online: message.online,
+          last_active: new Date()
+        }));
+      }
+    };
+    
+    document.addEventListener('status', handleStatusEvent);
+    
+    return () => {
+      document.removeEventListener('status', handleStatusEvent);
+    };
+  }, [username]);
 
   const createMessageObject = (message) => ({
     ...message,
@@ -49,6 +90,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
       );
       return uniqueMessages;
     });
+    setIsAppending(false);
   };
 
   const appendMessages = (newMessages) => {
@@ -64,6 +106,10 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
       );
       return uniqueMessages;
     });
+    setIsAppending(true);
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   };
 
   const fetchMessages = async () => {
@@ -93,6 +139,9 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
       if (data.messages && data.messages.length > 0) {
         prependMessages(data.messages.map(createMessageObject));
         setOffset(data.offset || -1);
+        if (isAppending) {
+          scrollToBottom();
+        }
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -107,22 +156,26 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
 
   useEffect(() => {
     const handlePrivateMessage = (event) => {
-      const message = event.detail.message;
-      addMessage(message);
+      if (event.detail && event.detail.message) {
+        addMessage(event.detail.message);
+      }
     };
 
-    document.addEventListener(`privateMessage-${username}`, (event) =>{
+    const eventListener = (event) => {
+      console.log("Received private message for", username);
+      handlePrivateMessage(event);
+    };
 
-      console.log("zzzzzzzzzzzzzzzz")
-        handlePrivateMessage(event)
-    });
-
-  }, []);
+    document.addEventListener(`privateMessage-${username}`, eventListener);
+    
+    return () => {
+      document.removeEventListener(`privateMessage-${username}`, eventListener);
+    };
+  }, [username]);
 
   const addMessage = (message) => {
     const messageObj = createMessageObject(message);
     appendMessages([messageObj]);
-    scrollToBottom();
   };
 
   const scrollToBottom = () => {
@@ -196,23 +249,38 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
     }
   };
 
+  useEffect(() => {
+    if (isAppending) {
+      scrollToBottom();
+    }
+  }, [messages, isAppending]);
+  
+  // Check if opponentData is empty
+  const hasOpponentData = Object.keys(opponentData).length > 0;
+
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
       <div className="chat-header">
         <div className="header-left">
-          <img
-            src={`http://localhost:8080/${opponentData.image}`}
-            alt="profile"
-            className="profile-pic"
-          />
+          {hasOpponentData && (
+            <img
+              src={`http://localhost:8080/${opponentData?.image.slice(1)}`}
+              alt="profile"
+              className="profile-pic"
+            />
+          )}
           <div className="header-info">
             <h3>{username}</h3>
             <p>
-              {opponentData.online 
-                ? "online" 
-                : opponentData.last_active 
-                  ? `Online ${dateFormat(opponentData.last_active)}` 
-                  : "offline"}
+              {hasOpponentData ? (
+                opponentData.online 
+                  ? "online" 
+                  : opponentData.last_active 
+                    ? `Online ${dateFormat(opponentData.last_active)}` 
+                    : "offline"
+              ) : (
+                "Loading status..."
+              )}
             </p>
           </div>
         </div>
@@ -230,6 +298,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         {isLoadingOlder && (
           <div className="loading-indicator">Loading older messages...</div>
         )}
+        {/* <TypingIndicator opponentData={opponentData} /> */}
         {messages.map((message) => (
           <div key={message.uniqueId}>
             <Message

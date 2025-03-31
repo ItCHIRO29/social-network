@@ -76,7 +76,18 @@
     border-radius: 50%;
 
   }
+
+  .typing-indicator {
+    order: 1;
+    transition: all 0.3s ease;
+    visibility: hidden;
+  }
   
+  .typing-indicator.active {
+    visibility: visible
+  }
+
+
   .chat-messages {
     flex: 1;
     padding: 16px;
@@ -95,7 +106,9 @@
   }
   
   .message-received {
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
+    display: flex !important;
+    align-items: center !important;
   }
   
   .message-sent {
@@ -103,13 +116,14 @@
   }
   
   .message-pic {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: auto;
     border-radius: 50%;
   }
   
   .message-content {
     padding: 8px 12px;
+    margin: 2px 0;
     border-radius: 16px;
     font-size: 15px;
     line-height: 20px;

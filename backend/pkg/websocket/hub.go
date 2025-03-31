@@ -87,7 +87,7 @@ func (h *HubType) Run() {
 			if broadcast {
 				statusMessage := Message{}
 				statusMessage["type"] = "status"
-				statusMessage["userName"] = client.Username
+				statusMessage["username"] = client.Username
 				statusMessage["online"] = true
 				h.BroadcastMessage(statusMessage, &client, nil)
 			}
@@ -96,7 +96,7 @@ func (h *HubType) Run() {
 			h.UnregisterClient(client)
 			statusMessage := Message{}
 			statusMessage["type"] = "status"
-			statusMessage["userName"] = client.Username
+			statusMessage["username"] = client.Username
 			statusMessage["online"] = false
 			h.BroadcastMessage(statusMessage, &client, h.offlineDelayFunc)
 		case message := <-h.Broadcast:
