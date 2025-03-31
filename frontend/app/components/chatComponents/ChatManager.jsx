@@ -93,6 +93,11 @@ const ChatManager = ({ className, id, userData }) => {
 
   const addChatWindow = (username) => {
     console.log("Opening chat with:", username, "Current users map:", users);
+    setUsers(prevUsers => {
+      const newUsers = new Map(prevUsers);
+      newUsers.set(username, { userData: { ...users.get(username).userData, notify: false} });
+      return newUsers;
+    })    
     
     setChatWindows(prev => {
       const newMap = new Map(prev);
@@ -125,9 +130,7 @@ const ChatManager = ({ className, id, userData }) => {
     });
   };
   
-  // Ensure we're properly passing updated users to chat windows
   useEffect(() => {
-    // When users map changes, update all chat windows with the new users map
     if (users.size > 0) {
       setChatWindows(prev => {
         const updatedWindows = new Map();
@@ -135,7 +138,7 @@ const ChatManager = ({ className, id, userData }) => {
         for (const [username, chatData] of prev.entries()) {
           updatedWindows.set(username, {
             ...chatData,
-            users // Update with the current users map
+            users 
           });
         }
         
@@ -150,7 +153,7 @@ const ChatManager = ({ className, id, userData }) => {
       {users.size > 0 ? (
         <div className={styles.usersList}>
           {Array.from(users.entries()).map(([username, userObj]) => (
-            <div className={styles.usersListItem} key={username}>
+            <div className={styles.usersListItem} id={`usersListItem-${username}`} key={username}>
               <img className={styles.avatar} src={`http://localhost:8080${userObj?.userData.image.slice(1)}`} alt="User avatar" />
               <button
                 id="chatButtons"
@@ -198,6 +201,7 @@ const ChatManager = ({ className, id, userData }) => {
               username={username}
               userData={userData}
               users={users} // Always pass the current users state
+              setUsers={setUsers}
               myData={myData}
               socket={socket}
               onClose={() => deleteChatWindow(username)}

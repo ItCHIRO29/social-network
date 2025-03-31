@@ -154,6 +154,10 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     fetchMessages();
   }, []);
 
+
+  useEffect(() => {
+    
+  }, []);
   useEffect(() => {
     const handlePrivateMessage = (event) => {
       if (event.detail && event.detail.message) {
