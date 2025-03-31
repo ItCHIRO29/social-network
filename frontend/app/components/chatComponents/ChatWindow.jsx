@@ -12,33 +12,62 @@ function dateFormat(timestamp) {
   if (diff < 60000) return 'now';
   if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
   if (diff < 86400000) return `${Math.floor(diff / 3600000)} hr ago`;
-  if (diff < 604800000) {
-    const days = Math.floor(diff / 86400000);
-    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-  }
+  
+  const days = Math.floor(diff / 86400000);
+  return `${days} ${days === 1 ? 'day' : 'days'} ago`;
 }
 
 const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   const opponentData = users.get(username)?.userData || {};
-  const [messages, setMessages] = useState(new Map());
+  const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
-
-  console.log("opponentData :: ", opponentData)
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
   const createMessageObject = (message) => ({
     ...message,
-    status: message.status || 'pending',
+    status: 'sent',
     timestamp: message.timestamp ? new Date(message.timestamp).getTime() : Date.now(),
-    retryCount: message.retryCount || 0
+    retryCount: message.retryCount || 0,
+    uniqueId: `msg-${message.id || Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   });
 
+  const prependMessages = (newMessages) => {
+    if (!Array.isArray(newMessages)) {
+      console.error("Error in prependMessages: messages is not an array");
+      return;
+    }
+    setMessages(prev => {
+      const combinedMessages = [...newMessages, ...prev];
+      const uniqueMessages = combinedMessages.filter(
+        (msg, index, self) => 
+          index === self.findIndex((t) => t.id === msg.id)
+      );
+      return uniqueMessages;
+    });
+  };
+
+  const appendMessages = (newMessages) => {
+    if (!Array.isArray(newMessages)) {
+      console.error("Error in appendMessages: messages is not an array");
+      return;
+    }
+    setMessages(prev => {
+      const combinedMessages = [...prev, ...newMessages];
+      const uniqueMessages = combinedMessages.filter(
+        (msg, index, self) => 
+          index === self.findIndex((t) => t.id === msg.id)
+      );
+      return uniqueMessages;
+    });
+  };
+
   const fetchMessages = async () => {
-    if (isLoadingOlder || offset === -1) return;
+    if (isLoadingOlder || !hasMoreMessages) return;
     setIsLoadingOlder(true);
 
     try {
@@ -50,38 +79,23 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
           credentials: 'include',
         }
       );
-      if (!response.ok) return;
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch messages');
+      }
 
       const data = await response.json();
-      setOffset(data?.offset);
+      
+      if (!data.messages || data.messages.length < 10 || data.offset === -1) {
+        setHasMoreMessages(false);
+      }
 
       if (data.messages && data.messages.length > 0) {
-        setMessages(prev => {
-          const newMap = new Map(prev);
-          const previousHeight = messagesContainerRef.current.scrollHeight;
-          const previousScrollTop = messagesContainerRef.current.scrollTop;
-
-          // Prepend older messages
-          console.log(data.messages)
-          // .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-          data.messages.forEach(msg => {
-            newMap.set(msg.id, createMessageObject({ ...msg, status: 'sent' }));
-          });
-
-          if (offset > 0) {
-            requestAnimationFrame(() => {
-              const newHeight = messagesContainerRef.current.scrollHeight;
-              messagesContainerRef.current.scrollTop = newHeight - previousHeight + previousScrollTop;
-            });
-          } else {
-            requestAnimationFrame(() => scrollToBottom());
-          }
-
-          return newMap;
-        });
+        prependMessages(data.messages.map(createMessageObject));
+        setOffset(data.offset || -1);
       }
     } catch (error) {
-      console.log('Error:', error);
+      console.error('Error fetching messages:', error);
     } finally {
       setIsLoadingOlder(false);
     }
@@ -92,48 +106,23 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   }, []);
 
   useEffect(() => {
-      document.addEventListener("privateMessage", (event) => {
-        const message = event.detail;
-        addMessage(message);
-      });
+    const handlePrivateMessage = (event) => {
+      const message = event.detail.message;
+      addMessage(message);
+    };
 
-      document.addEventListener("groupMessage", (event) => {
-        // Handle group message event
-      });
+    document.addEventListener(`privateMessage-${username}`, (event) =>{
 
+      console.log("zzzzzzzzzzzzzzzz")
+        handlePrivateMessage(event)
+    });
 
-      document.addEventListener("error", (event) => {
-        // Handle error event
-      });
-
-      document.addEventListener("status", (event) => {
-        // Handle status event
-      })
   }, []);
 
   const addMessage = (message) => {
-    const messageObj = createMessageObject({
-      ...message,
-      id: message.id || Date.now() + Math.random(),
-    });
-
-    setMessages(prev => {
-      const newMap = new Map(prev);
-      newMap.set(messageObj.id, messageObj);
-      return newMap;
-    });
+    const messageObj = createMessageObject(message);
+    appendMessages([messageObj]);
     scrollToBottom();
-  };
-
-  const handleMessageError = (messageId) => {
-    setMessages(prev => {
-      const newMap = new Map(prev);
-      const message = newMap.get(messageId);
-      if (message) {
-        newMap.set(messageId, { ...message, status: 'failed' });
-      }
-      return newMap;
-    });
   };
 
   const scrollToBottom = () => {
@@ -143,28 +132,19 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   };
 
   const sendMessage = (messageObj) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify(messageObj));
-      setMessages(prev => {
-        const newMap = new Map(prev);
-        newMap.set(messageObj.id, { ...messageObj, status: 'sent' });
-        return newMap;
-      });
-    } else {
-      setMessages(prev => {
-        const newMap = new Map(prev);
-        newMap.set(messageObj.id, { ...messageObj, status: 'failed' });
-        return newMap;
-      });
-      socket.dispatchEvent(new CustomEvent('receiveError', {
-        detail: { messageId: messageObj.id }
-      }));
-    }
+    const msgEvent = new CustomEvent("sendMessage", { 
+      detail: {
+        ...messageObj,
+        status: 'sent'
+      }
+    });
+    
+    document.dispatchEvent(msgEvent);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!messageInput.trim() || !socket) return;
+    if (!messageInput.trim()) return;
 
     const newMessage = {
       type: 'private message',
@@ -179,24 +159,24 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
     setMessageInput('');
   };
 
-  const handleRetry = (messageId) => {
+  const handleRetry = (uniqueId) => {
     setMessages(prev => {
-      const newMap = new Map(prev);
-      const oldMessage = newMap.get(messageId);
-      if (!oldMessage) return prev;
+      const messageToRetry = prev.find(msg => msg.uniqueId === uniqueId);
+      if (!messageToRetry) return prev;
 
       const newMessage = {
-        ...oldMessage,
-        id: Date.now() + Math.random(),
+        ...messageToRetry,
+        uniqueId: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         timestamp: Date.now(),
         status: 'pending',
-        retryCount: (oldMessage.retryCount || 0) + 1
+        retryCount: (messageToRetry.retryCount || 0) + 1
       };
 
-      newMap.delete(messageId);
-      newMap.set(newMessage.id, newMessage);
+      const filteredMessages = prev.filter(msg => msg.uniqueId !== uniqueId);
+      const updatedMessages = [...filteredMessages, newMessage];
+      
       sendMessage(newMessage);
-      return newMap;
+      return updatedMessages;
     });
     scrollToBottom();
   };
@@ -208,7 +188,7 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
   };
 
   const handleScroll = (e) => {
-    if (offset === -1 || isLoadingOlder) return;
+    if (!hasMoreMessages || isLoadingOlder) return;
     const { scrollTop } = e.target;
 
     if (scrollTop < 50) {
@@ -227,7 +207,13 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
           />
           <div className="header-info">
             <h3>{username}</h3>
-            <p>{opponentData.online ? "online" : opponentData.last_active ? `Online ${dateFormat(opponentData.last_active)}` : "offline"}</p>
+            <p>
+              {opponentData.online 
+                ? "online" 
+                : opponentData.last_active 
+                  ? `Online ${dateFormat(opponentData.last_active)}` 
+                  : "offline"}
+            </p>
           </div>
         </div>
         <div className="header-right">
@@ -241,28 +227,29 @@ const ChatWindow = ({ username, users, myData, socket, onClose, onHide }) => {
         ref={messagesContainerRef}
         onScroll={handleScroll}
       >
-        {Array.from(messages.entries())
-          .sort((a, b) => a[1].id - b[1].id)
-          .map(([id, message]) => (
-            <div key={`wrapper-${id}`}>
-              <Message
-                message={message}
-                myData={myData}
-                opponentData={opponentData}
-              />
-              {message.status === 'failed' && (
-                <div className="message-error">
-                  <span>Failed to send</span>
-                  <button
-                    onClick={() => handleRetry(id)}
-                    className="retry-btn"
-                  >
-                    Retry
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+        {isLoadingOlder && (
+          <div className="loading-indicator">Loading older messages...</div>
+        )}
+        {messages.map((message) => (
+          <div key={message.uniqueId}>
+            <Message
+              message={message}
+              myData={myData}
+              opponentData={opponentData}
+            />
+            {message.status === 'failed' && (
+              <div className="message-error">
+                <span>Failed to send</span>
+                <button
+                  onClick={() => handleRetry(message.uniqueId)}
+                  className="retry-btn"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="chat-input">

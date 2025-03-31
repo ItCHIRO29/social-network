@@ -13,14 +13,21 @@ export class Ws {
     reconnect() {
         this.socket?.close();
         this.socket = new WebSocket('ws://localhost:8080/api/ws');
-        this.socket.onmessage = this.handleMessage.bind(this);
+        this.socket.onmessage = (event) => {
+            this.handleMessage(event.data);
+            console.log("message", event)
+        };
     }
 
-    handleMessage(event: MessageEvent) {
-        const message = event.data;
+    handleMessage(data: any) {
+        const message = JSON.parse(data.data);
+        console.log("message", message)
         switch (message.type) {
             case 'private message':
-                const pEvent = new CustomEvent('privateMessage', { detail: message });
+                console.log("received message", message)
+                const eventName =  `privateMessage-${message.sender}`;
+                console.log("eventName", eventName)
+                const pEvent = new CustomEvent(eventName, { detail: {message} });
                 document.dispatchEvent(pEvent);
             break;
             case 'group message':
@@ -44,6 +51,7 @@ export class Ws {
     initListeners() {
         document.addEventListener('sendMessage', (event: Event) => {
             if (event instanceof CustomEvent) {
+                console.log("recieved message event");
                 const message = event.detail;
                 this.socket?.send(JSON.stringify(message));
             }

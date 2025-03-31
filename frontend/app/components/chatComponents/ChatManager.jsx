@@ -16,7 +16,12 @@ const ChatManager = ({ className, id, userData }) => {
     document.addEventListener("status", (event) => {
       if (event instanceof CustomEvent) {
         const message = event.detail;
+        if (message.username === myData.username) return;
         const user = users.get(message.username);
+        if (!user) {
+          console.log("user not found");
+          return;
+        };
         user.online = message.online;
         users.set(message.username, user);
       }
