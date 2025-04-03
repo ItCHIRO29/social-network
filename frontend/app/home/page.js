@@ -7,7 +7,7 @@ import Header from "../components/header";
 import SocialNetworkUsers from "../components/social-network-users";
 import { useRouter } from "next/navigation";
 import "./home.css"
-import {ChatManager} from '../components/chatComponents/ChatManager.jsx';
+import  FetchData  from "../utils/getUserData";
 
 export default function HomeP() {
     const router = useRouter();
@@ -28,30 +28,6 @@ export default function HomeP() {
             <SocialNetworkUsers key={`home-socialNetworkUsers-${userData.id}`} />
             <NavBar key={`home-navBar-${userData.id}`} />
             {/* <ChatWindowsContainer></ChatWindowsContainer> */}
-            <ChatManager  userData={userData}></ChatManager>
         </main>
     );
-}
-async function FetchData(category, id) {
-    try {
-        if (category === "profile") {
-            const response = await fetch(`http://localhost:8080/api/users/profile?id=${id}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            //console.log("data :: ", data);
-            return data; // Return the resolved object
-        }
-    } catch (error) {
-        console.error("Fetch Error:", error);
-        return null; // Handle errors gracefully
-    }
 }

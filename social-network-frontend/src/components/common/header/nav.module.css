@@ -1,0 +1,45 @@
+.navContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+}
+
+.mainNavItems {
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logoutContainer {
+    margin-left: auto;
+}
+
+.navItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.description {
+    position: absolute;
+    bottom: -30px;
+    background-color: #000;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.navItem:hover .description {
+    opacity: 1;
+    transform: translateY(0);
+}

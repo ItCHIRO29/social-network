@@ -1,0 +1,51 @@
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: white;
+    font-family: var(--font-geist-sans), sans-serif;
+}
+
+.main-layout {
+    display: flex;
+    min-height: 90%;
+    width: 100%;
+}
+
+.auth-page {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.chat-sidebar {
+    width: 20%;
+    background-color: #181818;
+    position: sticky;
+    height: 90vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+.main-content {
+    width: 80%;
+    padding: 20px;
+    min-height: 90vh;
+    /* overflow-y: auto; */
+    box-sizing: border-box;
+}
+
+.full-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

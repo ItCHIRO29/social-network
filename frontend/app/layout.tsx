@@ -4,6 +4,7 @@ import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { WebSocketContext, Ws } from "./WebSocketContext";
+import {ChatManager} from "./components/chatComponents/ChatManager";
 
 
 export default function RootLayout({
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ChatManager />
         <WebSocketContext.Provider value={ws}>
         {children}
         </WebSocketContext.Provider>

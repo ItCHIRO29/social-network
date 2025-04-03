@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import ChatWindow from './ChatWindow';
-import { WebSocketContext } from '../../WebSocketContext';
 import styles from './ChatManager.module.css';
-import { FetchData } from '../../utils/getUserData';
+import { WebSocketContext } from '../providers/websocketContext';
+import { useUserData } from "../providers/userDataContext";
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -10,16 +10,7 @@ const ChatManager = () => {
   const [data, setData] = useState([]);
   const ws = useContext(WebSocketContext);
   const socket = ws?.socket;
-  const [myData, setMyData] = useState({});
-
-  
-      useEffect(() => {
-          async function fetchUser() {
-              const data = await FetchData("profile", 0);
-              setMyData(data);
-          }
-          fetchUser();
-      }, []);
+  const myData = useUserData();
 
   // Fetch users data on component mount
   useEffect(() => {
@@ -217,7 +208,7 @@ const ChatManager = () => {
   }, [users]);
   
   return (
-    <div className={`${styles.chatManager}`} >
+    <div className={styles.chatManager}>
       <h2>Chat</h2>
       {users.size > 0 ? (
         <div className={styles.usersList}>
@@ -240,7 +231,7 @@ const ChatManager = () => {
                 {userObj.userData.firstname} {userObj.userData.lastname}
               </button>
               <div className={`${styles.notify} ${userObj.userData.notify ? styles.active : ''}`}>
-                new message
+                New
               </div>
               <div
                 className={`${styles.onlineIndicator} ${userObj.userData.online ? styles.active : ''}`}
@@ -254,23 +245,8 @@ const ChatManager = () => {
         </button>
       )}
 
-      <div
-        className={styles.chatWindowsContainer}
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 'auto',
-          height: 'auto',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-end',
-          gap: '10px',
-          zIndex: 1000,
-        }}
-      >
+      {/* Chat windows container - positioned relative to the sidebar */}
+      <div className={styles.chatWindowsContainer}>
         {Array.from(chatWindows.entries()).map(([username, chatData]) => (
           chatData.focused && (
             <ChatWindow

@@ -6,18 +6,31 @@ import (
 	"net/http"
 	"os"
 	"social-network/pkg/utils"
-	"strconv"
 )
 
 func MarkAsSeen(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	messageId, err := strconv.Atoi(r.URL.Query().Get("message_id"))
+	username := r.URL.Query().Get("sender")
+	uId, err := utils.GetUserIdFromUsername(db, username)
 	if err != nil {
-		utils.WriteJSON(w, http.StatusBadRequest, "Invalid message_id parameter")
+		fmt.Fprintln(os.Stderr, err, "error in getting user id")
+		if err == sql.ErrNoRows {
+			utils.WriteJSON(w, http.StatusBadRequest, "invalid sender username!")
+			return
+		}
+		utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
-	_, err = db.Exec("UPDATE private_messages SET seen = true WHERE id = ? AND receiver_id = ?", messageId, userId)
+	_, err = db.Exec(`UPDATE private_messages
+SET seen = 'true'
+WHERE id = (
+    SELECT MAX(id)
+    FROM private_messages
+    WHERE sender_id = ? AND receiver_id = ?
+);
+`, uId, userId)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+
+		fmt.Fprintln(os.Stderr, err, "error in marking as seen")
 		utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
