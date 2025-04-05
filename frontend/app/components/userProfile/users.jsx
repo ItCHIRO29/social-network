@@ -15,7 +15,7 @@ export default function AllUsers(userInfo) {
                 allusers.length > 0 ? (
                     allusers.map((user) => (
                         <div id="follower-section" key={user.id} className="user-card">
-                            <img src={user.image ? `http://localhost:8080/${user.image}` : imagePath} alt="Profile" />
+                            <img src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : imagePath} alt="Profile" />
                             <button onClick={() => clickProfile(user.id)} >{user.full_name}</button>
                         </div>
                     ))

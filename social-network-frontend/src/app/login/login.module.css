@@ -1,0 +1,105 @@
+.container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    background: #c9c7b6;
+    border: none;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 800px;
+}
+
+.logoSection {
+    background: linear-gradient(221deg, #ff0000, #00000067);
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    width: 50%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    z-index: 1000;
+}
+
+.logoTitle {
+    color: white;
+    font-family: serif;
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(263deg, #00000042, #00000000);
+    padding: 2rem;
+    width: 70%;
+    z-index: 1000;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.loginContainer h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #000000;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.loginContainer input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #000000;
+    font-size: 14px;
+}
+
+.loginContainer input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(47, 22, 189, 0.5);
+}
+
+.loginContainer input::placeholder {
+    color: #999;
+}
+
+.loginContainer a {
+    color: rgb(255, 3, 3);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.errorText {
+    color: #ff0000;
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff15;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.btn:hover {
+    background: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 15px 5px rgb(255, 255, 255);
+}

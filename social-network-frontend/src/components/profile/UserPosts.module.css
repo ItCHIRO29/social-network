@@ -1,0 +1,39 @@
+.userPosts {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.userPosts h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    color: #1a1a1a;
+}
+
+.postsGrid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.loading,
+.error,
+.noPosts {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+}
+
+.loading {
+    color: #666;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.noPosts {
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+} 

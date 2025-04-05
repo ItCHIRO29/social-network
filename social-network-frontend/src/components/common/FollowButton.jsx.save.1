@@ -1,0 +1,109 @@
+OAOAOAOAOA'use client';
+OOOB
+import { useState, useEffect } from 'react';
+iOBmOBport styles from './FollowButton.module.css';
+OA
+expOAoOBrt default function FollowButton({ userData, onStateChange }) {
+    const [followState, setFollowState] = useState(userData.follow_button?.state || 'follow');
+    const [referenceId, setReferenceId] = useState(userData.follow_button?.reference_id || 0);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (userData.follow_button?.state) {
+            setFollowState(userData.follow_button.state);
+            setReferenceId(userData.follow_button.reference_id);
+        } else {
+            // If no follow_button data, default to 'follow' state
+            setFollowState('follow');
+            setReferenceId(0);
+        }
+    }, [userData.follow_button]);
+
+    const handleFollow = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?username=${userData.username}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setReferenceId(data.reference_id);
+            setFollowState(data.state);
+            if (onStateChange) {
+                onStateChange(data.state);
+            }
+        } catch (error) {
+            console.error('Error following user:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleUnfollow = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?reference_id=${referenceId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            setFollowState('follow');
+            if (onStateChange) {
+                onStateChange('follow');
+            }
+        } catch (error) {
+            console.error('Error unfollowing user:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const getButtonText = () => {
+        switch (followState) {
+            case 'follow':
+                return 'Follow';
+            case 'unfollow':
+                return 'Unfollow';
+            case 'pending':
+                return 'Cancel Request';
+            default:
+                return 'Follow';
+        }
+    };
+
+    const handleClick = async () => {
+        if (isLoading) return;
+
+        if (followState === 'follow') {
+            await handleFollow();
+        } else if (followState === 'unfollow' || followState === 'pending') {
+            await handleUnfollow();
+        }
+    };
+
+    // Don't hide the button, just show it in the default 'follow' state
+    return (
+        <button 
+            className={`${styles.followButton} ${styles[followState]}`}
+            onClick={handleClick}
+            disabled={isLoading}
+        >
+            {isLoading ? '...' : getButtonText()}
+        </button>
+    );
+} 

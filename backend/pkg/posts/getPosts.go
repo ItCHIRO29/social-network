@@ -101,8 +101,8 @@ ORDER BY posts.id DESC;`
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		query := "SELECT first_name,last_name, image FROM users WHERE id = ?"
-		err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image)
+		query := "SELECT first_name,last_name, image, username FROM users WHERE id = ?"
+		err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image, &post.Username)
 		if err != nil {
 			fmt.Println("error in GetPosts1:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -145,8 +145,8 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		query := "SELECT first_name,last_name, image FROM users WHERE id = ?"
-		err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image)
+		query := "SELECT first_name,last_name, image, username FROM users WHERE id = ?"
+		err = db.QueryRow(query, post.UserID).Scan(&creator_first_name, &creator_last_name, &profile_image, &post.Username)
 		if err != nil {
 			fmt.Println("error in GetPosts1:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")

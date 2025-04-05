@@ -3,6 +3,7 @@ package models
 type Posts struct {
 	ID           int64
 	UserID       int
+	Username     string
 	Post_creator string
 	ProfileImage string
 	GroupId      int

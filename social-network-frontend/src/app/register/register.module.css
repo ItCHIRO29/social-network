@@ -1,0 +1,227 @@
+.container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    background: #c9c7b6;
+    border: none;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    height: 90vh; /* Use viewport height */
+    min-height: 600px; /* Minimum height */
+    transform: translate(-50%, -50%);
+    max-width: 1000px; /* Slightly larger max-width */
+    overflow-y: auto; /* Add scroll if content overflows */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.logoSection {
+    background: linear-gradient(221deg, #ff0000, #00000067);
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    width: 40%; /* Slightly narrower logo section */
+    min-width: 300px; /* Minimum width for logo section */
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: sticky;
+    top: 0;
+    height: 100%; /* Make it full height of container */
+}
+
+.logoTitle {
+    color: white;
+    font-family: serif;
+    margin-top: 20px;
+}
+
+.registerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Changed from center to flex-start */
+    background: linear-gradient(263deg, #00000042, #00000000);
+    padding: 2rem;
+    width: 60%;
+    min-width: 400px; /* Minimum width for form */
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow-y: auto; /* Add scroll if content overflows */
+}
+
+.registerContainer h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #000000;
+    font-family: 'Times New Roman', Times, serif;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(263deg, #00000042, #00000000);
+    padding: 10px 0;
+    z-index: 1;
+}
+
+.inputGroup {
+    margin-bottom: 1rem;
+}
+
+.inputField {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #000000;
+    font-size: 14px;
+}
+
+.inputField:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(47, 22, 189, 0.5);
+}
+
+.inputField::placeholder {
+    color: #999;
+}
+
+.inputError {
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5);
+}
+
+.errorText {
+    color: #ff0000;
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+}
+
+.genderSection {
+    margin-bottom: 1rem;
+}
+
+.genderLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #000000;
+    font-weight: bold;
+}
+
+.genderOptions {
+    display: flex;
+    gap: 20px;
+}
+
+.radioLabel {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #000000;
+}
+
+.radioInput {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.optionalLabel {
+    display: block;
+    color: #000000;
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+}
+
+.fileInput {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    color: #000000;
+    font-size: 14px;
+}
+
+.loginLink {
+    color: rgb(255, 3, 3);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.loginLink:hover {
+    text-decoration: underline;
+}
+
+.submitButton {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff15;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.submitButton:hover {
+    background: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 15px 5px rgb(255, 255, 255);
+}
+
+.submitButton:disabled {
+    background: #999;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        min-height: auto;
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .logoSection,
+    .registerContainer {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .logoSection {
+        border-radius: 10px 10px 0 0;
+        padding: 1.5rem;
+        position: relative;
+        height: auto;
+    }
+    
+    .registerContainer {
+        border-radius: 0 0 10px 10px;
+        padding: 1.5rem;
+    }
+    
+    .genderOptions {
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .registerContainer h1 {
+        position: relative;
+    }
+}
+
+@media (max-height: 700px) {
+    .container {
+        height: 95vh;
+        min-height: auto;
+    }
+}

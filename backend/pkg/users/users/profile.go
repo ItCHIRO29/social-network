@@ -5,24 +5,22 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
+	"strings"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 )
 
 func Profile(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	err := r.ParseForm()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+	// Extract username from URL path
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) < 3 {
 		utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "Invalid request"})
 		return
 	}
-	// me := r.FormValue("user")
-	// fmt.Println("me value", me)
-	// userName := r.FormValue("username")
-	idStr := r.FormValue("id")
-	if idStr == "0" {
+
+	// Handle /profile endpoint (get current user)
+	if len(pathParts) == 3 {
 		profile, err := GetUserData(db, &userId, nil)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error in GetUserData:", err)
@@ -30,41 +28,44 @@ func Profile(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 			return
 		}
 		utils.WriteJSON(w, http.StatusOK, profile)
-	} else if idStr != "" {
-		// fmt.Println("userName:", userName)
-		// id, err := utils.GetUserIdFromUsername(db, userName)
-		// if err != nil {
-		// 	if err == sql.ErrNoRows {
-		// 		utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "User not found"})
-		// 		return
-		// 	}
-		// 	fmt.Fprintln(os.Stderr, err)
-		// 	utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
-		// 	return
-		// }
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "error in strconv.Atoi:", err)
-			utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "Invalid request"})
-			return
-		}
-		// fmt.Println("id:", id)
-		profile, err := GetUserData(db, &userId, &id)
+		return
+	}
+
+	// Get username from path
+	username := pathParts[len(pathParts)-1]
+
+	// Handle /profile/me endpoint
+	if username == "me" {
+		profile, err := GetUserData(db, &userId, nil)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error in GetUserData:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 			return
 		}
 		utils.WriteJSON(w, http.StatusOK, profile)
+		return
 	}
-	// return
-	// } else if userName != "" {
-	// 	profile, err := GetUserData(db, userId)
-	// 	if err != nil {
-	// 		fmt.Fprintln(os.Stderr, "error in GetUserData:", err)
-	// 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
-	// 		return
-	// 	}
-	// 	utils.WriteJSON(w, http.StatusOK, profile)
-	// }
+
+	// Get user ID from username for /profile/{username}
+	var targetUserId int
+	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&targetUserId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			utils.WriteJSON(w, http.StatusNotFound, models.HttpError{Error: "User not found"})
+			return
+		}
+		fmt.Fprintln(os.Stderr, "error getting user ID:", err)
+		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+		return
+	}
+
+	// Get profile data
+	profile, err := GetUserData(db, &userId, &targetUserId)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error in GetUserData:", err)
+		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, profile)
 }

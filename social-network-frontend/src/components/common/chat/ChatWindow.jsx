@@ -275,7 +275,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
         <div className="header-left">
           {hasOpponentData && (
             <img
-              src={`http://localhost:8080/${opponentData?.image.slice(1)}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
               alt="profile"
               className="profile-pic"
             />

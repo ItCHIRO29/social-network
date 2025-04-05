@@ -1,14 +1,39 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./nav.module.css";
+import NotificationsList from "../NotificationsList";
 
 export default function Nav() {
     const [hovered, setHovered] = useState("");
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [notificationCount, setNotificationCount] = useState(0);
     const iconSize = 25;
     const router = useRouter();
-    const  handleLogout = async function(){
+
+    useEffect(() => {
+        fetchNotificationCount();
+        // Set up polling for notification count
+        const interval = setInterval(fetchNotificationCount, 30000); // Check every 30 seconds
+        return () => clearInterval(interval);
+    }, []);
+
+    const fetchNotificationCount = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications/count`, {
+                credentials: 'include',
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setNotificationCount(data.count);
+            }
+        } catch (error) {
+            console.error('Error fetching notification count:', error);
+        }
+    };
+
+    const handleLogout = async function() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
             {
                 method: "POST",
@@ -21,6 +46,14 @@ export default function Nav() {
             console.log("Error logging out");
         }
     }
+
+    const toggleNotifications = () => {
+        console.log('Toggle notifications clicked. Current state:', showNotifications);
+        setShowNotifications(!showNotifications);
+        if (!showNotifications) {
+            setNotificationCount(0);
+        }
+    };
 
     return (
         <div className={styles.navContainer}>
@@ -55,8 +88,31 @@ export default function Nav() {
                 <div className={styles.navItem} 
                      onMouseEnter={() => setHovered("Notifications")} 
                      onMouseLeave={() => setHovered("")}>
-                    <Image src="/icons/notifications.svg" alt="notifications" width={iconSize} height={iconSize} />
+                    <button 
+                        className={styles.iconButton}
+                        onClick={toggleNotifications}
+                        type="button"
+                    >
+                        <Image 
+                            src="/icons/notifications.svg" 
+                            alt="notifications" 
+                            width={iconSize} 
+                            height={iconSize} 
+                        />
+                        {notificationCount > 0 && (
+                            <span className={styles.notificationBadge}>
+                                {notificationCount > 99 ? '99+' : notificationCount}
+                            </span>
+                        )}
+                    </button>
                     {hovered === "Notifications" && <div className={styles.description}>Notifications</div>}
+                    {showNotifications && (
+                        <NotificationsList 
+                            isVisible={showNotifications}
+                            onClose={() => setShowNotifications(false)}
+                            onNotificationsRead={() => setNotificationCount(0)}
+                        />
+                    )}
                 </div>
             </div>
 
@@ -64,8 +120,8 @@ export default function Nav() {
                 <div className={styles.navItem} 
                      onMouseEnter={() => setHovered("Logout")} 
                      onMouseLeave={() => setHovered("")}
-                    onClick={() => handleLogout()}
-                     >
+                     onClick={() => handleLogout()}
+                >
                     <Image src="/icons/logout.svg" alt="logout" width={iconSize} height={iconSize} />
                     {hovered === "Logout" && <div className={styles.description}>Logout</div>}
                 </div>

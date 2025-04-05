@@ -1,45 +1,79 @@
 .navContainer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    position: relative;
+    height: 100%;
 }
 
 .mainNavItems {
     display: flex;
-    gap: 20px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.logoutContainer {
-    margin-left: auto;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 0 auto; /* Center the nav items */
 }
 
 .navItem {
     position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
     cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.navItem:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .description {
     position: absolute;
-    bottom: -30px;
-    background-color: #000;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
     font-size: 14px;
     white-space: nowrap;
-    opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    z-index: 1000;
 }
 
-.navItem:hover .description {
-    opacity: 1;
-    transform: translateY(0);
+.logoutContainer {
+    margin-left: auto;
+    padding-right: 1rem;
+}
+
+.iconButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificationBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #e41e3f;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #1c1e21;
+    box-sizing: content-box;
 }

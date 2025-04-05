@@ -60,7 +60,7 @@ function AddMembers({ groupId }) {
 
                             }}>
                                 <div id='invit-info'>
-                                    <img src={`http://localhost:8080/` + user.image} alt="member" />
+                                    <img src={`${process.env.NEXT_PUBLIC_API_URL}/${user.image}`} alt="member" />
                                     {user.full_name}
                                 </div>
                                 <FontAwesomeIcon icon={faPlus} style={{ backgroundColor: "green", color: "#ffffff", fontSize: "20px" }} />

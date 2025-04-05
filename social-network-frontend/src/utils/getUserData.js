@@ -1,6 +1,11 @@
-export default async function getUserData(id) {
+export default async function getUserData(username = null) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile?id=${id}`, {
+        // If no username is provided or username is 'me', fetch logged-in user's profile
+        const url = username && username !== 'me'
+            ? `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/${username}`
+            : `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/me`;
+
+        const response = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

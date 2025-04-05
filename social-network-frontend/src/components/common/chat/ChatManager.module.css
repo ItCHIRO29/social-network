@@ -1,19 +1,22 @@
 .chatManager {
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 300px;
+  height: calc(100vh - 60px);
   background-color: #181818;
   color: #ffffff;
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   padding: 15px;
   box-sizing: border-box;
+  z-index: 199;
+  border-right: 1px solid #303030;
 }
 
 .chatManager h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
+  margin: 0 0 15px 0;
   padding-bottom: 10px;
   border-bottom: 1px solid #303030;
   font-weight: 500;
@@ -23,11 +26,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-y: auto;
   padding: 10px;
   background-color: #202020;
   border-radius: 8px;
-  flex: 1; /* Takes the remaining space */
+  flex: 1;
   margin-bottom: 10px;
 }
 

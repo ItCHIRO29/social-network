@@ -55,8 +55,7 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	Content := strings.TrimSpace(html.EscapeString(GroupPost.Content))
 	// GroupPost.Type = strings.ToLower(GroupPost.Type)
 	query := ""
-	str := strings.Trim(createdAt, " ")
-	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "GroupPost", str+author)
+	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(GroupPost.ID, 10))
 	GroupPost.UserID = userId
 	GroupPost.GroupId = group_id
 	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image) VALUES ( ?, ?, ?, ?,?, ?)"

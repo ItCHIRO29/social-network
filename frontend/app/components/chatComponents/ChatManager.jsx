@@ -229,7 +229,7 @@ const ChatManager = () => {
             >
               <img 
                 className={styles.avatar} 
-                src={`http://localhost:8080${userObj?.userData.image.slice(1)}`} 
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${userObj?.userData.image}`} 
                 alt="User avatar" 
               />
               <button

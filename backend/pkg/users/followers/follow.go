@@ -90,8 +90,8 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		return
 	}
 	if isPublic {
-		utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "unfollow", ReferenceId: int(id)})
+		utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "unfollow", ReferenceID: int64(id)})
 		return
 	}
-	utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "pending", ReferenceId: int(id)})
+	utils.WriteJSON(w, http.StatusOK, models.FollowButton{State: "pending", ReferenceID: int64(id)})
 }

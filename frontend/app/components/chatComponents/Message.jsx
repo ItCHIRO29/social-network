@@ -14,7 +14,7 @@ const Message = ({ message, myData, opponentData }) => {
       {!isSent && (
         <div className="message-pic">
           <img
-            src={`http://localhost:8080${opponentData?.image.slice(1)}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
             alt="Profile Picture"
             onClick={handleImageClick}
             className='profile-pic'

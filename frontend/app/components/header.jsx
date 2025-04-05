@@ -48,7 +48,7 @@ export default function Header() {
                 if (notifi.type == "follow_request") {
                     newNotif.innerHTML = `
                   <div class="notification-item">
-                  <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
+                  <img src="${process.env.NEXT_PUBLIC_API_URL}/${notifi.image}" width="70" height="70" alt="profile-pic" class="profile-pic">
                   <p>${notifi.sender_name} has followed you</p>
                   <div class="right">
                   <button class="accept">Accept</button>
@@ -59,7 +59,7 @@ export default function Header() {
                 } else if (notifi.type == "follow") {
                     newNotif.innerHTML = `
                   <div class="notification-item">
-                  <img src="http://localhost:8080/${notifi.image}" width=${70} height=${70} alt="profile-pic" class="profile-pic">
+                  <img src="${process.env.NEXT_PUBLIC_API_URL}/${notifi.image}" width="70" height="70" alt="profile-pic" class="profile-pic">
                   <p>${notifi.sender_name} has followed you</p>
                   </div>
                   `

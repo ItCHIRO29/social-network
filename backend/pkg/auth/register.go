@@ -24,7 +24,7 @@ func Register(db *sql.DB) http.HandlerFunc {
 		}
 
 		userData.Image, err = utils.ValidateAndSaveImage(r, "profile", userData.Username)
-		if err != nil && err.Error() != "no image" {
+		if err != nil {
 			fmt.Fprintln(os.Stderr, "in ValidateAndSaveImage", err)
 			utils.WriteJSON(w, http.StatusBadRequest, err.Error())
 			return

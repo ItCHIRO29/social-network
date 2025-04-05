@@ -1,0 +1,116 @@
+.postContainer {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.postHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.userInfo:hover .username {
+    color: #1a73e8;
+}
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    transition: color 0.2s ease;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.timestamp {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.postContent {
+    margin-bottom: 1rem;
+}
+
+.title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: #1a1a1a;
+}
+
+.content {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.imageContainer {
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.postImage {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.postActions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e8e8e8;
+}
+
+.commentButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    background: none;
+    color: #666;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.commentButton:hover {
+    background-color: #f5f5f5;
+    color: #1a73e8;
+}
+
+.commentIcon {
+    width: 20px;
+    height: 20px;
+} 

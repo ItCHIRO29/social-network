@@ -1,0 +1,26 @@
+.main {
+    position: fixed;
+    top: 60px;
+    margin-left: 320px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #121212;
+    display: flex;
+    overflow-y: auto;
+    width: calc(100% - 320px);
+}
+
+.chat-sidebar {
+    width: 300px;
+    background-color: #181818;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.container {
+    flex: 1;
+    padding: 20px;
+    max-width: 1200px;
+    overflow-y: auto;
+}

@@ -1,0 +1,120 @@
+.aboutUser {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.profileImage {
+    flex-shrink: 0;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.profileImage img {
+    object-fit: cover;
+}
+
+.userInfo {
+    flex-grow: 1;
+}
+
+.userInfo h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #1a1a1a;
+}
+
+.username {
+    color: #666;
+    margin: 0.5rem 0 1rem;
+    font-size: 1.1rem;
+}
+
+.stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.stats a {
+    text-decoration: none;
+    color: #666;
+    font-size: 1rem;
+}
+
+.stats a:hover {
+    color: #1a1a1a;
+}
+
+.count {
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-right: 0.25rem;
+}
+
+.followButton {
+    padding: 0.5rem 2rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background-color: #1a73e8;
+    color: white;
+}
+
+.followButton:hover {
+    background-color: #1557b0;
+}
+
+.followButton.following {
+    background-color: #e8e8e8;
+    color: #666;
+}
+
+.followButton.following:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.bio {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 1.5rem;
+}
+
+.bio h2 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin: 0 0 1rem;
+}
+
+.bio p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .stats {
+        justify-content: center;
+    }
+} 

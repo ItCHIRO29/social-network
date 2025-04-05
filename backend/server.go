@@ -33,8 +33,10 @@ func main() {
 	mainMux.Handle("/api/groups/", http.StripPrefix("/api/groups", groups.CreateGroupsMux(db)))
 	mainMux.Handle("/api/chat/", http.StripPrefix("/api/chat", chat.CreateChatMux(db)))
 	mainMux.Handle("/api/notifications/", http.StripPrefix("/api/notifications", notifications.CreateNotificationsMux(db)))
+
 	// serve images
 	mainMux.Handle("/uploads/", http.StripPrefix("/uploads", http.FileServer(http.Dir("uploads"))))
+
 	mainMux.Handle("/api/ws", http.StripPrefix("/api/ws", auth.Middleware(db, 20, 20, time.Second, ws.Upgrade)))
 	go ws.Hub.Run()
 	go ws.Hub.PingService(db)

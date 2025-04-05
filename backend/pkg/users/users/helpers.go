@@ -45,7 +45,7 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									END AS follow_state
 									FROM users u
 									LEFT JOIN followers f ON (f.follower_id =$1 AND f.following_id = u.id )
-									WHERE u.id=$2;`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public, &user.Followers_count, &user.Followings_count, &user.FollowButton.ReferenceId, &user.FollowButton.State)
+									WHERE u.id=$2;`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Nickname, &user.Age, &user.Gender, &user.Bio, &user.Image, &user.Email, &user.Public, &user.Followers_count, &user.Followings_count, &user.FollowButton.ReferenceID, &user.FollowButton.State)
 		if err != nil {
 			fmt.Println("Error in GetUserData Public Prof:", err)
 			return nil, err
@@ -71,7 +71,7 @@ func GetUserData(db *sql.DB, myUserId *int, userId *int) (any, error) {
 									FROM users u
 									LEFT JOIN followers f ON (f.follower_id =$1 AND f.following_id = u.id AND f.accepted = 1)
 									WHERE u.id=$2;
-		`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Image, &user.Public, &user.Followers_count, &user.Followings_count, &user.FollowButton.ReferenceId, &user.FollowButton.State)
+		`, args...).Scan(&user.ID, &user.Username, &user.FirstName, &user.LastName, &user.Image, &user.Public, &user.Followers_count, &user.Followings_count, &user.FollowButton.ReferenceID, &user.FollowButton.State)
 		if err != nil {
 			fmt.Println("error in GetUserData Private Prof:", err)
 			return nil, err

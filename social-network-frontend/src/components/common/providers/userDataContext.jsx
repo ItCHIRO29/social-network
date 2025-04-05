@@ -11,7 +11,8 @@ export function UserDataProvider({ children }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const data = await getUserData(0); // Assuming getUserData() is async
+                // Call getUserData without parameters to get logged-in user's data
+                const data = await getUserData();
                 setUserData(data);
             } catch (error) {
                 console.error("Error fetching user data:", error);

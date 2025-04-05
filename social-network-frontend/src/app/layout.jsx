@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/common/header/header";
 import { ChatManager } from "@/components/common/chat/ChatManager";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname , useRouter} from "next/navigation";
 import { WebSocketContext, Ws } from "@/components/common/providers/websocketContext";
 import { UserDataProvider } from "../components/common/providers/userDataContext";
 
@@ -22,13 +22,16 @@ export default function RootLayout({ children }) {
   const [ws, setWs] = useState(null);
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname === "/register";
+  const router = useRouter();
   
   useEffect(() => {
     if (!ws) {
       const ws = new Ws();
-      setWs(ws);
+      setWs(ws.getSocket());
+      return;
     }
-  }, [ws]);
+    setWs(ws.getSocket());
+  }, [router]);
 
   return (
     <html lang="en">

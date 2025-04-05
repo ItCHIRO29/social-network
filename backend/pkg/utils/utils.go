@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -60,10 +61,17 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 
 		var path string
 		if imageType == "profile" {
-			path = "./uploads/profileImages/" + filename + extension
+			path = "uploads/profileImages/" + filename + extension
 		} else if imageType == "post" {
-			path = "./uploads/postsImages/" + filename + extension
+			path = "uploads/postsImages/" + filename + extension
 		}
+
+		err = os.MkdirAll(filepath.Dir(path), 0755)
+		if err != nil {
+			fmt.Println("Error creating directory:", err)
+			return "", err
+		}
+
 		dest, err := os.Create(path)
 		if err != nil {
 			fmt.Println("in create", err)

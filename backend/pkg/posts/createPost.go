@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -49,8 +50,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	// if post.Image != "" {
 	// post.Image = strings.TrimSpace(html.EscapeString(post.Image))
 	// strID := strconv.Itoa(post.ID)
-	str := strings.Trim(createdAt, " ")
-	post.Image, _ = utils.ValidateAndSaveImage(r, "post", str+author)
+	post.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(post.ID, 10))
 	// fmt.Println("post.Image:", post.Image)
 	post.UserID = userId
 	// fmt.Println("post::::::::", post)
