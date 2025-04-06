@@ -75,7 +75,7 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusInternalServerError, models.HttpError{Error: "Internal Server Error"})
 		return
 	}
-	err = notifications.SendNotification(tx, userId, followingId, notificationType, int(id))
+	err = notifications.SendNotification(tx, db, userId, followingId, notificationType, int(id))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		tx.Rollback()

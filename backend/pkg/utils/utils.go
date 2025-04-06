@@ -85,7 +85,7 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 		}
 		return path, nil
 	}
-	return "", errors.New("no image")
+	return "", nil
 }
 
 // CORS Middleware

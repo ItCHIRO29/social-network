@@ -62,14 +62,10 @@ export default function FollowButton({ userData }) {
     };
 
     return (
-        <button 
-            className={styles.followButton} 
-            onClick={handleClick}
-            data-state={followState}
-        >
+        <button className={styles.followButton} onClick={handleClick}>
             {followState === "follow" && "Follow"}
-            {followState === "unfollow" && "Following"}
-            {followState === "pending" && "Requested"}
+            {followState === "unfollow" && "Unfollow"}
+            {followState === "pending" && "Cancel Request"}
         </button>
     );
 } 

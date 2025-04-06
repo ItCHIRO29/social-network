@@ -9,35 +9,40 @@ import (
 )
 
 func GetFollowers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	Followers := make([]models.Followers, 0) // Initialize as empty array instead of nil
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		http.Error(w, "username is required", http.StatusBadRequest)
+		return
+	}
+	uId, err := utils.GetUserIdFromUsername(db, username)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	query := `SELECT f.follower_id
+	Followers := make([]models.Followers, 0)
+
+	query := `SELECT f.follower_id, u.image
 FROM followers f 
 JOIN users u ON f.follower_id = u.id  
 WHERE f.following_id = $1 AND f.accepted = 1`
-	rows, err := db.Query(query, userId)
+
+	rows, err := db.Query(query, uId)
 	if err != nil {
-		// Return empty array instead of error
-		utils.WriteJSON(w, http.StatusOK, Followers)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var Follower models.Followers
-		err := rows.Scan(&Follower.ID)
+		var follower models.Followers
+		err := rows.Scan(&follower.ID, &follower.Image)
+		follower.Username, err = utils.GetUsernameFromId(db, follower.ID)
 		if err != nil {
-			// Return empty array instead of error
-			utils.WriteJSON(w, http.StatusOK, Followers)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-		Follower.Username, err = utils.GetFullNameFromId(db, Follower.ID)
-		if err != nil {
-			// Return empty array instead of error
-			utils.WriteJSON(w, http.StatusOK, Followers)
-			return
-		}
-		Followers = append(Followers, Follower)
+		Followers = append(Followers, follower)
 	}
 	utils.WriteJSON(w, http.StatusOK, Followers)
 }

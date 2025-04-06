@@ -10,6 +10,8 @@ import FollowButton from '@/components/common/FollowButton';
 export default function AboutUser({ user }) {
     const [showFollowers, setShowFollowers] = useState(false);
     const [showFollowing, setShowFollowing] = useState(false);
+    const [followers, setFollowers] = useState([]);
+    const [following, setFollowing] = useState([]);
     
     const { userData } = useUserData();
     const isOwnProfile = userData?.username === user.username;
@@ -37,13 +39,13 @@ export default function AboutUser({ user }) {
                             className={styles.statButton} 
                             onClick={() => setShowFollowers(true)}
                         >
-                            <span className={styles.count}>{user.followers_count || 0}</span> followers
+                            <span className={styles.count}>{followers.length || 0}</span> followers
                         </button>
                         <button 
                             className={styles.statButton} 
                             onClick={() => setShowFollowing(true)}
                         >
-                            <span className={styles.count}>{user.followings_count || 0}</span> following
+                            <span className={styles.count}>{following.length || 0}</span> following
                         </button>
                     </div>
                     
@@ -103,17 +105,23 @@ export default function AboutUser({ user }) {
             )}
 
             <UserListPopup
+                key={"followers"}
                 isOpen={showFollowers}
                 onClose={() => setShowFollowers(false)}
-                users={user.followers || []}
                 title="Followers"
+                username={user.username}
+                followers={followers}
+                setFollowers={setFollowers}
             />
 
             <UserListPopup
+                key={"following"}
                 isOpen={showFollowing}
                 onClose={() => setShowFollowing(false)}
-                users={user.following || []}
                 title="Following"
+                username={user.username}
+                following={following}
+                setFollowing={setFollowing}
             />
         </div>
     );

@@ -10,6 +10,14 @@
     font-size: 2rem;
 }
 
+.fullName {
+    cursor: pointer;
+}
+
+.fullName:hover {
+    text-decoration: underline;
+}
+
 .usersGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -39,6 +47,7 @@
     object-fit: cover;
     margin-bottom: 1rem;
     border: 3px solid #f0f0f0;
+    cursor: pointer;
 }
 
 .userCard h3 {

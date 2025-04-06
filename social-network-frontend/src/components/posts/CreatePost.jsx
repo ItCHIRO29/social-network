@@ -145,7 +145,7 @@ export default function CreatePost({ onPostCreated }) {
             <form onSubmit={handleSubmit} className={styles.postForm}>
                 <div className={styles.userInfo}>
                     <img 
-                        src={`${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` || "/images/default-avatar.svg"} 
+                        src={userData.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/default-avatar.svg"}
                         alt="profile" 
                         className={styles.profileImage}
                     />

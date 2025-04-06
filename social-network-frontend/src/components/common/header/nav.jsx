@@ -1,9 +1,12 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./nav.module.css";
-import NotificationsList from "../NotificationsList";
+import NotificationsList from "@/components/notifications/NotificationsList";
+import { useUserData } from '@/components/common/providers/userDataContext';
 
 export default function Nav() {
     const [hovered, setHovered] = useState("");
@@ -11,12 +14,22 @@ export default function Nav() {
     const [notificationCount, setNotificationCount] = useState(0);
     const iconSize = 25;
     const router = useRouter();
+    const { userData } = useUserData();
 
     useEffect(() => {
+        // Initial fetch of notification count
         fetchNotificationCount();
-        // Set up polling for notification count
-        const interval = setInterval(fetchNotificationCount, 30000); // Check every 30 seconds
-        return () => clearInterval(interval);
+
+        // Listen for new notifications from websocket
+        document.addEventListener('notification', () => {
+            setNotificationCount(prev => prev + 1);
+        });
+
+        return () => {
+            document.removeEventListener('notification', () => {
+                setNotificationCount(prev => prev + 1);
+            });
+        };
     }, []);
 
     const fetchNotificationCount = async () => {
@@ -58,6 +71,21 @@ export default function Nav() {
     return (
         <div className={styles.navContainer}>
             <div className={styles.mainNavItems}>
+            <div className={styles.navItem} 
+                     onMouseEnter={() => setHovered("Profile")} 
+                     onMouseLeave={() => setHovered("")}>
+                    <Link href={`/profile/${userData?.username}`}>
+                        <Image 
+                            src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData.image}` : "/images/default-avatar.svg"} 
+                            alt="profile" 
+                            width={iconSize} 
+                            height={iconSize} 
+                            className={styles.profileIcon}
+                        />
+                    </Link>
+                    {hovered === "Profile" && <div className={styles.description}>Profile</div>}
+                </div>
+
                 <div className={styles.navItem} 
                      onMouseEnter={() => setHovered("Home")} 
                      onMouseLeave={() => setHovered("")}>
@@ -67,6 +95,7 @@ export default function Nav() {
                     {hovered === "Home" && <div className={styles.description}>Home</div>}
                 </div>
 
+               
                 <div className={styles.navItem} 
                      onMouseEnter={() => setHovered("People")} 
                      onMouseLeave={() => setHovered("")}>

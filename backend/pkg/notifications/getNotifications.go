@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
-	"strings"
+	"time"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -12,33 +12,53 @@ import (
 
 func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// fmt.Println("GetNotifications")
-	query := `SELECT * FROM notifications WHERE (receiver_id = $1 AND sender_id != $1)`
+	query := `SELECT n.id, n.sender_id, n.receiver_id, n.type, n.reference_id, n.created_at, u.image FROM notifications n JOIN users u ON n.sender_id = u.id WHERE (n.receiver_id = $1 AND n.sender_id != $1)`
 	rows, err := db.Query(query, userId)
 	if err != nil {
 		fmt.Println("error in GetNotifications", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 	notifications := []models.Notification{}
 	for rows.Next() {
 		var notification models.Notification
-		err := rows.Scan(&notification.NotificationId, &notification.Receiver_id, &notification.Sender_id, &notification.Type, &notification.Reference_id, &notification.Content, &notification.Seen, &notification.CreatedAt)
+		var senderId int
+		var receiverId int
+		var createdAtStr string
+		err := rows.Scan(&notification.Id, &senderId, &receiverId, &notification.Type, &notification.ReferenceId, &createdAtStr, &notification.Image)
 		if err != nil {
 			fmt.Println("error in GetNotifications", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-		notification.UserId = userId
-		notification.Receiver_name = utils.GetUserName(db, notification.Receiver_id)
-		notification.Sender_name = utils.GetUserName(db, notification.Sender_id)
-		err = db.QueryRow("SELECT image FROM users WHERE id = ?", notification.Sender_id).Scan(&notification.Sender_image)
+
+		// Parse the timestamp string
+		createdAt, err := time.Parse("2006-01-02 15:04:05.999999999-07:00", createdAtStr)
 		if err != nil {
-			fmt.Println("error in GetNotifications", err)
+			fmt.Printf("error parsing timestamp %s: %v\n", createdAtStr, err)
+			// Try alternative format if the first one fails
+			createdAt, err = time.Parse("2006-01-02 15:04:05", createdAtStr)
+			if err != nil {
+				fmt.Printf("error parsing timestamp with alternative format: %v\n", err)
+				http.Error(w, "internal server error", http.StatusInternalServerError)
+				return
+			}
+		}
+		notification.CreatedAt = createdAt
+
+		notification.Sender, err = utils.GetUsernameFromId(db, senderId)
+		if err != nil {
+			fmt.Println("error in GetNotifications get sender username", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-		notification.Sender_image = strings.Trim(notification.Sender_image, "./")
-		// fmt.Println("notification", notification.Sender_image)
+		notification.Receiver, err = utils.GetUsernameFromId(db, receiverId)
+		if err != nil {
+			fmt.Println("error in GetNotifications get receiver username", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
 		notifications = append(notifications, notification)
 	}
 	// fmt.Println("notifications", notifications)

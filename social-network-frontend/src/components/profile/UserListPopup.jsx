@@ -3,8 +3,32 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './UserListPopup.module.css';
+import { useEffect, useState } from 'react';
 
-export default function UserListPopup({ isOpen, onClose, users = [], title }) {
+export default function UserListPopup({ isOpen, onClose, title, username }) {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            if (!username || !isOpen) return;
+            
+            try {
+                const endpoint = title.toLowerCase();
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${endpoint}?username=${username}`,
+                    { credentials: 'include' }
+                );
+                if (!response.ok) throw new Error('Failed to fetch users');
+                setUsers(await response.json());
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                setUsers([]);
+            }
+        };
+
+        fetchUsers();
+    }, [username, title, isOpen]);
+
     if (!isOpen) return null;
 
     return (
@@ -16,9 +40,7 @@ export default function UserListPopup({ isOpen, onClose, users = [], title }) {
                 </div>
                 <div className={styles.content}>
                     {users.length === 0 ? (
-                        <div className={styles.emptyState}>
-                            No {title.toLowerCase()} yet
-                        </div>
+                        <div className={styles.emptyState}>No {title.toLowerCase()} yet</div>
                     ) : (
                         <ul className={styles.userList}>
                             {users.map(user => (
@@ -26,13 +48,12 @@ export default function UserListPopup({ isOpen, onClose, users = [], title }) {
                                     <Link href={`/profile/${user.username}`} onClick={onClose}>
                                         <Image
                                             src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/profile.png'}
-                                            alt={user.full_name}
+                                            alt={user.username}
                                             width={40}
                                             height={40}
                                         />
                                         <div className={styles.userInfo}>
-                                            <span className={styles.name}>{user.full_name}</span>
-                                            <span className={styles.username}>@{user.username}</span>
+                                            <span className={styles.name}>{user.username}</span>
                                         </div>
                                     </Link>
                                 </li>

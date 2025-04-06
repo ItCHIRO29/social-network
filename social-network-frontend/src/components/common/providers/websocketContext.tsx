@@ -26,9 +26,7 @@ export class Ws {
         console.log("message", message)
         switch (message.type) {
             case 'private message':
-                console.log("received message", message)
                 const eventName = `privateMessage-${message.sender}`;
-                console.log("eventName", eventName)
                 const pEvent = new CustomEvent(eventName, { detail: { message } });
                 document.dispatchEvent(pEvent);
                 break;

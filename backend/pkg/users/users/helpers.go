@@ -10,7 +10,6 @@ func GetUserData(db *sql.DB, viewerID, profileID int) (models.PublicProfile, err
 	var user models.PublicProfile
 
 	if viewerID == profileID {
-		// If viewing own profile, get all data directly
 		err := db.QueryRow(`
 			SELECT 
 				id,
