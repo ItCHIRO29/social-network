@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import styles from './page.module.css';
 import AboutUser from '@/components/profile/AboutUser';
 import Posts from '@/components/posts/Posts';
+import { useUserData } from '@/components/common/providers/userDataContext';
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -12,8 +13,36 @@ export default function ProfilePage() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { userData: currentUser } = useUserData();
     
     const username = params?.username;
+    const isOwnProfile = currentUser?.username === username;
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile?username=${username}`, {
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    router.push('/login');
+                    return;
+                }
+                if (response.status === 404) {
+                    throw new Error('User not found');
+                }
+                throw new Error('Failed to fetch user data');
+            }
+
+            const data = await response.json();
+            setUserData(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (!username) {
@@ -22,34 +51,8 @@ export default function ProfilePage() {
             return;
         }
 
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/${username}`, {
-                    credentials: 'include',
-                });
-
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        router.push('/login');
-                        return;
-                    }
-                    if (response.status === 404) {
-                        throw new Error('User not found');
-                    }
-                    throw new Error('Failed to fetch user data');
-                }
-
-                const data = await response.json();
-                setUserData(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchUserData();
-    }, [username, router]);
+    }, [username]);
 
     if (loading) {
         return <div className={styles.loading}>Loading...</div>;
@@ -64,13 +67,16 @@ export default function ProfilePage() {
     }
 
     return (
+        <div className={styles.container}>
         <div className={styles.profileContainer}>
-            <AboutUser user={userData} />
-            <Posts 
-                endpoint={`/api/posts/user/${userData.id}`}
-                emptyMessage="No posts yet"
-                title="Posts"
+            <AboutUser 
+                user={userData}
             />
+            <Posts 
+                userId={userData.id}
+                showCreatePost={isOwnProfile}
+            />
+        </div>
         </div>
     );
 } 

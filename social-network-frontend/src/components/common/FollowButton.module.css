@@ -1,41 +1,54 @@
 .followButton {
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 6px;
     font-weight: 600;
+    font-size: 14px;
+    border: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: none;
-    min-width: 120px;
+    min-width: 100px;
 }
 
 .followButton:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-.follow {
-    background-color: #1877f2;
+/* Follow state - Blue */
+.followButton[data-state="follow"] {
+    background-color: #0095f6;
     color: white;
 }
 
-.follow:hover:not(:disabled) {
-    background-color: #166fe5;
+.followButton[data-state="follow"]:hover {
+    background-color: #0074cc;
 }
 
-.unfollow {
-    background-color: #e4e6eb;
-    color: #050505;
+/* Unfollow state - Dark with border */
+.followButton[data-state="unfollow"] {
+    background-color: #262626;
+    color: #ffffff;
+    border: 1px solid #404040;
 }
 
-.unfollow:hover:not(:disabled) {
-    background-color: #d8dadf;
+.followButton[data-state="unfollow"]:hover {
+    background-color: #1a1a1a;
+    border-color: #666;
 }
 
-.pending {
-    background-color: #e4e6eb;
-    color: #050505;
+/* Pending state - Orange/Warning */
+.followButton[data-state="pending"] {
+    background-color: #ff9800;
+    color: #1a1a1a;
 }
 
-.pending:hover:not(:disabled) {
-    background-color: #d8dadf;
+.followButton[data-state="pending"]:hover {
+    background-color: #f57c00;
+}
+
+/* Hover state class */
+.hover.unfollow, .hover.pending {
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+    color: #d32f2f;
 } 

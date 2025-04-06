@@ -1,28 +1,25 @@
 .aboutUser {
-    background: white;
+    background: #1a1a1a;
     border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
 }
 
 .header {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
 .profileImage {
     flex-shrink: 0;
-    position: relative;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .profileImage img {
+    border-radius: 50%;
     object-fit: cover;
+    border: 2px solid #333;
 }
 
 .userInfo {
@@ -30,80 +27,147 @@
 }
 
 .userInfo h1 {
-    margin: 0;
-    font-size: 2rem;
-    color: #1a1a1a;
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
 }
 
 .username {
-    color: #666;
-    margin: 0.5rem 0 1rem;
-    font-size: 1.1rem;
+    color: #9e9e9e;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.nickname {
+    color: #9e9e9e;
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.privateLabel {
+    color: #ff9800;
+    margin: 0 0 16px 0;
+    font-size: 14px;
 }
 
 .stats {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 1rem;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
-.stats a {
-    text-decoration: none;
-    color: #666;
-    font-size: 1rem;
+.statButton {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    color: #9e9e9e;
+    cursor: pointer;
 }
 
-.stats a:hover {
-    color: #1a1a1a;
+.statButton:hover {
+    color: #ffffff;
 }
 
 .count {
     font-weight: 600;
-    color: #1a1a1a;
-    margin-right: 0.25rem;
+    color: #ffffff;
+    margin-right: 4px;
 }
 
-.followButton {
-    padding: 0.5rem 2rem;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    background-color: #1a73e8;
-    color: white;
+.details {
+    border-top: 1px solid #333;
+    padding-top: 24px;
 }
 
-.followButton:hover {
-    background-color: #1557b0;
+.personalInfo {
+    margin-bottom: 24px;
 }
 
-.followButton.following {
-    background-color: #e8e8e8;
-    color: #666;
+.personalInfo h2 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+    color: #ffffff;
 }
 
-.followButton.following:hover {
-    background-color: #dc3545;
-    color: white;
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #262626;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.infoItem strong {
+    font-size: 14px;
+    color: #9e9e9e;
+}
+
+.infoItem span {
+    font-size: 16px;
+    color: #ffffff;
 }
 
 .bio {
-    border-top: 1px solid #e8e8e8;
-    padding-top: 1.5rem;
+    margin-top: 24px;
+    background: #262626;
+    padding: 16px;
+    border-radius: 8px;
 }
 
 .bio h2 {
-    font-size: 1.2rem;
-    color: #1a1a1a;
-    margin: 0 0 1rem;
+    font-size: 18px;
+    margin: 0 0 12px 0;
+    color: #ffffff;
 }
 
 .bio p {
-    color: #666;
-    line-height: 1.6;
     margin: 0;
+    color: #e0e0e0;
+    line-height: 1.5;
+}
+
+.followButton {
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.followButton:hover {
+    background-color: #0074cc;
+}
+
+.followButton.following {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.privateMessage {
+    text-align: center;
+    padding: 2rem;
+    background-color: #262626;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.privateMessage p {
+    color: #9e9e9e;
+    margin: 0;
+    font-style: italic;
 }
 
 @media (max-width: 768px) {

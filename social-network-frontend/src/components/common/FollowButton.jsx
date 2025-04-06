@@ -1,98 +1,75 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './FollowButton.module.css';
 
-export default function FollowButton({ userData, onStateChange }) {
-    const [followState, setFollowState] = useState('follow');
-    const [referenceId, setReferenceId] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+export default function FollowButton({ userData }) {
+    const followButton = userData.follow_button;
+    console.log(followButton);
+    if (!followButton || followButton.state === 'none') {
+        return null;
+    }
 
-    useEffect(() => {
-        if (userData.follow_button) {
-            setFollowState(userData.follow_button.state);
-            setReferenceId(userData.follow_button.reference_id);
-        } else {
-            // If no follow_button data, check if we have follow_state directly
-            if (userData.follow_state) {
-                setFollowState(userData.follow_state);
-                setReferenceId(userData.reference_id || 0);
-            } else {
-                setFollowState('follow');
-                setReferenceId(0);
-            }
-        }
-    }, [userData]);
+    const [followState, setFollowState] = useState(followButton.state);
+    const [referenceId, setReferenceId] = useState(followButton.reference_id);
 
     const handleFollow = async () => {
-        setIsLoading(true);
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?username=${userData.username}`, {
-                method: 'POST',
-                credentials: 'include',
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
             });
-            if (response.ok) {
-                const data = await response.json();
-                setFollowState(data.follow_state);
-                setReferenceId(data.reference_id);
-                if (onStateChange) onStateChange(userData.username);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            const data = await response.json();
+            setReferenceId(data.reference_id);
+            setFollowState(data.state);
         } catch (error) {
-            console.error('Error following user:', error);
-        } finally {
-            setIsLoading(false);
+            console.error("Follow Error:", error);
         }
     };
 
-    const handleUnfollow = async () => {
-        setIsLoading(true);
+    const handleUnfollow = async (reference_id) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?reference_id=${referenceId}`, {
-                method: 'DELETE',
-                credentials: 'include',
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?reference_id=${reference_id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
             });
-            if (response.ok) {
-                setFollowState('follow');
-                setReferenceId(0);
-                if (onStateChange) onStateChange(userData.username);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            setFollowState("follow");
         } catch (error) {
-            console.error('Error unfollowing user:', error);
-        } finally {
-            setIsLoading(false);
+            console.error("Unfollow Error:", error);
         }
     };
 
-    const getButtonText = () => {
-        switch (followState) {
-            case 'follow':
-                return 'Follow';
-            case 'unfollow':
-                return 'Unfollow';
-            case 'pending':
-                return 'Cancel Request';
-            default:
-                return 'Follow';
-        }
-    };
-
-    const handleClick = () => {
-        if (isLoading) return;
-        
-        if (followState === 'follow') {
-            handleFollow();
-        } else {
-            handleUnfollow();
+    const handleClick = async () => {
+        if (followState === "follow") {
+            await handleFollow();
+        } else if (followState === "pending" || followState === "unfollow") {
+            await handleUnfollow(referenceId);
         }
     };
 
     return (
-        <button
-            className={`${styles.followButton} ${styles[followState]}`}
+        <button 
+            className={styles.followButton} 
             onClick={handleClick}
-            disabled={isLoading}
+            data-state={followState}
         >
-            {isLoading ? '...' : getButtonText()}
+            {followState === "follow" && "Follow"}
+            {followState === "unfollow" && "Following"}
+            {followState === "pending" && "Requested"}
         </button>
     );
 } 

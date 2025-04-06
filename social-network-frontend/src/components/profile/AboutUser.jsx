@@ -1,34 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from './AboutUser.module.css';
+import UserListPopup from './UserListPopup';
+import { useUserData } from '@/components/common/providers/userDataContext';
+import FollowButton from '@/components/common/FollowButton';
 
 export default function AboutUser({ user }) {
-    const [isFollowing, setIsFollowing] = useState(user.is_following);
-    const [followersCount, setFollowersCount] = useState(user.followers_count);
-    const [followingCount, setFollowingCount] = useState(user.following_count);
-
-    const handleFollow = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow`, {
-                method: isFollowing ? 'DELETE' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ user_id: user.id }),
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                setIsFollowing(!isFollowing);
-                setFollowersCount(prev => isFollowing ? prev - 1 : prev + 1);
-            }
-        } catch (error) {
-            console.error('Error following/unfollowing user:', error);
-        }
-    };
+    const [showFollowers, setShowFollowers] = useState(false);
+    const [showFollowing, setShowFollowing] = useState(false);
+    
+    const { userData } = useUserData();
+    const isOwnProfile = userData?.username === user.username;
 
     return (
         <div className={styles.aboutUser}>
@@ -36,39 +20,101 @@ export default function AboutUser({ user }) {
                 <div className={styles.profileImage}>
                     <Image
                         src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/profile.png'}
-                        alt={user.full_name}
+                        alt={`Profile picture of ${user.first_name} ${user.last_name}`}
                         width={150}
                         height={150}
                         priority
                     />
                 </div>
                 <div className={styles.userInfo}>
-                    <h1>{user.full_name}</h1>
+                    <h1>{user.first_name} {user.last_name}</h1>
                     <p className={styles.username}>@{user.username}</p>
+                    {user.nickname && <p className={styles.nickname}>({user.nickname})</p>}
+                    {!user.public && <p className={styles.privateLabel}>(Private Account)</p>}
+                    
                     <div className={styles.stats}>
-                        <Link href={`/profile/${user.id}/followers`}>
-                            <span className={styles.count}>{followersCount}</span> followers
-                        </Link>
-                        <Link href={`/profile/${user.id}/following`}>
-                            <span className={styles.count}>{followingCount}</span> following
-                        </Link>
-                    </div>
-                    {user.id !== parseInt(localStorage.getItem('userId')) && (
                         <button 
-                            className={`${styles.followButton} ${isFollowing ? styles.following : ''}`}
-                            onClick={handleFollow}
+                            className={styles.statButton} 
+                            onClick={() => setShowFollowers(true)}
                         >
-                            {isFollowing ? 'Following' : 'Follow'}
+                            <span className={styles.count}>{user.followers_count || 0}</span> followers
                         </button>
+                        <button 
+                            className={styles.statButton} 
+                            onClick={() => setShowFollowing(true)}
+                        >
+                            <span className={styles.count}>{user.followings_count || 0}</span> following
+                        </button>
+                    </div>
+                    
+                    {!isOwnProfile && user.follow_button?.state !== 'none' && (
+                        <FollowButton userData={user} />
                     )}
                 </div>
             </div>
-            {user.bio && (
-                <div className={styles.bio}>
-                    <h2>About</h2>
-                    <p>{user.bio}</p>
+
+            {/* Show full profile info only if public or own profile */}
+            {(user.public || isOwnProfile) && (
+                <div className={styles.details}>
+                    <div className={styles.personalInfo}>
+                        <h2>Personal Information</h2>
+                        <div className={styles.infoGrid}>
+                            <div className={styles.infoItem}>
+                                <strong>First Name:</strong>
+                                <span>{user.first_name}</span>
+                            </div>
+                            <div className={styles.infoItem}>
+                                <strong>Last Name:</strong>
+                                <span>{user.last_name}</span>
+                            </div>
+                            {user.nickname && (
+                                <div className={styles.infoItem}>
+                                    <strong>Nickname:</strong>
+                                    <span>{user.nickname}</span>
+                                </div>
+                            )}
+                            {user.age > 0 && (
+                                <div className={styles.infoItem}>
+                                    <strong>Age:</strong>
+                                    <span>{user.age}</span>
+                                </div>
+                            )}
+                            {user.gender && (
+                                <div className={styles.infoItem}>
+                                    <strong>Gender:</strong>
+                                    <span>{user.gender}</span>
+                                </div>
+                            )}
+                            {user.email && (
+                                <div className={styles.infoItem}>
+                                    <strong>Email:</strong>
+                                    <span>{user.email}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    {user.bio && (
+                        <div className={styles.bio}>
+                            <h2>About</h2>
+                            <p>{user.bio}</p>
+                        </div>
+                    )}
                 </div>
             )}
+
+            <UserListPopup
+                isOpen={showFollowers}
+                onClose={() => setShowFollowers(false)}
+                users={user.followers || []}
+                title="Followers"
+            />
+
+            <UserListPopup
+                isOpen={showFollowing}
+                onClose={() => setShowFollowing(false)}
+                users={user.following || []}
+                title="Following"
+            />
         </div>
     );
 } 

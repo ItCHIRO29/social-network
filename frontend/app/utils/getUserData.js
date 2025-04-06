@@ -1,7 +1,12 @@
 export default async function FetchData(category, id) {
     try {
         if (category === "profile") {
-            const response = await fetch(`http://localhost:8080/api/users/profile?id=${id}`, {
+            // If id is 0 or not provided, fetch current user's profile
+            const endpoint = id === 0 || !id 
+                ? `http://localhost:8080/api/users/profile/me`
+                : `http://localhost:8080/api/users/profile/${id}`;
+
+            const response = await fetch(endpoint, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

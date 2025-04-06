@@ -31,6 +31,7 @@ header {
 
 .main-content {
     width: 100%;
+    margin-top: 60px;
 }
 
 .posts-container {
