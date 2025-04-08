@@ -14,6 +14,7 @@ export default function Post({ post }) {
 
     return (
         <div className={styles.postContainer}>
+            <h1 style={{ color: "black" }}>ID: {post.ID}</h1 >
             <section className={styles.postHeader}>
                 <Link href={`/profile/${post.Username}`} className={styles.userInfo}>
                     <img
