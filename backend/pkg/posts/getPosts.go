@@ -28,7 +28,8 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
     posts.title, 
     posts.content, 
     posts.created_at, 
-    posts.image
+    posts.image,
+	posts.privacy
 FROM posts
 LEFT JOIN json_each(posts.can_see) ON true
 WHERE 
@@ -49,7 +50,7 @@ ORDER BY posts.id DESC;`
 		// return
 	} else {
 		if user_id_str == "0" {
-			query = "SELECT id, user_id, title, content, created_at, image  FROM posts WHERE user_id = ? ORDER BY id DESC"
+			query = "SELECT id, user_id, title, content, created_at, privacy, image  FROM posts WHERE user_id = ? ORDER BY id DESC"
 			rows, err = db.Query(query, userId)
 			if err != nil {
 				fmt.Println("error in GetPosts:", err)
@@ -65,7 +66,7 @@ ORDER BY posts.id DESC;`
 			}
 
 			query := `
-   					 SELECT id, user_id, title, content, created_at, image
+   					 SELECT id, user_id, title, content, created_at, image , privacy
 						FROM posts
 						WHERE 
    						(privacy = 'public' AND user_id = ?) 
@@ -95,7 +96,7 @@ ORDER BY posts.id DESC;`
 	for rows.Next() {
 		var post models.Posts
 		post.GroupId = 1
-		err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image)
+		err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image, &post.Type)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")

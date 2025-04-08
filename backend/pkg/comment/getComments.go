@@ -27,7 +27,12 @@ func GetComments(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 			utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Internal server error"})
 			return
 		}
-		comment.AuthorName = utils.GetUserName(db, comment.AuthorID)
+		comment.AuthorName, err = utils.GetFullNameFromId(db, comment.AuthorID)
+		if err != nil {
+			fmt.Printf("Error getting author name: %v\n", err)
+			utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Internal server error"})
+			return
+		}
 		comments = append(comments, comment)
 	}
 	utils.WriteJSON(w, http.StatusOK, comments)
