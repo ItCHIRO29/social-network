@@ -18,16 +18,16 @@ export default function AboutUser({ user }) {
     const { userData } = useUserData();
     const isOwnProfile = userData?.username === user.username;
 
-    useEffect(() => {
-        console.log("user =========>", user);
-    }, []);
+    // useEffect(() => {
+    //     console.log("user =========>", user);
+    // }, []);
 
     return (
         <div className={styles.aboutUser}>
             <div className={styles.header}>
                 <div className={styles.profileImage}>
                     <Image
-                        src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/profile.png'}
+                        src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/default-avatar.svg'}
                         alt={`Profile picture of ${user.first_name} ${user.last_name}`}
                         width={150}
                         height={150}

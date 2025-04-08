@@ -48,7 +48,7 @@ export default function CreatePost({ onPostCreated }) {
                 ...prev,
                 [name]: validateImage(file)
             }));
-            // Create preview URL
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);

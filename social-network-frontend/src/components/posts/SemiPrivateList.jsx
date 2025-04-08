@@ -10,7 +10,7 @@ export default function SemiPrivateList({ selectedFollowers, onSelectionChange }
     useEffect(() => {
         async function fetchFollowers() {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/followers`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/followers?username=${userData.username}`, {
                     credentials: 'include',
                 });
                 if (response.ok) {
