@@ -10,9 +10,6 @@ import (
 )
 
 func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	// fmt.Println("Get groups")
-	// rows, err := db.Query("SELECT g.id, g.name, g.description FROM groups g JOIN group_members gm on g.id = gm.group_id  WHERE (gm.user_id = 1; AND gm.accepted = 1)", userId)
-	// rows, err := db.Query("SELECT * FROM groups")
 	rows, err := db.Query(`
     SELECT g.* 
     FROM groups g
@@ -25,7 +22,7 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	}
 	defer rows.Close()
 
-	var AllGroups []models.Groups
+	AllGroups := make([]models.Groups, 0)
 	for rows.Next() {
 		var group models.Groups
 		var adminId int
@@ -54,7 +51,7 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		return
 	}
 	defer rows.Close()
-	var AllGroups []models.Groups
+	AllGroups := make([]models.Groups, 0)
 	for rows.Next() {
 		var group models.Groups
 		var adminId int

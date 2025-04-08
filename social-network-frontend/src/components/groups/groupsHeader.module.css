@@ -1,0 +1,365 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+}
+
+.tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: #a0a0a0;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.tab:hover {
+    color: #ffffff;
+}
+
+.tab.active {
+    color: #ffffff;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #0095f6;
+    border-radius: 2px;
+}
+
+.createButton {
+    padding: 0.75rem 1.5rem;
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.createButton:hover {
+    background: #0081d6;
+}
+
+.createForm {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.createForm h3 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+}
+
+.createForm input,
+.createForm textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+.createForm textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.formActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.formActions button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.formActions button[type="submit"] {
+    background: #0095f6;
+    color: white;
+    border: none;
+}
+
+.formActions button[type="submit"]:hover {
+    background: #0081d6;
+}
+
+.formActions button[type="button"] {
+    background: transparent;
+    color: #a0a0a0;
+    border: 1px solid #3a3a3a;
+}
+
+.formActions button[type="button"]:hover {
+    background: #2a2a2a;
+    color: #ffffff;
+}
+
+.content {
+    margin-top: 2rem;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 3rem;
+    color: #a0a0a0;
+    background: #1a1a1a;
+    border-radius: 12px;
+}
+
+.groupsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.groupCard {
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.groupCard:hover {
+    transform: translateY(-2px);
+}
+
+.groupCard h3 {
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.groupCard p {
+    color: #a0a0a0;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.groupActions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.joinButton,
+.leaveButton {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.joinButton {
+    background: #0095f6;
+    color: white;
+    border: none;
+}
+
+.joinButton:hover {
+    background: #0081d6;
+}
+
+.leaveButton {
+    background: transparent;
+    color: #ff4444;
+    border: 1px solid #ff4444;
+}
+
+.leaveButton:hover {
+    background: #ff4444;
+    color: white;
+}
+
+.inviteSection {
+    margin: 1.5rem 0;
+}
+
+.inviteSection h4 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.usersList {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.userItem {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.userItem:hover {
+    background-color: #2a2a2a;
+}
+
+.userItem input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    background-color: #2a2a2a;
+    border: 2px solid #3a3a3a;
+    border-radius: 4px;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.userItem:hover .checkmark {
+    border-color: #0095f6;
+}
+
+.userItem input:checked ~ .checkmark {
+    background-color: #0095f6;
+    border-color: #0095f6;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.userItem input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.username {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.searchContainer {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.searchContainer input {
+    width: 100%;
+    padding: 0.75rem;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+.searchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.searchResultItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.searchResultItem:hover {
+    background-color: #2a2a2a;
+}
+
+.addIcon {
+    color: #0095f6;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.selectedUsers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.selectedUser {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #2a2a2a;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.removeUser {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.removeUser:hover {
+    color: #ff4444;
+}
