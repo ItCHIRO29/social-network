@@ -57,11 +57,11 @@ export default function GroupsHeader() {
     const fetchGroups = async () => {
         try {
             let endpoint = '';
-            switch(activeButton) {
+            switch (activeButton) {
                 case 'your groups':
                     endpoint = '/api/groups/created';
                     break;
-                case 'joined groups': 
+                case 'joined groups':
                     endpoint = '/api/groups/joined';
                     break;
                 default:
@@ -75,6 +75,7 @@ export default function GroupsHeader() {
                 },
             });
             const data = await response.json();
+            console.log(data)
             setGroups(data);
         } catch (error) {
             console.error('Error fetching groups:', error);
@@ -110,7 +111,7 @@ export default function GroupsHeader() {
 
     const handleJoinGroup = async (groupId) => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/join`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/join?groupId=${groupId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -148,19 +149,19 @@ export default function GroupsHeader() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.tabs}>
-                    <button 
+                    <button
                         className={`${styles.tab} ${activeButton === 'your groups' ? styles.active : ''}`}
                         onClick={() => setActiveButton('your groups')}
                     >
                         Your Groups
                     </button>
-                    <button 
+                    <button
                         className={`${styles.tab} ${activeButton === 'joined groups' ? styles.active : ''}`}
                         onClick={() => setActiveButton('joined groups')}
                     >
                         Joined Groups
                     </button>
-                    <button 
+                    <button
                         className={`${styles.tab} ${activeButton === 'all groups' ? styles.active : ''}`}
                         onClick={() => setActiveButton('all groups')}
                     >
@@ -173,7 +174,7 @@ export default function GroupsHeader() {
                 {activeButton === 'your groups' && (
                     <>
                         {!showCreateForm ? (
-                            <button 
+                            <button
                                 className={styles.createButton}
                                 onClick={() => setShowCreateForm(true)}
                             >
@@ -196,7 +197,7 @@ export default function GroupsHeader() {
                                         onChange={(e) => setNewGroupDescription(e.target.value)}
                                         required
                                     />
-                                    
+
                                     <div className={styles.inviteSection}>
                                         <h4>Invite Users</h4>
                                         <div className={styles.usersList}>
@@ -253,17 +254,17 @@ export default function GroupsHeader() {
                                         <p>{group.description}</p>
                                         <div className={styles.groupActions}>
                                             {activeButton === 'all groups' && (
-                                                <button 
+                                                <button
                                                     className={styles.joinButton}
-                                                    onClick={() => handleJoinGroup(group.id)}
+                                                    onClick={() => handleJoinGroup(group.id_group)}
                                                 >
                                                     Join Group
                                                 </button>
                                             )}
                                             {activeButton === 'joined groups' && (
-                                                <button 
+                                                <button
                                                     className={styles.leaveButton}
-                                                    onClick={() => handleLeaveGroup(group.id)}
+                                                    onClick={() => handleLeaveGroup(group.id_group)}
                                                 >
                                                     Leave Group
                                                 </button>

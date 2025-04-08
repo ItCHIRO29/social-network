@@ -48,28 +48,28 @@ export default function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.logo} onClick={handleHomeRoute}>
-                <Image 
-                    src="/icons/logo.svg" 
-                    alt="Social Network" 
+                <Image
+                    src="/icons/logo.svg"
+                    alt="Social Network"
                     width={40}
                     height={40}
-                />
+                /> 
             </div>
-            <input 
-                type="search" 
-                className={styles.searchInput} 
-                placeholder="Search" 
+            <input
+                type="search"
+                className={styles.searchInput}
+                placeholder="Search"
             />
             <div className={styles.rightSection}>
                 <div className={styles.notificationWrapper}>
-                    <button 
+                    <button
                         className={styles.notificationButton}
                         onClick={toggleNotifications}
                         type="button"
                     >
-                        <Image 
-                            src="/icons/notifications.svg" 
-                            alt="Notifications" 
+                        <Image
+                            src="/icons/notifications.svg"
+                            alt="Notifications"
                             width={20}
                             height={20}
                             className={styles.notificationIcon}
@@ -81,7 +81,7 @@ export default function Header() {
                         )}
                     </button>
                     {showNotifications && (
-                        <NotificationsList 
+                        <NotificationsList
                             isVisible={showNotifications}
                             onClose={() => setShowNotifications(false)}
                             onNotificationsRead={() => setNotificationCount(0)}

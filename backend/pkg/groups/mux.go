@@ -12,6 +12,8 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
 	// Create group
 	mux.Handle("POST /createGroup", auth.Middleware(db, 10, 20, time.Second, CreateGroup))
+	// request to join
+	mux.Handle("POST /join", auth.Middleware(db, 10, 20, time.Second, Requestjoin))
 	// Get groups
 	mux.Handle("GET /getGroups/all", auth.Middleware(db, 10, 20, time.Second, GetAllGroups))
 	mux.Handle("GET /getGroups/MyGroups", auth.Middleware(db, 10, 20, time.Second, GetMyGroups))

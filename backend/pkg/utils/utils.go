@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
 )
 
 var MaxUploadSize int64 = 10_485_760
@@ -158,3 +159,17 @@ func InsertNotification(db *sql.DB, userId int, notificationType string) {
 		fmt.Println("Error inserting notification:", err)
 	}
 }
+
+func CheckUserInGrp(user_id int, groupId int, db *sql.DB) bool {
+	query := `SELECT * FROM group_members where (user_id = ? AND group_id = ? AND accepted = 1)`
+	_, err := db.Query(query, user_id, groupId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+		fmt.Println("Error checking user in db", err)
+		return false
+	}
+	return true
+}
+

@@ -7,6 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"social-network/pkg/utils"
+
 	"github.com/gorilla/websocket"
 	"github.com/mattn/go-sqlite3"
 )
@@ -27,6 +29,20 @@ type Client struct {
 }
 
 type Message map[string]any
+
+func (message Message) isValidGroupMessage(userid int, db *sql.DB) bool {
+	_, ok := message["groupe"].(string)
+	groupeid, ok5 := message["groupeId"].(int)
+	// _, ok1 := message["sender"].(string)
+	_, ok2 := message["message"].(string)
+	_, ok3 := message["id"].(float64)
+	ok4 := utils.CheckUserInGrp(userid, groupeid, db)
+	if !ok || !ok2 || !ok3 || !ok4 || !ok5 {
+		fmt.Println("invalid message")
+		return false
+	}
+	return true
+}
 
 func (message Message) isValidPrivateMessage() bool {
 	receiver, ok1 := message["receiver"].(string)
@@ -265,7 +281,6 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 				sendChatError(userName, message["receiver"].(string), message["id"].(float64))
 				continue
 			}
-
 			message["sender"] = userName
 			message["creation_date"] = time.Now().Format("2006-01-02 15:04")
 			id, err := saveInDb(db, userId, message)
@@ -293,6 +308,29 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			message["type"] = "pong"
 			message["receiver"] = userName
 			Hub.Private <- message
+		} else if messageType == "groupe" {
+			ok := message.isValidGroupMessage(userId, db)
+			if !ok {
+				fmt.Fprintln(os.Stderr, "invalid message")
+				continue
+			}
+			if len(message["message"].(string)) == 0 || len(message["message"].(string)) > 500 {
+				sendChatError(userName, message["receiver"].(string), message["id"].(float64))
+				continue
+			}
+			message["sender"] = userName
+			message["creation_date"] = time.Now().Format("2006-01-02 15:04")
+			ismember := utils.CheckUserInGrp(userId, message["groupeId"].(int), db)
+			if ismember {
+				err := AddMessageToGrp(userId, db, message)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "error in insertion", err)
+					continue
+				}
+			} else {
+				fmt.Fprintln(os.Stderr, "invalid user")
+				return
+			}
 		}
 	}
 }
@@ -351,4 +389,14 @@ func UpdateLastActive(db *sql.DB, userId int) {
 	}
 
 	fmt.Fprintln(os.Stderr, "Failed to update after retries:", err)
+}
+
+func AddMessageToGrp(senderId int, db *sql.DB, message Message) error {
+	query := `INSERT INTO group_chat (? , ? , ? , ?)`
+	_, err := db.Exec(query, message["groupeId"].(int), senderId, message["message"].(string), time.Now())
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error to insert message", err)
+		return err
+	}
+	return nil
 }

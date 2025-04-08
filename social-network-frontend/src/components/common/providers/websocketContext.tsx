@@ -14,7 +14,10 @@ export class Ws {
             return;
         }
         this.socket?.close();
-        const url = process.env.NEXT_PUBLIC_WS_URL || "";
+        const url = process.env.NEXT_PUBLIC_WS_URL;
+        if (!url) {
+            throw new Error("WebSocket URL is not configured. Please set NEXT_PUBLIC_WS_URL environment variable.");
+        }
         this.socket = new WebSocket(url);
         this.socket.onmessage = (event) => {
             this.handleMessage(event.data);

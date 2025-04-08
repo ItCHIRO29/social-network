@@ -1,5 +1,4 @@
 backend/pkg/db/social-network.db
-
+*.db
 frontend/node_modules
-
 backend/tmp
