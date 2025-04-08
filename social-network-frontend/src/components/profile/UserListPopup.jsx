@@ -5,10 +5,11 @@ import Link from 'next/link';
 import styles from './UserListPopup.module.css';
 import { useEffect, useState } from 'react';
 
-export default function UserListPopup({ isOpen, onClose, title, username }) {
+export default function UserListPopup({ isOpen, onClose, title, username, followButtonState }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
+        console.log("followButtonState ===>", followButtonState);
         const fetchUsers = async () => {
             if (!username || !isOpen) return;
             
@@ -40,7 +41,7 @@ export default function UserListPopup({ isOpen, onClose, title, username }) {
                 </div>
                 <div className={styles.content}>
                     {users.length === 0 ? (
-                        <div className={styles.emptyState}>No {title.toLowerCase()} yet</div>
+                        <div className={styles.emptyState}>{(followButtonState === 'follow' || 'pending') ? `Follow ${username} to see their ${title.toLowerCase()}` : `No ${title.toLowerCase()} found`}</div>
                     ) : (
                         <ul className={styles.userList}>
                             {users.map(user => (

@@ -24,11 +24,23 @@ func GetFollowing(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 	Followings := make([]models.Following, 0)
 
 	query := `SELECT f.following_id, u.image
-FROM followers f 
-JOIN users u ON f.following_id = u.id  
-WHERE f.follower_id = $1 AND f.accepted = 1`
+FROM followers f
+JOIN users u ON f.following_id = u.id
+WHERE f.follower_id = $1 
+  AND f.accepted = 1
+  AND (
+    EXISTS (
+      SELECT 1 
+      FROM followers 
+      WHERE follower_id = $2 
+        AND following_id = $1 
+        AND accepted = 1
+    ) 
+    OR $1 = $2
+  );
+`
 
-	rows, err := db.Query(query, uId)
+	rows, err := db.Query(query, uId, userId)
 	if err != nil {
 		fmt.Println("Error getting following:", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styles from './AboutUser.module.css';
 import UserListPopup from './UserListPopup';
@@ -12,9 +12,15 @@ export default function AboutUser({ user }) {
     const [showFollowing, setShowFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
+
+
     
     const { userData } = useUserData();
     const isOwnProfile = userData?.username === user.username;
+
+    useEffect(() => {
+        console.log("user =========>", user);
+    }, []);
 
     return (
         <div className={styles.aboutUser}>
@@ -39,13 +45,13 @@ export default function AboutUser({ user }) {
                             className={styles.statButton} 
                             onClick={() => setShowFollowers(true)}
                         >
-                            <span className={styles.count}>{followers.length || 0}</span> followers
+                            <span className={styles.count}>{user.followers_count || 0}</span> followers
                         </button>
                         <button 
                             className={styles.statButton} 
                             onClick={() => setShowFollowing(true)}
                         >
-                            <span className={styles.count}>{following.length || 0}</span> following
+                            <span className={styles.count}>{user.followings_count || 0}</span> following
                         </button>
                     </div>
                     
@@ -55,7 +61,6 @@ export default function AboutUser({ user }) {
                 </div>
             </div>
 
-            {/* Show full profile info only if public or own profile */}
             {(user.public || isOwnProfile) && (
                 <div className={styles.details}>
                     <div className={styles.personalInfo}>
@@ -112,6 +117,7 @@ export default function AboutUser({ user }) {
                 username={user.username}
                 followers={followers}
                 setFollowers={setFollowers}
+                followButtonState = {user.follow_button?.state}
             />
 
             <UserListPopup
@@ -122,6 +128,7 @@ export default function AboutUser({ user }) {
                 username={user.username}
                 following={following}
                 setFollowing={setFollowing}
+                followButtonState = {user.follow_button?.state}
             />
         </div>
     );

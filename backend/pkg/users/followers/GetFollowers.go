@@ -23,11 +23,23 @@ func GetFollowers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 	Followers := make([]models.Followers, 0)
 
 	query := `SELECT f.follower_id, u.image
-FROM followers f 
-JOIN users u ON f.follower_id = u.id  
-WHERE f.following_id = $1 AND f.accepted = 1`
+FROM followers f
+JOIN users u ON f.follower_id = u.id
+WHERE f.following_id = $1 
+  AND f.accepted = 1
+  AND (
+    EXISTS (
+      SELECT 1 
+      FROM followers 
+      WHERE follower_id = $2 
+        AND following_id = $1 
+        AND accepted = 1
+    ) 
+    OR $1 = $2
+  );
+`
 
-	rows, err := db.Query(query, uId)
+	rows, err := db.Query(query, uId, userId)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return

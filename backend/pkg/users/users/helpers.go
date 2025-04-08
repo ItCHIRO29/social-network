@@ -23,8 +23,8 @@ func GetUserData(db *sql.DB, viewerID, profileID int) (models.PublicProfile, err
 				image,
 				email,
 				public,
-				(SELECT COUNT(id) FROM followers WHERE following_id = users.id AND accepted = 1) AS following_cont,
-				(SELECT COUNT(id) FROM followers WHERE follower_id = users.id AND accepted = 1) AS followers_cont
+				(SELECT COUNT(id) FROM followers WHERE follower_id = users.id AND accepted = 1) AS followers_cont,
+				(SELECT COUNT(id) FROM followers WHERE following_id = users.id AND accepted = 1) AS following_cont
 			FROM users 
 			WHERE id = ?
 			LIMIT 1`,
