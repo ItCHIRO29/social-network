@@ -53,6 +53,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	post.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(post.ID, 10))
 	// fmt.Println("post.Image:", post.Image)
 	post.UserID = userId
+	post.Username = utils.GetUserName(db, userId)
 	// fmt.Println("post::::::::", post)
 	query = "INSERT INTO posts (user_id, title, content, created_at, image, privacy , can_see) VALUES ( ?, ?, ?, ?,?, ? , ?)"
 	res, err1 := db.Exec(query, post.UserID, Title, Content, createdAt, post.Image, post.Type, post.Can_see)
