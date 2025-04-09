@@ -39,6 +39,8 @@ export default function GroupsHeader() {
             });
             const data = await response.json();
             setUsers(data);
+            console.log(data);
+
         } catch (error) {
             console.error('Error fetching users:', error);
         }
@@ -59,10 +61,10 @@ export default function GroupsHeader() {
             let endpoint = '';
             switch (activeButton) {
                 case 'your groups':
-                    endpoint = '/api/groups/created';
+                    endpoint = '/api/groups/getGroups/MyGroups';
                     break;
                 case 'joined groups':
-                    endpoint = '/api/groups/joined';
+                    endpoint = '/api/groups/getGroups/joined';
                     break;
                 default:
                     endpoint = '/api/groups/getGroups/all';
@@ -129,7 +131,7 @@ export default function GroupsHeader() {
 
     const handleLeaveGroup = async (groupId) => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/leave`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/leave?groupId=${groupId}`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {

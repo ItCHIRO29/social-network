@@ -9,9 +9,9 @@ import (
 	"social-network/pkg/utils"
 )
 
-func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+func GetJoinedGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	rows, err := db.Query(`
-    SELECT g.* 
+    SELECT g.*  
     FROM groups g
     LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
     WHERE gm.user_id = ?`, userId)
@@ -70,7 +70,6 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 // `http://localhost:8080/api/groups/groupActivity?group=${group_name}
 
 func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-
 	group_name := r.URL.Query().Get("group")
 
 	if group_name == "" {
@@ -177,4 +176,24 @@ func CheckVote(db *sql.DB, userId int, eventId int) (bool, error) {
 		}
 	}
 	return going, nil
+}
+
+func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	query := `SELECT * FROM groups WHERE admin_id = ?`
+	group := models.Group{}
+	err := db.QueryRow(query, userId).Scan(&group.Id, &group.Admin_id, &group.Name, &group.Description)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			utils.WriteJSON(w, http.StatusAccepted, nil)
+			fmt.Println(err)
+			return
+		}
+		utils.WriteJSON(w, http.StatusInternalServerError, nil)
+		fmt.Println(err)
+
+		return
+	}
+	fmt.Println(group)
+
+	utils.WriteJSON(w, http.StatusAccepted, []models.Group{group})
 }
