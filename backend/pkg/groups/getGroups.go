@@ -184,7 +184,7 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	err := db.QueryRow(query, userId).Scan(&group.Id, &group.Admin_id, &group.Name, &group.Description)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			utils.WriteJSON(w, http.StatusAccepted, nil)
+			utils.WriteJSON(w, http.StatusAccepted, [0]models.Group{})
 			fmt.Println(err)
 			return
 		}

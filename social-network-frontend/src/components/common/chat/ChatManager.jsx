@@ -7,6 +7,7 @@ import { useUserData } from "../providers/userDataContext";
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
   const [users, setUsers] = useState(new Map());
+  const [grps, setGrps] = useState(new Map());
   const [data, setData] = useState([]);
   const ws = useContext(WebSocketContext);
   const socket = ws?.socket;
@@ -26,21 +27,40 @@ const ChatManager = () => {
           return;
         }
         const fetchedData = await response.json();
-        
+
         // Create users map directly here
         const newUsersMap = new Map();
         fetchedData.forEach(user => {
           newUsersMap.set(user.username, { userData: user });
         });
-        
-        // Set both state variables
         setData(fetchedData);
         setUsers(newUsersMap);
       } catch (error) {
         console.log('Error:', error);
       }
     };
-    
+
+    const getgrps = async () => {
+      const resp = await fetch('http://localhost:8080/api/groups/getGroups/joined', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      if (!resp.ok) {
+        console.log('Error fetching grps:')
+        return
+      }
+      const groups = await resp.json();
+      const newgrps = new Map();
+      groups.forEach(grp => {
+        newgrps.set(grp.name, { groupedata: grp });
+      })
+      console.log('grps:', newgrps);
+
+      // Set both state variables
+      setGrps(newgrps);
+    }
+    getgrps();
     getUsers();
   }, []);
 
@@ -49,15 +69,15 @@ const ChatManager = () => {
     const handleStatusEvent = (event) => {
       if (event instanceof CustomEvent) {
         const message = event.detail;
-        
+
         // Don't update your own status
         if (message.username === myData.username) return;
-        
+
         // Update user status in the map
         setUsers(prevUsers => {
           const user = prevUsers.get(message.username);
           if (!user) return prevUsers;
-          
+
           // Create new map with updated user status
           const newUsers = new Map(prevUsers);
           newUsers.set(message.username, {
@@ -67,14 +87,14 @@ const ChatManager = () => {
               online: message.online
             }
           });
-          
+
           return newUsers;
         });
       }
     };
-    
+
     document.addEventListener('status', handleStatusEvent);
-    
+
     // Clean up event listener on component unmount
     return () => {
       document.removeEventListener('status', handleStatusEvent);
@@ -87,19 +107,19 @@ const ChatManager = () => {
       if (event instanceof CustomEvent && event.detail && event.detail.message) {
         const message = event.detail.message;
         const senderUsername = message.sender;
-        
+
         // If the sender is not the current user
         if (senderUsername !== myData.username) {
           // Check if we have a chat window open for this sender
-          const hasActiveChatWindow = chatWindows.has(senderUsername) && 
-                                     chatWindows.get(senderUsername).focused;
-          
+          const hasActiveChatWindow = chatWindows.has(senderUsername) &&
+            chatWindows.get(senderUsername).focused;
+
           // If no active chat window, mark as unread (notify)
           if (!hasActiveChatWindow) {
             setUsers(prevUsers => {
               const user = prevUsers.get(senderUsername);
               if (!user) return prevUsers;
-              
+
               const newUsers = new Map(prevUsers);
               newUsers.set(senderUsername, {
                 ...user,
@@ -108,19 +128,19 @@ const ChatManager = () => {
                   notify: true
                 }
               });
-              
+
               return newUsers;
             });
           }
         }
       }
     };
-    
+
     // Add event listeners for private messages
     for (const [username] of users) {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
-    
+
     // Clean up
     return () => {
       for (const [username] of users) {
@@ -136,15 +156,15 @@ const ChatManager = () => {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
-      
+
       // Also update local state
       setUsers(prevUsers => {
         const newUsers = new Map(prevUsers);
         const user = newUsers.get(username);
         if (user) {
-          newUsers.set(username, { 
-            ...user, 
-            userData: { ...user.userData, notify: false } 
+          newUsers.set(username, {
+            ...user,
+            userData: { ...user.userData, notify: false }
           });
         }
         return newUsers;
@@ -157,7 +177,7 @@ const ChatManager = () => {
   const addChatWindow = (username) => {
     // Mark messages as seen when chat window opens
     markMessageAsSeen(username);
-    
+
     setChatWindows(prev => {
       const newMap = new Map(prev);
       newMap.set(username, {
@@ -188,40 +208,40 @@ const ChatManager = () => {
       return newMap;
     });
   };
-  
+
   // Update chat windows when users map changes
   useEffect(() => {
     if (users.size > 0) {
       setChatWindows(prev => {
         const updatedWindows = new Map();
-        
+
         for (const [username, chatData] of prev.entries()) {
           updatedWindows.set(username, {
             ...chatData,
-            users 
+            users
           });
         }
-        
+
         return updatedWindows;
       });
     }
   }, [users]);
-  
+
   return (
     <div className={styles.chatManager}>
       <h2>Chat</h2>
-      {users.size > 0 ? (
+      {users.size > 0 || grps.size > 0 ? (
         <div className={styles.usersList}>
           {Array.from(users.entries()).map(([username, userObj]) => (
-            <div 
-              className={styles.usersListItem} 
-              id={`usersListItem-${username}`} 
+            <div
+              className={styles.usersListItem}
+              id={`usersListItem-${username}`}
               key={username}
             >
-              <img 
-                className={styles.avatar} 
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${userObj?.userData.image}`} 
-                alt="User avatar" 
+              <img
+                className={styles.avatar}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${userObj?.userData.image}`}
+                alt="User avatar"
               />
               <button
                 id="chatButtons"
@@ -236,6 +256,18 @@ const ChatManager = () => {
               <div
                 className={`${styles.onlineIndicator} ${userObj.userData.online ? styles.active : ''}`}
               />
+            </div>
+          ))}
+          {Array.from(grps.entries()).map(([grpname, grpobject]) => (
+            <div key={grpname}>
+              <button
+                id="chatButtons"
+                className={`${styles.listItem} ${grpname}`}
+                onClick={() => addChatWindow(grpname)}
+              >{grpname}</button>
+              <div>
+                {grpobject.groupedata.description}
+              </div>
             </div>
           ))}
         </div>
