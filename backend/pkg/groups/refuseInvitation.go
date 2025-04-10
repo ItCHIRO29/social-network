@@ -9,7 +9,7 @@ import (
 )
 
 func RefuseInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	var Groups models.Groups
+	var Groups models.Group
 	err := json.NewDecoder(r.Body).Decode(&Groups)
 	if err != nil {
 		utils.WriteJSON(w, 400, "bad request")
@@ -22,6 +22,6 @@ func RefuseInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	}
 }
 
-func DeleteInvitation(Group *models.Groups, userId int, Db *sql.DB, r *http.Request) error {
+func DeleteInvitation(Group *models.Group, userId int, Db *sql.DB, r *http.Request) error {
 	return Db.QueryRow("DELETE FROM group_members WHERE group_id = ? AND user_id = ?", Group.Id, userId).Err()
 }
