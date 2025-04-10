@@ -25,12 +25,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// if user_id_str != "" {
 	// }
 	
-	isfollowing := checkfollowing(db, userId, user_id_str)
-	if isfollowing == false {
-		fmt.Println("user is not following")
-		utils.WriteJSON(w, http.StatusOK, posts)
-		return
-	}
+
 	if user_id_str == "" {
 		fmt.Println("m here in get posts user id is empty")
 		query = `SELECT 
@@ -67,6 +62,7 @@ ORDER BY posts.id DESC;`
 			return
 		}
 		if user_id == userId {
+			fmt.Println(user_id, userId)
 			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? ORDER BY id DESC"
 			rows, err = db.Query(query, userId)
 			if err != nil {
@@ -75,6 +71,12 @@ ORDER BY posts.id DESC;`
 				return
 			}
 		} else {
+isfollowing := checkfollowing(db, userId, user_id_str)
+	if isfollowing == false {
+		fmt.Println("user is not following")
+		utils.WriteJSON(w, http.StatusOK, posts)
+		return
+	}
 			fmt.Println("m here in get posts user id  !==== userid = ")
 			query := `
    					 SELECT id, user_id, title, content, created_at, image , privacy
