@@ -4,6 +4,7 @@ import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
 import { fips } from 'crypto';
+import { type } from 'os';
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -32,7 +33,10 @@ const ChatManager = () => {
         // Create users map directly here
         const newUsersMap = new Map();
         fetchedData.forEach(user => {
-          newUsersMap.set(user.username, { userData: user });
+          newUsersMap.set(user.username, {
+            userData: user,
+            type: "User"
+          });
         });
         setData(fetchedData);
         setUsers(newUsersMap);
@@ -54,12 +58,16 @@ const ChatManager = () => {
       const groups = await resp.json();
       const newgrps = new Map();
       groups.forEach(grp => {
-        newgrps.set(grp.name, { groupedata: grp });
+        newgrps.set(grp.name, {
+          groupedata: grp,
+          type: "groupe"
+        });
       })
-      console.log('grps:', newgrps);
 
       // Set both state variables
       setGrps(newgrps);
+      console.log(newgrps)
+
     }
     getgrps();
     getUsers();
@@ -175,7 +183,7 @@ const ChatManager = () => {
     }
   };
 
-  const addChatWindow = (username) => {
+  const addChatWindow = (username, type, chatdata) => {
     // Mark messages as seen when chat window opens
     markMessageAsSeen(username);
 
@@ -185,7 +193,9 @@ const ChatManager = () => {
         username,
         users: users,
         myData,
-        focused: true
+        focused: true,
+        type: type,
+        chatdata: chatdata,
       });
       console.log('New chat window:', newMap);
       return newMap;
@@ -248,7 +258,7 @@ const ChatManager = () => {
               <button
                 id="chatButtons"
                 className={`${styles.listItem} ${username}`}
-                onClick={() => addChatWindow(username)}
+                onClick={() => addChatWindow(username, userObj.type , userObj)}
               >
                 {userObj.userData.firstname} {userObj.userData.lastname}
               </button>
@@ -265,7 +275,7 @@ const ChatManager = () => {
               <button
                 id="chatButtons"
                 className={`${styles.listItem} ${grpname}`}
-                onClick={() => addChatWindow(grpname)}
+                onClick={() => addChatWindow(grpname, grpobject.type , grpobject)}
               >{grpname}</button>
               <div>
                 {grpobject.groupedata.description}
@@ -284,6 +294,8 @@ const ChatManager = () => {
         {Array.from(chatWindows.entries()).map(([username, chatData]) => (
           chatData.focused && (
             <ChatWindow
+              type={chatData.type}
+              chatdata={chatData}
               key={username}
               username={username}
               userData={chatData.userData}
