@@ -10,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-
 )
 
 var MaxUploadSize int64 = 10_485_760
@@ -67,7 +66,7 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 			path = "uploads/postsImages/" + filename + extension
 		}
 
-		err = os.MkdirAll(filepath.Dir(path), 0755)
+		err = os.MkdirAll(filepath.Dir(path), 0o755)
 		if err != nil {
 			fmt.Println("Error creating directory:", err)
 			return "", err
@@ -173,3 +172,31 @@ func CheckUserInGrp(user_id int, groupId int, db *sql.DB) bool {
 	return true
 }
 
+func GetGroupMembers(group_id int, db *sql.DB) []int {
+	query := `SELECT user_id FROM group_members WHERE group_id = ?`
+	rows, err := db.Query(query, group_id)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "query error:", err)
+		return []int{}
+	}
+	defer rows.Close()
+	var result []int
+	for rows.Next() {
+		var id int
+		if err := rows.Scan(&id); err != nil {
+			fmt.Println("query error:", err)
+			return []int{}
+		}
+		result = append(result, id)
+	}
+	return result
+}
+
+func Include(arr []int, id int) bool {
+	for _, Id := range arr {
+		if id == Id {
+			return true
+		}
+	}
+	return false
+}

@@ -129,6 +129,8 @@ const ChatManager = () => {
     for (const [username] of users) {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
+
+    for (const [groupname] of grp)
     
     // Clean up
     return () => {

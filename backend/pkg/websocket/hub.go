@@ -19,6 +19,7 @@ type HubType struct {
 	Register   chan Client
 	Unregister chan Client
 	Broadcast  chan Message
+	Groupe     chan Message
 	Private    chan Message
 }
 
@@ -88,6 +89,7 @@ var Hub = HubType{
 	Unregister: make(chan Client, 1024),
 	Broadcast:  make(chan Message, 1024),
 	Private:    make(chan Message, 1024),
+	Groupe:     make(chan Message, 1024),
 }
 
 func (h *HubType) offlineDelayFunc(client *Client) bool {
@@ -100,7 +102,7 @@ func (h *HubType) offlineDelayFunc(client *Client) bool {
 	return true
 }
 
-func (h *HubType) Run() {
+func (h *HubType) Run(db *sql.DB) {
 	for {
 		select {
 		case client := <-h.Register:
@@ -124,6 +126,22 @@ func (h *HubType) Run() {
 			h.BroadcastMessage(message, nil, nil)
 		case message := <-h.Private:
 			h.SendPrivateMessage(message)
+		case message := <-h.Groupe:
+			h.SendGroupMssg(message, db)
+		}
+	}
+}
+
+func (h *HubType) SendGroupMssg(message Message, db *sql.DB) {
+	fmt.Println("fired", message)
+	users := utils.GetGroupMembers(int(message["groupeId"].(float64)), db)
+	for _, client := range h.Clients {
+		if utils.Include(users, client.UserId) {
+			for _, conn := range client.Conns {
+				if err := conn.WriteJSON(message); err != nil {
+					fmt.Fprintln(os.Stderr, err)
+				}
+			}
 		}
 	}
 }
@@ -332,6 +350,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 					fmt.Fprintln(os.Stderr, "error in insertion", err)
 					continue
 				}
+				Hub.Groupe <- message
 			} else {
 				fmt.Fprintln(os.Stderr, "invalid user")
 				return

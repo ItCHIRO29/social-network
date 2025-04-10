@@ -38,7 +38,7 @@ func main() {
 	mainMux.Handle("/uploads/", http.StripPrefix("/uploads", http.FileServer(http.Dir("uploads"))))
 
 	mainMux.Handle("/api/ws", http.StripPrefix("/api/ws", auth.Middleware(db, 20, 20, time.Second, ws.Upgrade)))
-	go ws.Hub.Run()
+	go ws.Hub.Run(db)
 	go ws.Hub.PingService(db)
 	// Start Server
 	fmt.Println("\033[42mServer is running on port 8080\033[0m")

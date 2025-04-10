@@ -150,10 +150,17 @@ const ChatManager = () => {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
 
+    for (const [groupename] of grps) {
+      document.addEventListener(`privateMessage-${groupename}`, handlePrivateMessage);
+    }
+
     // Clean up
     return () => {
       for (const [username] of users) {
         document.removeEventListener(`privateMessage-${username}`, handlePrivateMessage);
+      }
+      for (const [groupename] of grps) {
+        document.removeEventListener(`privateMessage-${groupename}`, handlePrivateMessage);
       }
     };
   }, [users, chatWindows, myData.username]);
@@ -258,7 +265,7 @@ const ChatManager = () => {
               <button
                 id="chatButtons"
                 className={`${styles.listItem} ${username}`}
-                onClick={() => addChatWindow(username, userObj.type , userObj)}
+                onClick={() => addChatWindow(username, userObj.type, userObj)}
               >
                 {userObj.userData.firstname} {userObj.userData.lastname}
               </button>
@@ -275,7 +282,7 @@ const ChatManager = () => {
               <button
                 id="chatButtons"
                 className={`${styles.listItem} ${grpname}`}
-                onClick={() => addChatWindow(grpname, grpobject.type , grpobject)}
+                onClick={() => addChatWindow(grpname, grpobject.type, grpobject)}
               >{grpname}</button>
               <div>
                 {grpobject.groupedata.description}
