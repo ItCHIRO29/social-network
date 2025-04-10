@@ -4,63 +4,77 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
-	"strconv"
-	"time"
-
+	"social-network/pkg/notifications"
 	"social-network/pkg/utils"
+	"strconv"
 )
 
 func Requestjoin(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	groupId, err := strconv.Atoi(r.URL.Query().Get("groupId"))
-	if err != nil {
-		utils.WriteJSON(w, http.StatusBadRequest, "invalide group ID")
-		return
-	}
-	query := `INSERT INTO group_members (user_id , group_id , accepted) values (? , ? , 0) `
+	fmt.Printf("\033[32mStarting join request for user %v\033[0m\n", userId)
 
-	res, err1 := db.Exec(query, userId, groupId)
-	if err1 != nil {
-		utils.WriteJSON(w, http.StatusInternalServerError, err1)
+	groupId, err := strconv.Atoi(r.URL.Query().Get("group_id"))
+	if err != nil || groupId <= 0 {
+		fmt.Printf("\033[31mInvalid group ID: %v\033[0m\n", r.URL.Query().Get("group_id"))
+		http.Error(w, "Invalid group ID", http.StatusBadRequest)
 		return
 	}
-	adminId, err := GetAdminGrp(db, groupId)
-	if err != nil {
-		utils.WriteJSON(w, http.StatusInternalServerError, err1)
-		return
-	}
-	reference, err1 := res.LastInsertId()
-	if err != nil {
-		utils.WriteJSON(w, http.StatusInternalServerError, err1)
-		return
-	}
-	query = `INSERT INTO notifications (receiver_id, sender_id, type, reference_id, content, seen, created_at) VALUES (? ,? ,? ,? ,? ,? ,?)`
-	_, err1 = db.Exec(query, adminId, userId, "request_join_group", reference, "", 0, time.Now())
-	if err1 != nil {
-		fmt.Println(err1)
-		utils.WriteJSON(w, http.StatusInternalServerError, err1)
-		return
-	}
-	utils.WriteJSON(w, http.StatusAccepted, nil)
-}
+	fmt.Printf("\033[32mRequesting to join group %v\033[0m\n", groupId)
 
-func GetAdminGrp(db *sql.DB, groupId int) (int, error) {
-	adminId := 0
-	query := `SELECT admin_id FROM groups WHERE id=?`
-	err := db.QueryRow(query, groupId).Scan(&adminId)
+	tx, err := db.Begin()
 	if err != nil {
-		return 0, err
-	}
-	return adminId, nil
-}
-
-func LeaveGrp(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	groupId := r.URL.Query().Get("groupId")
-	query := `DELETE FROM group_members where (group_id = ? AND user_id= ?)`
-	_, err := db.Exec(query, groupId, userId)
-	if err != nil {
-		utils.WriteJSON(w, http.StatusInternalServerError, nil)
-		fmt.Println(err)
+		fmt.Printf("\033[31mError starting transaction: %v\033[0m\n", err)
+		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
-	utils.WriteJSON(w, http.StatusAccepted, nil)
+
+	query := `INSERT INTO group_members (group_id, user_id)
+		SELECT $1, $2
+		WHERE NOT EXISTS (
+			SELECT 1 FROM groups
+			WHERE id = $1 AND admin_id = $2
+		)
+		RETURNING id`
+
+	fmt.Printf("\033[32mExecuting query: %v\033[0m\n", query)
+	var referenceId int
+	err = tx.QueryRow(query, groupId, userId).Scan(&referenceId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Printf("\033[31mUser %v is the admin of group %v or already a member\033[0m\n", userId, groupId)
+			tx.Rollback()
+			utils.WriteJSON(w, 400, "you are the admin of this group or already a member")
+			return
+		}
+		fmt.Printf("\033[31mError executing query: %v\033[0m\n", err)
+		tx.Rollback()
+		utils.WriteJSON(w, 500, "internal server error")
+		return
+	}
+
+	adminQuery := `SELECT admin_id FROM groups WHERE id = $1`
+	fmt.Printf("\033[32mGetting admin ID with query: %v\033[0m\n", adminQuery)
+	var receiverId int
+	err = tx.QueryRow(adminQuery, groupId).Scan(&receiverId)
+	if err != nil {
+		fmt.Printf("\033[31mError getting admin ID: %v\033[0m\n", err)
+		tx.Rollback()
+		utils.WriteJSON(w, 500, "internal server error")
+		return
+	}
+
+	fmt.Printf("\033[32mCreated group_member with ID: %v\033[0m\n", referenceId)
+	fmt.Printf("\033[32mGroup admin ID: %v\033[0m\n", receiverId)
+
+	notifications.SendNotification(tx, db, userId, receiverId, "request_join_group", referenceId)
+	fmt.Printf("\033[32mSent notification to admin %v\033[0m\n", receiverId)
+
+	err = tx.Commit()
+	if err != nil {
+		fmt.Printf("\033[31mError committing transaction: %v\033[0m\n", err)
+		utils.WriteJSON(w, 500, "internal server error")
+		return
+	}
+
+	fmt.Printf("\033[32mSuccessfully completed join request\033[0m\n")
+	utils.WriteJSON(w, 200, "join request sent")
 }

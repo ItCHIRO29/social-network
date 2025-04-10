@@ -182,19 +182,22 @@ func CheckVote(db *sql.DB, userId int, eventId int) (bool, error) {
 func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	query := `SELECT * FROM groups WHERE admin_id = ?`
 	group := models.Group{}
-	err := db.QueryRow(query, userId).Scan(&group.Id, &group.AdminId, &group.Name, &group.Description)
+	rows, err := db.Query(query, userId)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			utils.WriteJSON(w, http.StatusAccepted, [0]models.Group{})
-			fmt.Println(err)
-			return
-		}
-		utils.WriteJSON(w, http.StatusInternalServerError, nil)
-		fmt.Println(err)
-
+		fmt.Println("Error getting groups", err)
+		http.Error(w, "internal server error", 500)
 		return
 	}
-	fmt.Println(group)
-
-	utils.WriteJSON(w, http.StatusAccepted, []models.Group{group})
+	defer rows.Close()
+	AllGroups := make([]models.Group, 0)
+	for rows.Next() {
+		err = rows.Scan(&group.Id, &group.AdminId, &group.Name, &group.Description)
+		if err != nil {
+			fmt.Println("Error getting groups ==>", err)
+			http.Error(w, "internal server error", 500)
+			return
+		}
+		AllGroups = append(AllGroups, group)
+	}
+	utils.WriteJSON(w, http.StatusAccepted, AllGroups)
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"social-network/pkg/models"
+	"social-network/pkg/notifications"
 	"social-network/pkg/utils"
 )
 
@@ -37,16 +38,22 @@ func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId i
 		return
 	}
 
-	query := `INSERT INTO group_members (user_id, group_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`
+	query := `INSERT INTO group_members (user_id, group_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING id`
 
 	for _, invitedId := range group.InvitedUsers {
-		_, err := tx.Exec(query, invitedId, group.Id)
+		var referenceId int64
+		err := tx.QueryRow(query, invitedId, group.Id).Scan(&referenceId)
 		if err != nil {
+			if err == sql.ErrNoRows {
+				continue
+			}
 			fmt.Printf("\033[31mError: %v\033[0m\n", err)
 			tx.Rollback()
 			utils.WriteJSON(w, 500, "internal server error")
 			return
 		}
+		fmt.Printf("\033[32mCreated group_member with ID: %v\033[0m\n", referenceId)
+		notifications.SendNotification(tx, db, userId, invitedId, "group_invitation", int(referenceId))
 	}
 
 	err = tx.Commit()
