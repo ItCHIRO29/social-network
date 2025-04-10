@@ -9,7 +9,9 @@ const Message = ({ message, myData, opponentData }) => {
   const isSent = message.sender === myData.username;
   const Mymessages = message.sender !== opponentData.username
   const handleImageClick = () => {
-    router.push(`/profile?id=${isSent ? message.sender_id : message.receiver_id}`);
+    // router.push(`/profile?id=${!Mymessages ? message.sender_id : message.receiver_id}`);
+    router.push(`/profile/${Mymessages ? message.sender : message.receiver}`);
+    return
   };
   let urlImage = '';
   if (Mymessages) {
