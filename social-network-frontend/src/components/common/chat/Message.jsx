@@ -3,18 +3,28 @@ import { useEffect, useRef } from 'react';
 
 const Message = ({ message, myData, opponentData }) => {
   const router = useRouter();
+  // console.log("message MyData ======>", myData);
+  // console.log("message opponentData ======>", opponentData);
+  // console.log("message message ======>", message);
   const isSent = message.sender === myData.username;
-
+  const Mymessages = message.sender !== opponentData.username
   const handleImageClick = () => {
-    router.push(`/profile?id=${isSent ? message.sender_id : message.receiver_id}`);
+    // router.push(`/profile?id=${!Mymessages ? message.sender_id : message.receiver_id}`);
+    router.push(`/profile/${Mymessages ? message.sender : message.receiver}`);
+    return
   };
-
+  let urlImage = '';
+  if (Mymessages) {
+    urlImage = `${process.env.NEXT_PUBLIC_API_URL}/${myData?.userData.image}`;
+  } else {
+    urlImage = `${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`;
+  }
   return (
-    <div className={`message ${isSent ? 'message-sent' : 'message-received'}`}>
+    <div className={`message ${Mymessages ? 'message-sent' : 'message-received'}`}>
       {!isSent && (
         <div className="message-pic">
           <img
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
+            src={urlImage}
             alt="Profile Picture"
             onClick={handleImageClick}
             className='profile-pic'
@@ -33,4 +43,4 @@ const Message = ({ message, myData, opponentData }) => {
 };
 
 
-export { Message};
+export { Message };

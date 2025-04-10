@@ -21,7 +21,7 @@ func MarkAsSeen(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		return
 	}
 	_, err = db.Exec(`UPDATE private_messages
-SET seen = 'true'
+SET seen = 1
 WHERE id = (
     SELECT MAX(id)
     FROM private_messages

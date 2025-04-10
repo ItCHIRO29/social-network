@@ -21,7 +21,7 @@ export class Ws {
 
     handleMessage(data: any) {
         const message = JSON.parse(data.data);
-        console.log("message", message)
+        // console.log("message", message)
         switch (message.type) {
             case 'private message':
                 console.log("received message", message)

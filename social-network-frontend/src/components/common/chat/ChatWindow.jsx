@@ -12,7 +12,7 @@ function dateFormat(timestamp) {
   if (diff < 60000) return 'now';
   if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
   if (diff < 86400000) return `${Math.floor(diff / 3600000)} hr ago`;
-  
+
   const days = Math.floor(diff / 86400000);
   return `${days} ${days === 1 ? 'day' : 'days'} ago`;
 }
@@ -35,7 +35,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       const opponent = users.get(username);
       if (opponent && opponent.userData) {
         setOpponentData(opponent.userData);
-      } 
+      }
     }
   }, [users, username]);
 
@@ -52,9 +52,9 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
         }));
       }
     };
-    
+
     document.addEventListener('status', handleStatusEvent);
-    
+
     return () => {
       document.removeEventListener('status', handleStatusEvent);
     };
@@ -74,11 +74,13 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       return;
     }
     setMessages(prev => {
+      console.log('newMessages 1');
       const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
-        (msg, index, self) => 
+        (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(false);
@@ -90,15 +92,17 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       return;
     }
     setMessages(prev => {
-      const combinedMessages = [...prev, ...newMessages];
+      console.log('newMessages 2');
+      const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
-        (msg, index, self) => 
+        (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(true);
-    
+
     scrollToBottom();
   };
 
@@ -115,15 +119,15 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
           credentials: 'include',
         }
       );
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch messages');
       }
-
       const data = await response.json();
-      
+      console.log('response', data);
+
       if (!data.messages || data.messages.length < 10 || data.offset === -1) {
-        setHasMoreMessages(false);
+        // setHasMoreMessages(false);
       }
 
       if (data.messages && data.messages.length > 0) {
@@ -150,7 +154,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     const handlePrivateMessage = (event) => {
       if (event.detail && event.detail.message) {
         addMessage(event.detail.message);
-        
+
         // Mark message as seen since the chat window is active
         markMessageAsSeen();
       }
@@ -161,7 +165,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     };
 
     document.addEventListener(`privateMessage-${username}`, eventListener);
-    
+
     return () => {
       document.removeEventListener(`privateMessage-${username}`, eventListener);
     };
@@ -191,20 +195,20 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
   };
 
   const sendMessage = (messageObj) => {
-    const msgEvent = new CustomEvent("sendMessage", { 
+    const msgEvent = new CustomEvent("sendMessage", {
       detail: {
         ...messageObj,
         status: 'sent'
       }
     });
-    
+
     document.dispatchEvent(msgEvent);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!messageInput.trim()) return;
-
+    console.log('sender', myData.username);
     const newMessage = {
       type: 'private message',
       message: messageInput,
@@ -212,7 +216,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       receiver: username,
       id: Date.now() + Math.random(),
     };
-
+    console.log('newMessage', newMessage);
     addMessage(newMessage);
     sendMessage(newMessage);
     setMessageInput('');
@@ -220,6 +224,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
 
   const handleRetry = (uniqueId) => {
     setMessages(prev => {
+      console.log('newMessages 3');
       const messageToRetry = prev.find(msg => msg.uniqueId === uniqueId);
       if (!messageToRetry) return prev;
 
@@ -233,7 +238,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
 
       const filteredMessages = prev.filter(msg => msg.uniqueId !== uniqueId);
       const updatedMessages = [...filteredMessages, newMessage];
-      
+
       sendMessage(newMessage);
       return updatedMessages;
     });
@@ -260,15 +265,16 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       scrollToBottom();
     }
   }, [messages, isAppending]);
-  
+
   // Mark messages as seen when component mounts
   useEffect(() => {
     markMessageAsSeen();
   }, []);
-  
+
   // Check if opponentData is empty
   const hasOpponentData = Object.keys(opponentData).length > 0;
-
+  // console.log("messages ======>", messages);
+  // console.log("opponentData ======>", opponentData);
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
       <div className="chat-header">
@@ -284,10 +290,10 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
             <h3>{username}</h3>
             <p>
               {hasOpponentData ? (
-                opponentData.online 
-                  ? "online" 
-                  : opponentData.last_active 
-                    ? `Online ${dateFormat(opponentData.last_active)}` 
+                opponentData.online
+                  ? "online"
+                  : opponentData.last_active
+                    ? `Online ${dateFormat(opponentData.last_active)}`
                     : "offline"
               ) : (
                 "Loading status..."
@@ -304,12 +310,14 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       <div
         className="chat-messages"
         ref={messagesContainerRef}
-        onScroll={handleScroll}
+      // onScroll={handleScroll}
       >
         {isLoadingOlder && (
           <div className="loading-indicator">Loading older messages...</div>
         )}
-        {messages.map((message) => (
+
+        {[...messages].reverse().map((message) => (
+          // {/* {messages.map((message) => ( */}
           <div key={message.uniqueId}>
             <Message
               message={message}
