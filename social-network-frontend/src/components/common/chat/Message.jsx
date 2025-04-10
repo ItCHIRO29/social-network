@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 
 const Message = ({ message, myData, opponentData }) => {
   const router = useRouter();
-  console.log("message MyData ======>", myData);
+  // console.log("message MyData ======>", myData);
   // console.log("message opponentData ======>", opponentData);
   // console.log("message message ======>", message);
   const isSent = message.sender === myData.username;

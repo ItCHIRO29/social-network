@@ -74,7 +74,8 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       return;
     }
     setMessages(prev => {
-      const combinedMessages = [...newMessages, ...prev];
+      console.log('newMessages 1');
+      const combinedMessages = [...prev, ...newMessages];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
@@ -90,11 +91,13 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
       return;
     }
     setMessages(prev => {
-      const combinedMessages = [...prev, ...newMessages];
+      console.log('newMessages 2');
+      const combinedMessages = [...newMessages,...prev ];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(true);
@@ -220,6 +223,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
 
   const handleRetry = (uniqueId) => {
     setMessages(prev => {
+      console.log('newMessages 3');
       const messageToRetry = prev.find(msg => msg.uniqueId === uniqueId);
       if (!messageToRetry) return prev;
 
@@ -268,8 +272,8 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
 
   // Check if opponentData is empty
   const hasOpponentData = Object.keys(opponentData).length > 0;
-  console.log("messages ======>", messages);
-  console.log("opponentData ======>", opponentData);
+  // console.log("messages ======>", messages);
+  // console.log("opponentData ======>", opponentData);
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
       <div className="chat-header">
@@ -312,6 +316,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
         )}
 
         {[...messages].reverse().map((message) => (
+        // {/* {messages.map((message) => ( */}
           <div key={message.uniqueId}>
             <Message
               message={message}

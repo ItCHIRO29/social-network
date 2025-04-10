@@ -28,7 +28,7 @@ const ChatManager = () => {
           return;
         }
         const fetchedData = await response.json();
-        console.log("fetchedData for messages:", fetchedData);
+        // console.log("fetchedData for messages:", fetchedData);
         // Create users map directly here
         const newUsersMap = new Map();
         fetchedData.forEach(user => {
