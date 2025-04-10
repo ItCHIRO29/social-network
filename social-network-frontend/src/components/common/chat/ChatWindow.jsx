@@ -221,7 +221,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       message: messageInput,
       sender: myData.username,
       receiver: username,
-      groupeId: chatdata.chatdata.groupedata.id,
+      groupeId: type === "groupe" ? chatdata.chatdata.groupedata.id : '',
       id: Date.now() + Math.random(),
     };
     console.log('newMessage', newMessage);
