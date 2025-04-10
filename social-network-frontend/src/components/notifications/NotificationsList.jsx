@@ -50,32 +50,7 @@ export default function NotificationsList({ onClose }) {
         }
     };
 
-    const handleAction = async (notification, action) => {
-        console.log('Notification:', notification);
-        try {
-            let response;
-            if (notification.notification_type === 'follow_request') {
-                if (action === 'accept') {
-                    response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?reference_id=${notification.referenceId}`, {
-                        method: 'PUT',
-                        credentials: 'include',
-                    });
-                } else if (action === 'reject') {
-                    response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/follow?reference_id=${notification.referenceId}`, {
-                        method: 'DELETE',
-                        credentials: 'include',
-                    });
-                }
-            }
-            // Handle other notification types if needed
 
-            if (response && response.ok) {
-                setNotifications(prev => prev.filter(n => n.referenceId !== notification.referenceId));
-            }
-        } catch (error) {
-            console.error('Error handling notification action:', error);
-        }
-    };
 
     return (
         <div className={styles.notificationsContainer}>

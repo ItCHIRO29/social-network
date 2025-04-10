@@ -82,7 +82,10 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal server error")
 				return
 			}
-			notifications.SendNotification(tx, db, userId, invitedId, "group_invitation", int(referenceId))
+			notifications.SendNotification(tx, db, userId, invitedId, "group_invitation", int(referenceId), map[string]any{
+				"group_id":   groupId,
+				"group_name": group.Name,
+			})
 
 		}
 	}

@@ -53,7 +53,19 @@ func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId i
 			return
 		}
 		fmt.Printf("\033[32mCreated group_member with ID: %v\033[0m\n", referenceId)
-		notifications.SendNotification(tx, db, userId, invitedId, "group_invitation", int(referenceId))
+		getGroupDataQuery := `SELECT id, name FROM groups WHERE id = $1`
+		var groupData models.Group
+		err = tx.QueryRow(getGroupDataQuery, group.Id).Scan(&groupData.Id, &groupData.Name)
+		if err != nil {
+			fmt.Printf("\033[31mError getting group data: %v\033[0m\n", err)
+			tx.Rollback()
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+		notifications.SendNotification(tx, db, userId, invitedId, "group_invitation", int(referenceId), map[string]any{
+			"group_id":   groupData.Id,
+			"group_name": groupData.Name,
+		})
 	}
 
 	err = tx.Commit()

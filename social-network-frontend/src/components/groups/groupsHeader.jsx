@@ -124,7 +124,7 @@ export default function GroupsHeader() {
 
     const handleJoinGroup = async (groupId) => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/join?groupId=${groupId}`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/join?group_id=${groupId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

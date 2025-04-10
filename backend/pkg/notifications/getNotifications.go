@@ -2,6 +2,7 @@ package notifications
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -12,7 +13,7 @@ import (
 
 func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// fmt.Println("GetNotifications")
-	query := `SELECT n.id, n.sender_id, n.receiver_id, n.type, n.reference_id, n.created_at, u.image FROM notifications n JOIN users u ON n.sender_id = u.id WHERE (n.receiver_id = $1 AND n.sender_id != $1)`
+	query := `SELECT n.id, n.sender_id, n.receiver_id, n.type, n.reference_id, n.created_at, u.image, n.additional_data FROM notifications n JOIN users u ON n.sender_id = u.id WHERE (n.receiver_id = $1 AND n.sender_id != $1)`
 	rows, err := db.Query(query, userId)
 	if err != nil {
 		fmt.Println("error in GetNotifications", err)
@@ -26,24 +27,26 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		var senderId int
 		var receiverId int
 		var createdAtStr string
-		err := rows.Scan(&notification.Id, &senderId, &receiverId, &notification.Type, &notification.ReferenceId, &createdAtStr, &notification.Image)
+		var additionalData string
+		err := rows.Scan(&notification.Id, &senderId, &receiverId, &notification.Type, &notification.ReferenceId, &createdAtStr, &notification.Image, &additionalData)
 		if err != nil {
 			fmt.Println("error in GetNotifications", err)
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-
-		// Parse the timestamp string
-		createdAt, err := time.Parse("2006-01-02 15:04:05.999999999-07:00", createdAtStr)
-		if err != nil {
-			fmt.Printf("error parsing timestamp %s: %v\n", createdAtStr, err)
-			// Try alternative format if the first one fails
-			createdAt, err = time.Parse("2006-01-02 15:04:05", createdAtStr)
+		if additionalData != "" {
+			err = json.Unmarshal([]byte(additionalData), &notification.AdditionalData)
 			if err != nil {
-				fmt.Printf("error parsing timestamp with alternative format: %v\n", err)
+				fmt.Println("error in GetNotifications", err)
 				http.Error(w, "internal server error", http.StatusInternalServerError)
 				return
 			}
+		}
+		createdAt, err := time.Parse("2006-01-02 15:04:05.999999999-07:00", createdAtStr)
+		if err != nil {
+			fmt.Printf("error parsing timestamp %s: %v\n", createdAtStr, err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
 		}
 		notification.CreatedAt = createdAt
 
@@ -61,6 +64,5 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		}
 		notifications = append(notifications, notification)
 	}
-	// fmt.Println("notifications", notifications)
 	utils.WriteJSON(w, 200, notifications)
 }

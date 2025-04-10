@@ -13,6 +13,16 @@
     animation: slideIn 0.2s ease-out;
 }
 
+.groupName {
+    color: #ff9800;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.groupName:hover {
+    text-decoration: underline;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
