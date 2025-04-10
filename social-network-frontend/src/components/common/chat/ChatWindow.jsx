@@ -17,7 +17,7 @@ function dateFormat(timestamp) {
   return `${days} ${days === 1 ? 'day' : 'days'} ago`;
 }
 
-const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide }) => {
+const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket, onClose, onHide }) => {
   const [opponentData, setOpponentData] = useState({});
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
@@ -106,13 +106,19 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     scrollToBottom();
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (type, chatdata) => {
+
     if (isLoadingOlder || !hasMoreMessages) return;
     setIsLoadingOlder(true);
-
+    let link = "";
+    if (type === "User") {
+      link = `http://localhost:8080/api/chat/get_messages?opponent=${username}&offset=${offset}`;
+    } else if (type === "groupe") {
+      link = `http://localhost:8080/api/chat/get_chat_grp?group_id=${chatdata.chatdata.groupedata.id_group}&offset=${offset}`;
+    }
     try {
       const response = await fetch(
-        `http://localhost:8080/api/chat/get_messages?opponent=${username}&offset=${offset}`,
+        link,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -146,7 +152,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
 
   // Initial fetch of messages
   useEffect(() => {
-    fetchMessages();
+    fetchMessages(type, chatdata);
   }, []);
 
   // Listen for private messages
@@ -179,7 +185,8 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
         credentials: 'include',
       });
     } catch (error) {
-      console.error('Error marking message as seen:', error);
+      // console.error('Error marking message as seen:', error);
+      return
     }
   };
 
@@ -210,10 +217,11 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     if (!messageInput.trim()) return;
     console.log('sender', myData.username);
     const newMessage = {
-      type: 'private message',
+      type: type === "groupe" ? "groupe" : 'private message',
       message: messageInput,
       sender: myData.username,
       receiver: username,
+      groupeId: chatdata.chatdata.groupedata.id_group,
       id: Date.now() + Math.random(),
     };
     console.log('newMessage', newMessage);
@@ -256,7 +264,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     const { scrollTop } = e.target;
 
     if (scrollTop < 50) {
-      fetchMessages();
+      fetchMessages(type, chatdata);
     }
   };
 
