@@ -107,14 +107,14 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   };
 
   const fetchMessages = async (type, chatdata) => {
-
+    console.warn(type, chatdata)
     if (isLoadingOlder || !hasMoreMessages) return;
     setIsLoadingOlder(true);
     let link = "";
     if (type === "User") {
       link = `http://localhost:8080/api/chat/get_messages?opponent=${username}&offset=${offset}`;
     } else if (type === "groupe") {
-      link = `http://localhost:8080/api/chat/get_chat_grp?group_id=${chatdata.chatdata.groupedata.id_group}&offset=${offset}`;
+      link = `http://localhost:8080/api/chat/get_chat_grp?group_id=${chatdata.chatdata.groupedata.id}&offset=${offset}`;
     }
     try {
       const response = await fetch(
@@ -221,7 +221,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       message: messageInput,
       sender: myData.username,
       receiver: username,
-      groupeId: chatdata.chatdata.groupedata.id_group,
+      groupeId: chatdata.chatdata.groupedata.id,
       id: Date.now() + Math.random(),
     };
     console.log('newMessage', newMessage);

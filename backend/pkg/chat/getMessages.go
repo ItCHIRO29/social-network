@@ -57,7 +57,7 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			if err == sql.ErrNoRows {
-				utils.WriteJSON(w, http.StatusBadRequest, "invalid opponent username!")
+				utils.WriteJSON(w, http.StatusAccepted, "invalid opponent username!")
 				return
 			}
 			utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))

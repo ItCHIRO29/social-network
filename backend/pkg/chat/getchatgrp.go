@@ -27,7 +27,7 @@ func GetChat(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error fetching latest message ID:", err)
 			if err == sql.ErrNoRows {
-				utils.WriteJSON(w, http.StatusBadRequest, "invalid group_id or no messages found")
+				utils.WriteJSON(w, http.StatusAccepted, "invalid group_id or no messages found")
 				return
 			}
 			utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
