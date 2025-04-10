@@ -5,69 +5,56 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 )
 
 func SendInvitation(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	var Groups models.Groups
-	// var existingMembers bool
-	// Decode the request body
-	err := json.NewDecoder(r.Body).Decode(&Groups)
+	var group models.Group
+	err := json.NewDecoder(r.Body).Decode(&group)
 	if err != nil {
-		fmt.Println("Error decoding request body:", err)
-		utils.WriteJSON(w, 400, "Bad request: Invalid JSON")
+		fmt.Printf("\033[31mError: %v\033[0m\n", err)
+		utils.WriteJSON(w, 400, "bad request")
 		return
 	}
-	existingMembers, err := CheckExistingInvitation(db, Groups.Invited_user_id, Groups.Id)
-	if err != nil {
-		fmt.Println("Error checking existing members:", err)
-		utils.WriteJSON(w, 500, "Internal server error")
-		return
-	}
-	if existingMembers {
-		fmt.Println("User already exists in the group")
-		utils.WriteJSON(w, 400, "User already exists in the group")
-		return
-	}
-	// if Groups.Invited_user_id != 0 && Groups.Invited_user_id != userId {
-	// 	fmt.Println("user ID ===>", Groups)
-	// 	// return
-	// }
 
-	if Groups.Invited_user_id != 0 && Groups.Invited_user_id != userId && !existingMembers {
-		_, err = db.Exec("INSERT INTO group_members (user_id, group_id, accepted) VALUES (?, ?, 0)", Groups.Invited_user_id, Groups.Id)
-		if err != nil {
-			fmt.Println("Error sending invitation:", err)
-			utils.WriteJSON(w, 500, "Internal server error")
+	checkQuery := `SELECT 1 FROM group_members WHERE group_id = $1 AND user_id = $2`
+	var exists int
+	err = db.QueryRow(checkQuery, group.Id, userId).Scan(&exists)
+	if err != nil {
+		fmt.Printf("\033[31mError: %v\033[0m\n", err)
+		if err == sql.ErrNoRows {
+			utils.WriteJSON(w, 400, "you must be a member of the group to invite others")
 			return
 		}
+		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
-	// If user is not in the group, insert new invitation
-	_, err = db.Exec("INSERT INTO group_members (user_id, group_id, accepted) VALUES (?, ?, 0)", userId, Groups.Id)
+
+	tx, err := db.Begin()
 	if err != nil {
-		fmt.Println("Error sending invitation:", err)
-		utils.WriteJSON(w, 500, "Internal server error")
+		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
 
-	utils.WriteJSON(w, 200, Groups)
-}
+	query := `INSERT INTO group_members (user_id, group_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`
 
-func CheckExistingInvitation(db *sql.DB, userId int, groupId int) (bool, error) {
-	// Check if the user is already a member or invited
-	var existingID int
-	query := `SELECT user_id FROM group_members WHERE user_id = ? AND group_id = ?`
-	err := db.QueryRow(query, userId, groupId).Scan(&existingID)
-	if err == nil {
-		fmt.Println("User is already a member or has a pending invitation.")
-		return true, err
-	} else if err != sql.ErrNoRows {
-		fmt.Println("Database error when checking existing invitation:", err)
-		// utils.WriteJSON(w, 500, "Internal server error")
-		return true, err
+	for _, invitedId := range group.InvitedUsers {
+		_, err := tx.Exec(query, invitedId, group.Id)
+		if err != nil {
+			fmt.Printf("\033[31mError: %v\033[0m\n", err)
+			tx.Rollback()
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
 	}
-	return false, nil
+
+	err = tx.Commit()
+	if err != nil {
+		fmt.Printf("\033[31mError: %v\033[0m\n", err)
+		utils.WriteJSON(w, 500, "internal server error")
+		return
+	}
+
+	utils.WriteJSON(w, 200, "invitation sent")
 }

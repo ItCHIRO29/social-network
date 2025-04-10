@@ -96,6 +96,7 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 			utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 			return
 		}
+		fmt.Println("messages in get messages handlers : ", message)
 		messages = append(messages, message)
 	}
 	if len(messages) == 0 {
@@ -104,6 +105,5 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		offset = messages[len(messages)-1].Id
 		fmt.Println("offset in get messages handlers : ", offset)
 	}
-	// fmt.Println("messages in get messages handlers : ", messages)
 	utils.WriteJSON(w, http.StatusOK, resp{Messages: messages, Offset: offset})
 }

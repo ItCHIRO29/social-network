@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_groups_name ON groups(name);

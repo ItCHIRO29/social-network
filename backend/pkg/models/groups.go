@@ -1,12 +1,11 @@
 package models
 
-type Groups struct {
-	Id              int    `json:"id_group"`
-	Admin_id        int    `json:"admin_id"`
-	Admin           string `json:"admin"`
-	Name            string `json:"name"`
-	Description     string `json:"description"`
-	Invited_user_id int    `json:"invited_user_id"`
+type Group struct {
+	Id           int    `json:"id"`
+	AdminId      int    `json:"admin_id"`
+	Name         string `json:"name"`
+	Description  string `json:"description"`
+	InvitedUsers []int  `json:"invited_users"`
 }
 
 type Member struct {
@@ -16,15 +15,4 @@ type Member struct {
 	Group_id int    `json:"group_id"`
 	Accepted bool   `json:"accepted"`
 	// User     string `json:"user"`
-}
-
-type Group struct {
-	Id       int `json:"id_group"`
-	Admin_id int `json:"admin_id"`
-	// Admin       string `json:"admin"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Events      []Event
-	Members     []Member
-	// posts        []Post
 }

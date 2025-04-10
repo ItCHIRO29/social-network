@@ -74,11 +74,13 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       return;
     }
     setMessages(prev => {
+      console.log('newMessages 1');
       const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(false);
@@ -90,11 +92,13 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       return;
     }
     setMessages(prev => {
-      const combinedMessages = [...prev, ...newMessages];
+      console.log('newMessages 2');
+      const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(true);
@@ -213,10 +217,11 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
     if (!messageInput.trim()) return;
     console.log('sender', myData.username);
     const newMessage = {
-      type: 'private message',
+      type: type === "groupe" ? "groupe" : 'private message',
       message: messageInput,
       sender: myData.username,
       receiver: username,
+      groupeId: chatdata.chatdata.groupedata.id_group,
       id: Date.now() + Math.random(),
     };
     console.log('newMessage', newMessage);
@@ -227,6 +232,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
 
   const handleRetry = (uniqueId) => {
     setMessages(prev => {
+      console.log('newMessages 3');
       const messageToRetry = prev.find(msg => msg.uniqueId === uniqueId);
       if (!messageToRetry) return prev;
 
@@ -275,8 +281,8 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
 
   // Check if opponentData is empty
   const hasOpponentData = Object.keys(opponentData).length > 0;
-  console.log("messages ======>", messages);
-  console.log("opponentData ======>", opponentData);
+  // console.log("messages ======>", messages);
+  // console.log("opponentData ======>", opponentData);
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
       <div className="chat-header">
@@ -319,6 +325,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         )}
 
         {[...messages].reverse().map((message) => (
+          // {/* {messages.map((message) => ( */}
           <div key={message.uniqueId}>
             <Message
               message={message}

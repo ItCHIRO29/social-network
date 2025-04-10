@@ -10,10 +10,10 @@ export default function GroupsHeader() {
     const [newGroupDescription, setNewGroupDescription] = useState('');
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
-
+    const [expandedGroupId, setExpandedGroupId] = useState(null);
+    const [createError, setCreateError] = useState(null);
     useEffect(() => {
         fetchGroups();
-        // Reset create form when switching tabs
         if (activeButton !== 'your groups') {
             setShowCreateForm(false);
             setNewGroupName('');
@@ -24,13 +24,13 @@ export default function GroupsHeader() {
 
     useEffect(() => {
         if (showCreateForm) {
-            fetchUsers();
+            fetchUsers(0);
         }
     }, [showCreateForm]);
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (groupId) => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/users/GetAllUsers', {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/get_members_to_invite?group_id=${groupId}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -87,7 +87,7 @@ export default function GroupsHeader() {
     const handleCreateGroup = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/groups/createGroup', {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/groups/create_group', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,15 +96,26 @@ export default function GroupsHeader() {
                 body: JSON.stringify({
                     name: newGroupName,
                     description: newGroupDescription,
-                    invitedUsers: selectedUsers
+                    invited_users: selectedUsers
                 })
             });
+            
             if (response.ok) {
+                setCreateError(null);
                 setShowCreateForm(false);
                 setNewGroupName('');
                 setNewGroupDescription('');
                 setSelectedUsers([]);
                 fetchGroups();
+            } else {
+                const data = await response.json();
+                if (response.status === 400) {
+                    console.error('Group creation failed:', data);
+                    setCreateError(data);
+                } else {
+                    console.error('Unexpected error:', data);
+                    setCreateError("Failed to create group Try again later");
+                }
             }
         } catch (error) {
             console.error('Error creating group:', error);
@@ -147,6 +158,36 @@ export default function GroupsHeader() {
         }
     };
 
+    const handleExpandCommunity = (groupId) => {
+        setExpandedGroupId(expandedGroupId === groupId ? null : groupId);
+        if (expandedGroupId !== groupId) {
+            fetchUsers(groupId);
+        }
+    };
+
+    const handleInviteToGroup = async (groupId) => {
+        try {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/invitation`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: groupId,
+                    invited_users: selectedUsers
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to invite users');
+            }
+            setSelectedUsers([]);
+            setExpandedGroupId(null);
+        } catch (error) {
+            console.error('Error inviting users:', error);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -161,13 +202,13 @@ export default function GroupsHeader() {
                         className={`${styles.tab} ${activeButton === 'joined groups' ? styles.active : ''}`}
                         onClick={() => setActiveButton('joined groups')}
                     >
-                        Joined Groups
+                       Joined Groups
                     </button>
                     <button
                         className={`${styles.tab} ${activeButton === 'all groups' ? styles.active : ''}`}
                         onClick={() => setActiveButton('all groups')}
                     >
-                        All Groups
+                        Find New Communities
                     </button>
                 </div>
             </div>
@@ -216,7 +257,7 @@ export default function GroupsHeader() {
                                             ))}
                                         </div>
                                     </div>
-
+                                    {createError && <div className={styles.error}>{createError}</div>}
                                     <div className={styles.formActions}>
                                         <button type="submit">Create</button>
                                         <button type="button" onClick={() => setShowCreateForm(false)}>Cancel</button>
@@ -232,9 +273,63 @@ export default function GroupsHeader() {
                         ) : (
                             <div className={styles.groupsGrid}>
                                 {groups.map(group => (
-                                    <div key={group.id} className={styles.groupCard}>
+                                    <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
                                         <h3>{group.name}</h3>
                                         <p>{group.description}</p>
+                                        <div className={styles.groupActions}>
+                                            <button
+                                                className={styles.actionButton}
+                                                onClick={() => window.location.href = `/groups/${group.id}`}
+                                            >
+                                                Go to Group
+                                            </button>
+                                            <button
+                                                className={styles.actionButton}
+                                                onClick={() => handleExpandCommunity(group.id)}
+                                            >
+                                                Expand Community
+                                            </button>
+                                            {expandedGroupId === group.id && (
+                                                <div className={styles.popupOverlay}>
+                                                    <div className={styles.invitePopup}>
+                                                        <div className={styles.popupHeader}>
+                                                            <h3>Invite Users to {group.name}</h3>
+                                                            <button 
+                                                                className={styles.closeButton}
+                                                                onClick={() => {
+                                                                    setExpandedGroupId(null);
+                                                                    setSelectedUsers([]);
+                                                                }}
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                        <div className={styles.usersList}>
+                                                            {users.map(user => (
+                                                                <label key={user.id} className={styles.userItem}>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={selectedUsers.includes(user.id)}
+                                                                        onChange={() => handleUserSelect(user.id)}
+                                                                    />
+                                                                    <span className={styles.checkmark}></span>
+                                                                    <span className={styles.username}>{user.username}</span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                        <div className={styles.popupActions}>
+                                                            <button 
+                                                                className={styles.inviteButton}
+                                                                onClick={() => handleInviteToGroup(group.id)}
+                                                                disabled={selectedUsers.length === 0}
+                                                            >
+                                                                Invite Selected Users
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -251,14 +346,66 @@ export default function GroupsHeader() {
                         ) : (
                             <div className={styles.groupsGrid}>
                                 {groups.map(group => (
-                                    <div key={group.id} className={styles.groupCard}>
+                                    <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
                                         <h3>{group.name}</h3>
                                         <p>{group.description}</p>
                                         <div className={styles.groupActions}>
+                                            <button
+                                                className={styles.actionButton}
+                                                onClick={() => window.location.href = `/groups/${group.id}`}
+                                            >
+                                                Go to Group
+                                            </button>
+                                            <button
+                                                className={styles.actionButton}
+                                                onClick={() => handleExpandCommunity(group.id)}
+                                            >
+                                                Expand Community
+                                            </button>
+                                            {expandedGroupId === group.id && (
+                                                <div className={styles.popupOverlay}>
+                                                    <div className={styles.invitePopup}>
+                                                        <div className={styles.popupHeader}>
+                                                            <h3>Invite Users to {group.name}</h3>
+                                                            <button 
+                                                                className={styles.closeButton}
+                                                                onClick={() => {
+                                                                    setExpandedGroupId(null);
+                                                                    setSelectedUsers([]);
+                                                                }}
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                        <div className={styles.usersList}>
+                                                            {users.map(user => (
+                                                                <label key={user.id} className={styles.userItem}>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={selectedUsers.includes(user.id)}
+                                                                        onChange={() => handleUserSelect(user.id)}
+                                                                    />
+                                                                    <span className={styles.checkmark}></span>
+                                                                    <span className={styles.username}>{user.username}</span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                        <div className={styles.popupActions}>
+                                                            <button 
+                                                                className={styles.inviteButton}
+                                                                onClick={() => handleInviteToGroup(group.id)}
+                                                                disabled={selectedUsers.length === 0}
+                                                            >
+                                                                Invite Selected Users
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                             {activeButton === 'all groups' && (
                                                 <button
                                                     className={styles.joinButton}
-                                                    onClick={() => handleJoinGroup(group.id_group)}
+                                                    onClick={() => handleJoinGroup(group.id)}
                                                 >
                                                     Join Group
                                                 </button>
@@ -266,7 +413,7 @@ export default function GroupsHeader() {
                                             {activeButton === 'joined groups' && (
                                                 <button
                                                     className={styles.leaveButton}
-                                                    onClick={() => handleLeaveGroup(group.id_group)}
+                                                    onClick={() => handleLeaveGroup(group.id)}
                                                 >
                                                     Leave Group
                                                 </button>

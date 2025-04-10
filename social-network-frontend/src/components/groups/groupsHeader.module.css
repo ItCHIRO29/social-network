@@ -3,6 +3,15 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    background-color: #121212;
+    color: #ffffff;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.error {
+    color: #ff4444;
+    margin-bottom: 1rem;
 }
 
 .header {
@@ -11,7 +20,7 @@
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid #333;
 }
 
 .tabs {
@@ -46,23 +55,24 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #0095f6;
+    background: #4a90e2;
     border-radius: 2px;
 }
 
 .createButton {
     padding: 0.75rem 1.5rem;
-    background: #0095f6;
+    background: #4a90e2;
     color: white;
     border: none;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .createButton:hover {
-    background: #0081d6;
+    background: #357abd;
+    transform: translateY(-1px);
 }
 
 .createForm {
@@ -83,7 +93,7 @@
     padding: 0.75rem;
     margin-bottom: 1rem;
     background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    border: 1px solid #333;
     border-radius: 8px;
     color: #ffffff;
 }
@@ -108,19 +118,20 @@
 }
 
 .formActions button[type="submit"] {
-    background: #0095f6;
+    background: #4a90e2;
     color: white;
     border: none;
 }
 
 .formActions button[type="submit"]:hover {
-    background: #0081d6;
+    background: #357abd;
+    transform: translateY(-1px);
 }
 
 .formActions button[type="button"] {
     background: transparent;
     color: #a0a0a0;
-    border: 1px solid #3a3a3a;
+    border: 1px solid #333;
 }
 
 .formActions button[type="button"]:hover {
@@ -130,6 +141,8 @@
 
 .content {
     margin-top: 2rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .emptyState {
@@ -144,22 +157,29 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .groupCard {
     background: #1a1a1a;
     padding: 1.5rem;
     border-radius: 12px;
-    transition: transform 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .groupCard:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .groupCard h3 {
     color: #ffffff;
     margin-bottom: 0.5rem;
+    font-size: 1.25rem;
 }
 
 .groupCard p {
@@ -170,41 +190,46 @@
 
 .groupActions {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.joinButton,
-.leaveButton {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-weight: 600;
+.actionButton {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.joinButton {
-    background: #0095f6;
+.actionButton:first-child {
+    background-color: #4a90e2;
     color: white;
-    border: none;
 }
 
-.joinButton:hover {
-    background: #0081d6;
+.actionButton:first-child:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
 }
 
-.leaveButton {
-    background: transparent;
-    color: #ff4444;
-    border: 1px solid #ff4444;
+.actionButton:last-child {
+    background-color: #2a2a2a;
+    color: #ffffff;
 }
 
-.leaveButton:hover {
-    background: #ff4444;
-    color: white;
+.actionButton:last-child:hover {
+    background-color: #333;
+    transform: translateY(-1px);
 }
 
 .inviteSection {
     margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: #2a2a2a;
+    border-radius: 12px;
+    border: 1px solid #333;
 }
 
 .inviteSection h4 {
@@ -214,25 +239,44 @@
 }
 
 .usersList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     max-height: 300px;
     overflow-y: auto;
+    padding-right: 8px;
+}
+
+.usersList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.usersList::-webkit-scrollbar-track {
     background: #1a1a1a;
-    border: 1px solid #3a3a3a;
-    border-radius: 8px;
-    padding: 0.5rem;
+    border-radius: 3px;
+}
+
+.usersList::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 3px;
+}
+
+.usersList::-webkit-scrollbar-thumb:hover {
+    background: #666;
 }
 
 .userItem {
     display: flex;
     align-items: center;
     padding: 0.75rem;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
     position: relative;
 }
 
 .userItem:hover {
-    background-color: #2a2a2a;
+    background-color: #333;
 }
 
 .userItem input {
@@ -247,20 +291,20 @@
     position: relative;
     height: 20px;
     width: 20px;
-    background-color: #2a2a2a;
-    border: 2px solid #3a3a3a;
+    background-color: #1a1a1a;
+    border: 2px solid #333;
     border-radius: 4px;
-    margin-right: 1rem;
-    transition: all 0.3s ease;
+    margin-right: 12px;
+    transition: all 0.2s ease;
 }
 
 .userItem:hover .checkmark {
-    border-color: #0095f6;
+    border-color: #4a90e2;
 }
 
 .userItem input:checked ~ .checkmark {
-    background-color: #0095f6;
-    border-color: #0095f6;
+    background-color: #4a90e2;
+    border-color: #4a90e2;
 }
 
 .checkmark:after {
@@ -282,7 +326,54 @@
 
 .username {
     color: #ffffff;
-    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.inviteButton {
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inviteButton:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+.joinButton,
+.leaveButton {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.joinButton {
+    background: #4a90e2;
+    color: white;
+    border: none;
+}
+
+.joinButton:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+.leaveButton {
+    background: #ff4444;
+    color: white;
+    border: none;
+}
+
+.leaveButton:hover {
+    background: #e63c3c;
+    transform: translateY(-1px);
 }
 
 .searchContainer {
@@ -362,4 +453,109 @@
 
 .removeUser:hover {
     color: #ff4444;
+}
+
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.invitePopup {
+    background: #1a1a1a;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.popupHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popupHeader h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.25rem;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+    color: #ffffff;
+}
+
+.popupActions {
+    padding: 1.5rem;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.inviteButton {
+    padding: 0.75rem 1.5rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inviteButton:hover:not(:disabled) {
+    background-color: #357abd;
+    transform: translateY(-1px);
+}
+
+.inviteButton:disabled {
+    background-color: #2a2a2a;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
 }

@@ -69,6 +69,7 @@ ORDER BY posts.id DESC;`
 				return
 			}
 		} else {
+			fmt.Println("rani hna f post dial user akhour!!!!!!!!!!!!!!!!!!!!")
 			fmt.Println("m here in get posts user id  !==== userid = ")
 			query := `
    					 SELECT id, user_id, title, content, created_at, image , privacy

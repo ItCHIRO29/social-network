@@ -31,14 +31,19 @@ type Client struct {
 type Message map[string]any
 
 func (message Message) isValidGroupMessage(userid int, db *sql.DB) bool {
-	_, ok := message["groupe"].(string)
-	groupeid, ok5 := message["groupeId"].(int)
+	// _, ok := message["groupe"].(string)
+	groupeId, ok5 := message["groupeId"].(float64)
+
 	// _, ok1 := message["sender"].(string)
 	_, ok2 := message["message"].(string)
 	_, ok3 := message["id"].(float64)
-	ok4 := utils.CheckUserInGrp(userid, groupeid, db)
-	if !ok || !ok2 || !ok3 || !ok4 || !ok5 {
-		fmt.Println("invalid message")
+	ok4 := utils.CheckUserInGrp(userid, int(groupeId), db)
+	if !ok5 {
+		fmt.Println("invalid message 45", groupeId)
+		return false
+	}
+	if !ok2 || !ok3 || !ok4 || !ok5 {
+		fmt.Println("invalid message here")
 		return false
 	}
 	return true
@@ -320,7 +325,7 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			}
 			message["sender"] = userName
 			message["creation_date"] = time.Now().Format("2006-01-02 15:04")
-			ismember := utils.CheckUserInGrp(userId, message["groupeId"].(int), db)
+			ismember := utils.CheckUserInGrp(userId, int(message["groupeId"].(float64)), db)
 			if ismember {
 				err := AddMessageToGrp(userId, db, message)
 				if err != nil {
@@ -392,8 +397,8 @@ func UpdateLastActive(db *sql.DB, userId int) {
 }
 
 func AddMessageToGrp(senderId int, db *sql.DB, message Message) error {
-	query := `INSERT INTO group_chat (? , ? , ? , ?)`
-	_, err := db.Exec(query, message["groupeId"].(int), senderId, message["message"].(string), time.Now())
+	query := `INSERT INTO group_chat (group_id , sender_id , message , created_at) VALUES (? , ? , ? , ?)`
+	_, err := db.Exec(query, int(message["groupeId"].(float64)), senderId, message["message"].(string), time.Now())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error to insert message", err)
 		return err
