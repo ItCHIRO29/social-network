@@ -37,14 +37,21 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		return
 	}
 	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
-
+	if err != nil {
+		offset = 0
+	}
+	fmt.Println("offset in backend :======>", offset)
 	if err != nil || offset <= 0 {
-		query := `SELECT COALESCE(
-            (SELECT MAX(id) FROM private_messages 
-             WHERE (sender_id = $1 AND receiver_id = $2) 
-                OR (receiver_id = $1 AND sender_id = $2)), 
-            0
-        );`
+		// query := `SELECT COALESCE(
+		// (SELECT MAX(id) FROM private_messages
+		//  WHERE (sender_id = $1 AND receiver_id = $2)
+		// OR (receiver_id = $1 AND sender_id = $2) ORDER BY id DESC),
+		// 0
+		// ) ;`
+		query := `SELECT id FROM private_messages 
+		WHERE (sender_id = $1 AND receiver_id = $2) 
+		OR (receiver_id = $1 AND sender_id = $2) 
+		ORDER BY id DESC ;`
 
 		err := db.QueryRow(query, userId, opponnentId).Scan(&offset)
 		if err != nil {
@@ -64,7 +71,7 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	WHERE ((m.sender_id = $1 AND m.receiver_id = $2) OR (m.sender_id = $2 AND m.receiver_id = $1)) 
 	AND m.id < $3
 	ORDER BY m.id DESC 
-	LIMIT 10;`
+	;`
 
 	rows, err := db.Query(query, userId, opponnentId, offset)
 	if err != nil {
@@ -78,6 +85,12 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		var message Message
 		var senderFirstName string
 		var senderLastName string
+		message.Receiver = opponentUsername
+		// if err != nil {
+		// fmt.Fprintln(os.Stderr, err)
+		// utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		// return
+		// }
 		if err := rows.Scan(&message.Id, &message.Sender, &message.SenderId, &message.ReceiverId, &senderFirstName, &senderLastName, &message.Message, &message.CreatedAt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			utils.WriteJSON(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
@@ -89,6 +102,8 @@ func GetMessages(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		offset = -1
 	} else {
 		offset = messages[len(messages)-1].Id
+		fmt.Println("offset in get messages handlers : ", offset)
 	}
+	// fmt.Println("messages in get messages handlers : ", messages)
 	utils.WriteJSON(w, http.StatusOK, resp{Messages: messages, Offset: offset})
 }

@@ -3,6 +3,7 @@ import ChatWindow from './ChatWindow';
 import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
+import { fips } from 'crypto';
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -27,7 +28,7 @@ const ChatManager = () => {
           return;
         }
         const fetchedData = await response.json();
-
+        console.log("fetchedData for messages:", fetchedData);
         // Create users map directly here
         const newUsersMap = new Map();
         fetchedData.forEach(user => {
@@ -186,6 +187,7 @@ const ChatManager = () => {
         myData,
         focused: true
       });
+      console.log('New chat window:', newMap);
       return newMap;
     });
   };

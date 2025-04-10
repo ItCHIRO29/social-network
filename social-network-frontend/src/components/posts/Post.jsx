@@ -6,7 +6,7 @@ import styles from './Post.module.css';
 
 export default function Post({ post }) {
     const [showComments, setShowComments] = useState(false);
-    console.log("Post:", post);
+    // console.log("Post:", post);
     const imagePath = post.Image ? `${process.env.NEXT_PUBLIC_API_URL}/${post.Image}` : null;
     const profileImage = post.ProfileImage
         ? `${process.env.NEXT_PUBLIC_API_URL}/${post.ProfileImage}`
