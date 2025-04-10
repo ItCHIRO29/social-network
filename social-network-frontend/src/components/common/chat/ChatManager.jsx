@@ -46,7 +46,7 @@ const ChatManager = () => {
     };
 
     const getgrps = async () => {
-      const resp = await fetch('http://localhost:8080/api/groups/getGroups/joined', {
+      const resp = await fetch('http://localhost:8080/api/groups/getGroups/GroupsMember', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
