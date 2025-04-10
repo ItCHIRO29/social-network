@@ -75,11 +75,12 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     }
     setMessages(prev => {
       console.log('newMessages 1');
-      const combinedMessages = [...prev, ...newMessages];
+      const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
+      scrollToBottom();
       return uniqueMessages;
     });
     setIsAppending(false);
@@ -92,7 +93,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
     }
     setMessages(prev => {
       console.log('newMessages 2');
-      const combinedMessages = [...newMessages,...prev ];
+      const combinedMessages = [...newMessages, ...prev];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
@@ -316,7 +317,7 @@ const ChatWindow = ({ username, users, setUsers, myData, socket, onClose, onHide
         )}
 
         {[...messages].reverse().map((message) => (
-        // {/* {messages.map((message) => ( */}
+          // {/* {messages.map((message) => ( */}
           <div key={message.uniqueId}>
             <Message
               message={message}
