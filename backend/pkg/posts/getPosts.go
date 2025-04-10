@@ -24,6 +24,13 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// var user_id int
 	// if user_id_str != "" {
 	// }
+	
+	isfollowing := checkfollowing(db, userId, user_id_str)
+	if isfollowing == false {
+		fmt.Println("user is not following")
+		utils.WriteJSON(w, http.StatusOK, posts)
+		return
+	}
 	if user_id_str == "" {
 		fmt.Println("m here in get posts user id is empty")
 		query = `SELECT 
@@ -37,8 +44,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 FROM posts
 LEFT JOIN json_each(posts.can_see) ON true
 WHERE 
-    posts.privacy = 'public' 
-    OR (posts.privacy = 'private' AND posts.user_id IN (
+     (posts.privacy = 'private' AND posts.user_id IN (
         SELECT following_id
         FROM followers
         WHERE follower_id = ? AND accepted = 1
@@ -168,4 +174,25 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	}
 	// fmt.Println("Get GroupPosts =======>", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
+}
+
+
+func checkfollowing(db *sql.DB, userId int, user_id_str string) bool {
+	fmt.Println("userId", userId)
+	
+	// var user_id int
+	// err := db.QueryRow("SELECT id FROM users WHERE username = ?", user_id_str).Scan(&user_id)
+	// if err != nil {
+	// 	fmt.Println("error in checkfollowing:", err)
+	// 	return false
+	// }
+	var isfollowing bool
+	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM followers WHERE follower_id = ? AND following_id = ? AND accepted = 1)", userId, user_id_str).Scan(&isfollowing)
+	fmt.Println("following_id", isfollowing)
+	fmt.Println("user_id", user_id_str)
+	if err != nil {
+		fmt.Println("error in checkfollowing:", err)
+		return false
+	}
+	return isfollowing
 }
