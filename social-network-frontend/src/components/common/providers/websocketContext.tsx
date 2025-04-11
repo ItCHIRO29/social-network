@@ -33,8 +33,9 @@ export class Ws {
                 const pEvent = new CustomEvent(eventName, { detail: { message } });
                 document.dispatchEvent(pEvent);
                 break;
-            case 'group message':
-                const gEvent = new CustomEvent('groupMessage', { detail: message });
+            case 'groupe':
+                const customgrp = `groupMessage-${message.receiver}`;
+                const gEvent = new CustomEvent(customgrp, { detail: message });
                 document.dispatchEvent(gEvent);
                 break;
             case 'status':

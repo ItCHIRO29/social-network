@@ -158,8 +158,13 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   // Listen for private messages
   useEffect(() => {
     const handlePrivateMessage = (event) => {
+      console.warn('detail', event)
       if (event.detail && event.detail.message) {
-        addMessage(event.detail.message);
+        if (event.detail.type === 'groupe') {
+          addMessage(event.detail);
+        } else {
+          addMessage(event.detail.message);
+        }
 
         // Mark message as seen since the chat window is active
         markMessageAsSeen();
@@ -171,9 +176,13 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
     };
 
     document.addEventListener(`privateMessage-${username}`, eventListener);
+    document.addEventListener(`groupMessage-${username}`, eventListener);
+
 
     return () => {
       document.removeEventListener(`privateMessage-${username}`, eventListener);
+      document.addEventListener(`groupMessage-${username}`, eventListener);
+
     };
   }, [username]);
 

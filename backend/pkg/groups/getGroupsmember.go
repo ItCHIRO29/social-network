@@ -9,7 +9,7 @@ import (
 	"social-network/pkg/utils"
 )
 
-func GetGroupsMember(w http.ResponseWriter, r *http.Request, userId int, db *sql.DB) {
+func GetGroupsMember(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	rows, err := db.Query(`
     SELECT g.*  
     FROM groups g
@@ -34,5 +34,6 @@ func GetGroupsMember(w http.ResponseWriter, r *http.Request, userId int, db *sql
 		}
 		AllGroups = append(AllGroups, group)
 	}
+	fmt.Println(AllGroups)
 	utils.WriteJSON(w, 200, AllGroups)
 }
