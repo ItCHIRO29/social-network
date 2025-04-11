@@ -21,7 +21,7 @@ export class Ws {
 
     handleMessage(data: any) {
         const message = JSON.parse(data.data);
-        // console.log("message", message)
+        console.log("message", message.type)
         switch (message.type) {
             case 'private message':
                 console.log("received message", message)
@@ -31,7 +31,9 @@ export class Ws {
                 document.dispatchEvent(pEvent);
                 break;
             case 'groupe':
-                const gEvent = new CustomEvent('groupMessage', { detail: message });
+                const customgrp = `groupMessage-${message.receiver}`;
+                console.warn(customgrp)
+                const gEvent = new CustomEvent(customgrp, { detail: message });
                 document.dispatchEvent(gEvent);
                 break;
             case 'status':
