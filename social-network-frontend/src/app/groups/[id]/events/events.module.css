@@ -1,0 +1,89 @@
+.eventsContainer {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.formSection {
+    margin-bottom: 3rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.eventsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.eventCard {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.eventCard h2 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
+.datetime {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.votingSection {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.voteButton {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.voteButton:hover {
+    background: #f5f5f5;
+}
+
+.voteButton.selected {
+    background: #e3f2fd;
+    border-color: #2196f3;
+    color: #1976d2;
+}
+
+.noEvents {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .formSection {
+        padding: 1rem;
+    }
+    
+    .eventsContainer {
+        padding: 1rem;
+    }
+} 
