@@ -1,0 +1,108 @@
+.createPostContainer {
+    background: #181818;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.postForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profileImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.postContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.titleInput {
+    padding: 12px;
+    border: 1px solid #252525;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #202020;
+    color: #ffffff;
+}
+
+.contentInput {
+    padding: 12px;
+    border: 1px solid #252525;
+    border-radius: 8px;
+    min-height: 120px;
+    resize: vertical;
+    font-size: 16px;
+    background-color: #202020;
+    color: #ffffff;
+}
+
+.fileInput {
+    padding: 12px;
+    border: 2px dashed #252525;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #202020;
+    text-align: center;
+    color: #888888;
+}
+
+.previewImage {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    margin-top: 12px;
+    object-fit: contain;
+}
+
+.postOptions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.submitButton {
+    padding: 10px 24px;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #42a5f5;
+}
+
+.privacySelect {
+    padding: 10px;
+    border: 1px solid #252525;
+    border-radius: 8px;
+    background-color: #202020;
+    cursor: pointer;
+    font-size: 14px;
+    color: #888888;
+}
+
+.privacySelect:hover {
+    border-color: #1e88e5;
+    color: #42a5f5;
+} 

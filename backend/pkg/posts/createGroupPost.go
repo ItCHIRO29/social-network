@@ -17,6 +17,7 @@ var GroupPost models.Posts
 
 func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	// fmt.Println("CreatePost triggered")
+	fmt.Println("CreateGroupPost triggered !!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	group_id_str := r.URL.Query().Get("groupId")
 	group_id, errr := strconv.Atoi(group_id_str)
 	if errr != nil {
@@ -58,8 +59,10 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(GroupPost.ID, 10))
 	GroupPost.UserID = userId
 	GroupPost.GroupId = group_id
-	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image) VALUES ( ?, ?, ?, ?,?, ?)"
-	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image)
+	GroupPost.Type = ""
+	fmt.Println("GroupPost ==============++>", GroupPost)
+	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image, privacy) VALUES ( ?, ?, ?, ?,?, ?,?)"
+	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image, GroupPost.Type)
 	if err1 != nil {
 		fmt.Println("error in inserting post:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting GroupPost: "+err1.Error())

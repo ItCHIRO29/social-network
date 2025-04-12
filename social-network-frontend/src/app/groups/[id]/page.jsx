@@ -4,12 +4,15 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import styles from './group.module.css';
 import GroupNavigation from '../../../components/groups/GroupNavigation';
-
+import Posts from '../../../components/posts/groupPosts'
+// import CreateGrpPost from '../../../components/posts/CreateGrpPost';
 export default function GroupPage() {
     const { id: groupId } = useParams();
     const [group, setGroup] = useState(null);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
+    // const [posts, setPosts] = useState([]);
+
 
     useEffect(() => {
         fetchGroupDetails();
@@ -22,17 +25,18 @@ export default function GroupPage() {
             const groupResponse = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}`, {
                 credentials: 'include',
             });
-            
+
             if (groupResponse.ok) {
                 const groupData = await groupResponse.json();
+                console.log('groupData to posts ===>',groupData)
                 setGroup(groupData);
             }
-            
+
             // Fetch group members
             const membersResponse = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/members`, {
                 credentials: 'include',
             });
-            
+
             if (membersResponse.ok) {
                 const membersData = await membersResponse.json();
                 setMembers(membersData);
@@ -43,13 +47,15 @@ export default function GroupPage() {
             setLoading(false);
         }
     };
-
+    // const handlePostCreated = (newPost) => {
+    //     setPosts(prev => [newPost, ...(prev || [])]);
+    // };
     return (
         <div className={styles.groupContainer}>
             <div className={styles.header}>
                 <h1>Group</h1>
             </div>
-            
+            <Posts groupId={groupId} />
             {loading ? (
                 <div className={styles.loading}>Loading group details...</div>
             ) : group ? (
@@ -57,7 +63,7 @@ export default function GroupPage() {
                     <div className={styles.groupInfo}>
                         <h2 className={styles.groupTitle}>{group.name}</h2>
                         <p className={styles.groupDescription}>{group.description}</p>
-                        
+
                         <div className={styles.membersSection}>
                             <h3>Members ({members.length})</h3>
                             <div className={styles.membersList}>
