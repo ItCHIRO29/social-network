@@ -46,16 +46,16 @@ export default function Nav() {
         }
     };
 
-    const handleLogout = async function() {
+    const handleLogout = async function () {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
             {
                 method: "POST",
                 credentials: "include",
             }
         )
-        if(response.ok){
+        if (response.ok) {
             router.push("/login");
-        }else{
+        } else {
             console.log("Error logging out");
         }
     }
@@ -71,62 +71,62 @@ export default function Nav() {
     return (
         <div className={styles.navContainer}>
             <div className={styles.mainNavItems}>
-            <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("Profile")} 
-                     onMouseLeave={() => setHovered("")}>
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("Profile")}
+                    onMouseLeave={() => setHovered("")}>
                     <Link href={`/profile/${userData?.username}`}>
-                        <Image 
-                            src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData.image}` : "/images/default-avatar.svg"} 
-                            alt="profile" 
-                            width={iconSize} 
-                            height={iconSize} 
+                        <Image
+                            src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/profile.png"}
+                            alt="profile"
+                            width={iconSize}
+                            height={iconSize}
                             className={styles.profileIcon}
                         />
                     </Link>
                     {hovered === "Profile" && <div className={styles.description}>Profile</div>}
                 </div>
 
-                <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("Home")} 
-                     onMouseLeave={() => setHovered("")}>
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("Home")}
+                    onMouseLeave={() => setHovered("")}>
                     <Link href="/">
                         <Image src="/icons/home.svg" alt="home" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "Home" && <div className={styles.description}>Home</div>}
                 </div>
 
-               
-                <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("People")} 
-                     onMouseLeave={() => setHovered("")}>
+
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("People")}
+                    onMouseLeave={() => setHovered("")}>
                     <Link href="/people">
                         <Image src="/icons/pepole.svg" alt="people" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "People" && <div className={styles.description}>People</div>}
                 </div>
 
-                <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("Groups")} 
-                     onMouseLeave={() => setHovered("")}>
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("Groups")}
+                    onMouseLeave={() => setHovered("")}>
                     <Link href="/groups">
                         <Image src="/icons/groups.svg" alt="groups" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "Groups" && <div className={styles.description}>Groups</div>}
                 </div>
 
-                <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("Notifications")} 
-                     onMouseLeave={() => setHovered("")}>
-                    <button 
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("Notifications")}
+                    onMouseLeave={() => setHovered("")}>
+                    <button
                         className={styles.iconButton}
                         onClick={toggleNotifications}
                         type="button"
                     >
-                        <Image 
-                            src="/icons/notifications.svg" 
-                            alt="notifications" 
-                            width={iconSize} 
-                            height={iconSize} 
+                        <Image
+                            src="/icons/notifications.svg"
+                            alt="notifications"
+                            width={iconSize}
+                            height={iconSize}
                         />
                         {notificationCount > 0 && (
                             <span className={styles.notificationBadge}>
@@ -136,7 +136,7 @@ export default function Nav() {
                     </button>
                     {hovered === "Notifications" && <div className={styles.description}>Notifications</div>}
                     {showNotifications && (
-                        <NotificationsList 
+                        <NotificationsList
                             isVisible={showNotifications}
                             onClose={() => setShowNotifications(false)}
                             onNotificationsRead={() => setNotificationCount(0)}
@@ -146,10 +146,10 @@ export default function Nav() {
             </div>
 
             <div className={styles.logoutContainer}>
-                <div className={styles.navItem} 
-                     onMouseEnter={() => setHovered("Logout")} 
-                     onMouseLeave={() => setHovered("")}
-                     onClick={() => handleLogout()}
+                <div className={styles.navItem}
+                    onMouseEnter={() => setHovered("Logout")}
+                    onMouseLeave={() => setHovered("")}
+                    onClick={() => handleLogout()}
                 >
                     <Image src="/icons/logout.svg" alt="logout" width={iconSize} height={iconSize} />
                     {hovered === "Logout" && <div className={styles.description}>Logout</div>}
