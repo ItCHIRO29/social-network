@@ -59,9 +59,10 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(GroupPost.ID, 10))
 	GroupPost.UserID = userId
 	GroupPost.GroupId = group_id
+	GroupPost.Type = ""
 	fmt.Println("GroupPost ==============++>", GroupPost)
-	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image) VALUES ( ?, ?, ?, ?,?, ?)"
-	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image)
+	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image, privacy) VALUES ( ?, ?, ?, ?,?, ?,?)"
+	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image, GroupPost.Type)
 	if err1 != nil {
 		fmt.Println("error in inserting post:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting GroupPost: "+err1.Error())

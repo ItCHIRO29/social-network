@@ -11,7 +11,7 @@ export default function GroupPage() {
     const [group, setGroup] = useState(null);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState([]);
+    // const [posts, setPosts] = useState([]);
 
 
     useEffect(() => {

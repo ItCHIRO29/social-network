@@ -30,6 +30,11 @@ export default function Post({ post }) {
                         <span className={styles.timestamp}>{dateFormat(post.CreatedAt)}</span>
                     </div>
                 </Link>
+                {
+                    post.Type && (
+                        <span className={styles.subtitle}>status: {post.Type}</span>
+                    )
+                }
             </section>
 
             <div className={styles.postContent}>
