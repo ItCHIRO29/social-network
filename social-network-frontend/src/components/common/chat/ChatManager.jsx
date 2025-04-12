@@ -3,8 +3,9 @@ import ChatWindow from './ChatWindow';
 import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
-import { fips } from 'crypto';
-import { type } from 'os';
+// import { fips } from 'crypto';
+// import { type } from 'os';
+// import { group } from 'console';
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -264,7 +265,7 @@ const ChatManager = () => {
   return (
     <div className={styles.chatManager}>
       <h2>Chat</h2>
-      {users.size > 0 || grps.size > 0 ? (
+      {users.size > 0 ? (
         <div className={styles.usersList}>
           {Array.from(users.entries()).map(([username, userObj]) => (
             <div
@@ -292,15 +293,37 @@ const ChatManager = () => {
               />
             </div>
           ))}
+
+        </div>
+      ) : (
+        <button id="chatButtons" className={styles.noChatsButton}>
+          No Chats
+        </button>
+      )}
+      <h2>Group Chat</h2>
+      {grps.size > 0 ? (
+        <div className={styles.usersList}>
           {Array.from(grps.entries()).map(([grpname, grpobject]) => (
-            <div key={grpname}>
-              <button
-                id="chatButtons"
-                className={`${styles.listItem} ${grpname}`}
-                onClick={() => addChatWindow(grpname, grpobject.type, grpobject)}
-              >{grpname}</button>
-              <div>
-                {grpobject.groupedata.description}
+            <div
+              className={styles.usersListItem}
+              id={`usersListItem-${grpname}`}
+              key={grpname}
+            >
+              <img
+                className={styles.avatar}
+                ///home/iichi/social-network/social-network-frontend/public/images/groupIcon.jpg
+                src={`./images/groupIcon.jpg`}
+                alt="User avatar"
+              />
+              <div key={grpname}>
+                <button
+                  id="chatButtons"
+                  className={`${styles.listItem} ${grpname}`}
+                  onClick={() => addChatWindow(grpname, grpobject.type, grpobject)}
+                >{grpname}</button>
+                <div>
+                  {grpobject.groupedata.description}
+                </div>
               </div>
             </div>
           ))}
@@ -309,8 +332,8 @@ const ChatManager = () => {
         <button id="chatButtons" className={styles.noChatsButton}>
           No Chats
         </button>
-      )}
-
+      )
+      }
       {/* Chat windows container - positioned relative to the sidebar */}
       <div className={styles.chatWindowsContainer}>
         {Array.from(chatWindows.entries()).map(([username, chatData]) => (
