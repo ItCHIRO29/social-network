@@ -312,7 +312,7 @@ const ChatManager = () => {
               <img
                 className={styles.avatar}
                 ///home/iichi/social-network/social-network-frontend/public/images/groupIcon.jpg
-                src={`./images/groupIcon.jpg`}
+                src={`/images/groupIcon.jpg`}
                 alt="User avatar"
               />
               <div key={grpname}>
