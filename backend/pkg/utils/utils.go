@@ -173,7 +173,7 @@ func CheckUserInGrp(user_id int, groupId int, db *sql.DB) bool {
 }
 
 func GetGroupMembers(group_id int, db *sql.DB) []int {
-	query := `SELECT user_id FROM group_members WHERE group_id = ?`
+	query := `SELECT user_id FROM group_members WHERE group_id = ? AND accepted=1`
 	rows, err := db.Query(query, group_id)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "query error:", err)

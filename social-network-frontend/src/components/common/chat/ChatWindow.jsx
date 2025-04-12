@@ -62,6 +62,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
 
   const createMessageObject = (message) => ({
     ...message,
+    type: type, // Use provided type or fall back to message.type
     status: 'sent',
     timestamp: message.timestamp ? new Date(message.timestamp).getTime() : Date.now(),
     retryCount: message.retryCount || 0,
@@ -137,6 +138,8 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       }
 
       if (data.messages && data.messages.length > 0) {
+        // data.type = type;
+        // Object.assign(data.messages, { type: type })
         prependMessages(data.messages.map(createMessageObject));
         setOffset(data.offset || -1);
         if (isAppending) {
@@ -158,16 +161,16 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   // Listen for private messages
   useEffect(() => {
     const handlePrivateMessage = (event) => {
-      console.warn('detail', event)
+      console.warn('detail', event.detail)
       if (event.detail && event.detail.message) {
         if (event.detail.type === 'groupe') {
           addMessage(event.detail);
         } else {
           addMessage(event.detail.message);
+          markMessageAsSeen();
         }
 
         // Mark message as seen since the chat window is active
-        markMessageAsSeen();
       }
     };
 
