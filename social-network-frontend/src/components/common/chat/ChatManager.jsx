@@ -275,7 +275,9 @@ const ChatManager = () => {
             >
               <img
                 className={styles.avatar}
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${userObj?.userData.image}`}
+                src={userObj?.userData?.image
+                  ? `${process.env.NEXT_PUBLIC_API_URL}/${userObj.userData.image}`
+                  : '/images/profile.png'}
                 alt="User avatar"
               />
               <button
