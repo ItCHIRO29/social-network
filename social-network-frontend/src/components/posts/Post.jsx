@@ -10,7 +10,7 @@ export default function Post({ post }) {
     const imagePath = post.Image ? `${process.env.NEXT_PUBLIC_API_URL}/${post.Image}` : null;
     const profileImage = post.ProfileImage
         ? `${process.env.NEXT_PUBLIC_API_URL}/${post.ProfileImage}`
-        : '/images/default-avatar.svg';
+        : `${process.env.NEXT_PUBLIC_API_URL}/uploads/profileImages/default-avatar.svg`;
 
     return (
         <div className={styles.postContainer}>

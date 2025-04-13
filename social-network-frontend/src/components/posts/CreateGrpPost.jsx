@@ -18,7 +18,7 @@ export default function CreateGrpPost({ groupId, onPostCreated }) {
         title: "",
         content: "",
         image: "",
-        privacy: ""
+        // privacy: ""
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 

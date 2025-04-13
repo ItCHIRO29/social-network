@@ -130,7 +130,7 @@ const ChatManager = () => {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
 
-    for (const [groupname] of grp)
+    // for (const [groupname] of grp)
     
     // Clean up
     return () => {

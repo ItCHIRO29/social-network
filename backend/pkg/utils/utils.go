@@ -200,3 +200,24 @@ func Include(arr []int, id int) bool {
 	}
 	return false
 }
+
+// chack if the user if a follower of the user
+func CheckFollowing(db *sql.DB, userId int, user_id_str string) bool {
+	fmt.Println("userId", userId)
+
+	// var user_id int
+	// err := db.QueryRow("SELECT id FROM users WHERE username = ?", user_id_str).Scan(&user_id)
+	// if err != nil {
+	// 	fmt.Println("error in checkfollowing:", err)
+	// 	return false
+	// }
+	var isfollowing bool
+	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM followers WHERE follower_id = ? AND following_id = ? AND accepted = 1)", userId, user_id_str).Scan(&isfollowing)
+	fmt.Println("following_id", isfollowing)
+	fmt.Println("user_id", user_id_str)
+	if err != nil {
+		fmt.Println("error in checkfollowing:", err)
+		return false
+	}
+	return isfollowing
+}

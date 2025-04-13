@@ -79,7 +79,7 @@ export default function Groups() {
                 },
             });
             const data = await response.json();
-            console.log(data)
+            console.log("group data ::::", data)
             setGroups(data);
         } catch (error) {
             console.error('Error fetching groups:', error);
@@ -101,7 +101,7 @@ export default function Groups() {
                     invited_users: selectedUsers
                 })
             });
-            
+
             if (response.ok) {
                 setCreateError(null);
                 setShowCreateForm(false);
@@ -189,248 +189,248 @@ export default function Groups() {
             console.error('Error inviting users:', error);
         }
     };
-    
+
     return (
         <div className="main-content">
             <h1>Groups</h1>
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div className={styles.tabs}>
-                    <button
-                        className={`${styles.tab} ${activeButton === 'your groups' ? styles.active : ''}`}
-                        onClick={() => setActiveButton('your groups')}
-                    >
-                        Your Groups
-                    </button>
-                    <button
-                        className={`${styles.tab} ${activeButton === 'joined groups' ? styles.active : ''}`}
-                        onClick={() => setActiveButton('joined groups')}
-                    >
-                       Joined Groups
-                    </button>
-                    <button
-                        className={`${styles.tab} ${activeButton === 'all groups' ? styles.active : ''}`}
-                        onClick={() => setActiveButton('all groups')}
-                    >
-                        Find New Communities
-                    </button>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <div className={styles.tabs}>
+                        <button
+                            className={`${styles.tab} ${activeButton === 'your groups' ? styles.active : ''}`}
+                            onClick={() => setActiveButton('your groups')}
+                        >
+                            Your Groups
+                        </button>
+                        <button
+                            className={`${styles.tab} ${activeButton === 'joined groups' ? styles.active : ''}`}
+                            onClick={() => setActiveButton('joined groups')}
+                        >
+                            Joined Groups
+                        </button>
+                        <button
+                            className={`${styles.tab} ${activeButton === 'all groups' ? styles.active : ''}`}
+                            onClick={() => setActiveButton('all groups')}
+                        >
+                            Find New Communities
+                        </button>
+                    </div>
+                </div>
+
+                <div className={styles.content}>
+                    {activeButton === 'your groups' && (
+                        <>
+                            {!showCreateForm ? (
+                                <button
+                                    className={styles.createButton}
+                                    onClick={() => setShowCreateForm(true)}
+                                >
+                                    Create New Group
+                                </button>
+                            ) : (
+                                <div className={styles.createForm}>
+                                    <h3>Create New Group</h3>
+                                    <form onSubmit={handleCreateGroup}>
+                                        <input
+                                            type="text"
+                                            placeholder="Group Name"
+                                            value={newGroupName}
+                                            onChange={(e) => setNewGroupName(e.target.value)}
+                                            required
+                                        />
+                                        <textarea
+                                            placeholder="Group Description"
+                                            value={newGroupDescription}
+                                            onChange={(e) => setNewGroupDescription(e.target.value)}
+                                            required
+                                        />
+
+                                        <div className={styles.inviteSection}>
+                                            <h4>Invite Users</h4>
+                                            <div className={styles.usersList}>
+                                                {users.map(user => (
+                                                    <label key={user.id} className={styles.userItem}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedUsers.includes(user.id)}
+                                                            onChange={() => handleUserSelect(user.id)}
+                                                        />
+                                                        <span className={styles.checkmark}></span>
+                                                        <span className={styles.username}>{user.username}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {createError && <div className={styles.error}>{createError}</div>}
+                                        <div className={styles.formActions}>
+                                            <button type="submit">Create</button>
+                                            <button type="button" onClick={() => setShowCreateForm(false)}>Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            )}
+
+                            {groups.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    You haven't created any groups yet
+                                </div>
+                            ) : (
+                                <div className={styles.groupsGrid}>
+                                    {groups.map(group => (
+                                        <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
+                                            <h3>{group.name}</h3>
+                                            <p>{group.description}</p>
+                                            <div className={styles.groupActions}>
+                                                <button
+                                                    className={styles.actionButton}
+                                                    onClick={() => router.push(`/groups/${group.name}`)}
+                                                >
+                                                    Go to Group
+                                                </button>
+                                                <button
+                                                    className={styles.actionButton}
+                                                    onClick={() => handleExpandCommunity(group.id)}
+                                                >
+                                                    Expand Community
+                                                </button>
+                                                {expandedGroupId === group.id && (
+                                                    <div className={styles.popupOverlay}>
+                                                        <div className={styles.invitePopup}>
+                                                            <div className={styles.popupHeader}>
+                                                                <h3>Invite Users to {group.name}</h3>
+                                                                <button
+                                                                    className={styles.closeButton}
+                                                                    onClick={() => {
+                                                                        setExpandedGroupId(null);
+                                                                        setSelectedUsers([]);
+                                                                    }}
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                            <div className={styles.usersList}>
+                                                                {users.map(user => (
+                                                                    <label key={user.id} className={styles.userItem}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={selectedUsers.includes(user.id)}
+                                                                            onChange={() => handleUserSelect(user.id)}
+                                                                        />
+                                                                        <span className={styles.checkmark}></span>
+                                                                        <span className={styles.username}>{user.username}</span>
+                                                                    </label>
+                                                                ))}
+                                                            </div>
+                                                            <div className={styles.popupActions}>
+                                                                <button
+                                                                    className={styles.inviteButton}
+                                                                    onClick={() => handleInviteToGroup(group.id)}
+                                                                    disabled={selectedUsers.length === 0}
+                                                                >
+                                                                    Invite Selected Users
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {activeButton !== 'your groups' && (
+                        <>
+                            {groups.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    No groups found in this section
+                                </div>
+                            ) : (
+                                <div className={styles.groupsGrid}>
+                                    {groups.map(group => (
+                                        <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
+                                            <h3>{group.name}</h3>
+                                            <p>{group.description}</p>
+                                            <div className={styles.groupActions}>
+                                                <button
+                                                    className={styles.actionButton}
+                                                    onClick={() => window.location.href = `/groups/${group.id}`}
+                                                >
+                                                    Go to Group
+                                                </button>
+                                                <button
+                                                    className={styles.actionButton}
+                                                    onClick={() => handleExpandCommunity(group.id)}
+                                                >
+                                                    Expand Community
+                                                </button>
+                                                {expandedGroupId === group.id && (
+                                                    <div className={styles.popupOverlay}>
+                                                        <div className={styles.invitePopup}>
+                                                            <div className={styles.popupHeader}>
+                                                                <h3>Invite Users to {group.name}</h3>
+                                                                <button
+                                                                    className={styles.closeButton}
+                                                                    onClick={() => {
+                                                                        setExpandedGroupId(null);
+                                                                        setSelectedUsers([]);
+                                                                    }}
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                            <div className={styles.usersList}>
+                                                                {users.map(user => (
+                                                                    <label key={user.id} className={styles.userItem}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={selectedUsers.includes(user.id)}
+                                                                            onChange={() => handleUserSelect(user.id)}
+                                                                        />
+                                                                        <span className={styles.checkmark}></span>
+                                                                        <span className={styles.username}>{user.username}</span>
+                                                                    </label>
+                                                                ))}
+                                                            </div>
+                                                            <div className={styles.popupActions}>
+                                                                <button
+                                                                    className={styles.inviteButton}
+                                                                    onClick={() => handleInviteToGroup(group.id)}
+                                                                    disabled={selectedUsers.length === 0}
+                                                                >
+                                                                    Invite Selected Users
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {activeButton === 'all groups' && (
+                                                    <button
+                                                        className={styles.joinButton}
+                                                        onClick={() => handleJoinGroup(group.id)}
+                                                    >
+                                                        Join Group
+                                                    </button>
+                                                )}
+                                                {activeButton === 'joined groups' && (
+                                                    <button
+                                                        className={styles.leaveButton}
+                                                        onClick={() => handleLeaveGroup(group.id)}
+                                                    >
+                                                        Leave Group
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
-
-            <div className={styles.content}>
-                {activeButton === 'your groups' && (
-                    <>
-                        {!showCreateForm ? (
-                            <button
-                                className={styles.createButton}
-                                onClick={() => setShowCreateForm(true)}
-                            >
-                                Create New Group
-                            </button>
-                        ) : (
-                            <div className={styles.createForm}>
-                                <h3>Create New Group</h3>
-                                <form onSubmit={handleCreateGroup}>
-                                    <input
-                                        type="text"
-                                        placeholder="Group Name"
-                                        value={newGroupName}
-                                        onChange={(e) => setNewGroupName(e.target.value)}
-                                        required
-                                    />
-                                    <textarea
-                                        placeholder="Group Description"
-                                        value={newGroupDescription}
-                                        onChange={(e) => setNewGroupDescription(e.target.value)}
-                                        required
-                                    />
-
-                                    <div className={styles.inviteSection}>
-                                        <h4>Invite Users</h4>
-                                        <div className={styles.usersList}>
-                                            {users.map(user => (
-                                                <label key={user.id} className={styles.userItem}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedUsers.includes(user.id)}
-                                                        onChange={() => handleUserSelect(user.id)}
-                                                    />
-                                                    <span className={styles.checkmark}></span>
-                                                    <span className={styles.username}>{user.username}</span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {createError && <div className={styles.error}>{createError}</div>}
-                                    <div className={styles.formActions}>
-                                        <button type="submit">Create</button>
-                                        <button type="button" onClick={() => setShowCreateForm(false)}>Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        )}
-
-                        {groups.length === 0 ? (
-                            <div className={styles.emptyState}>
-                                You haven't created any groups yet
-                            </div>
-                        ) : (
-                            <div className={styles.groupsGrid}>
-                                {groups.map(group => (
-                                    <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
-                                        <h3>{group.name}</h3>
-                                        <p>{group.description}</p>
-                                        <div className={styles.groupActions}>
-                                            <button
-                                                className={styles.actionButton}
-                                                onClick={() => router.push(`/groups/${group.id}`)}
-                                            >
-                                                Go to Group
-                                            </button>
-                                            <button
-                                                className={styles.actionButton}
-                                                onClick={() => handleExpandCommunity(group.id)}
-                                            >
-                                                Expand Community
-                                            </button>
-                                            {expandedGroupId === group.id && (
-                                                <div className={styles.popupOverlay}>
-                                                    <div className={styles.invitePopup}>
-                                                        <div className={styles.popupHeader}>
-                                                            <h3>Invite Users to {group.name}</h3>
-                                                            <button 
-                                                                className={styles.closeButton}
-                                                                onClick={() => {
-                                                                    setExpandedGroupId(null);
-                                                                    setSelectedUsers([]);
-                                                                }}
-                                                            >
-                                                                ×
-                                                            </button>
-                                                        </div>
-                                                        <div className={styles.usersList}>
-                                                            {users.map(user => (
-                                                                <label key={user.id} className={styles.userItem}>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedUsers.includes(user.id)}
-                                                                        onChange={() => handleUserSelect(user.id)}
-                                                                    />
-                                                                    <span className={styles.checkmark}></span>
-                                                                    <span className={styles.username}>{user.username}</span>
-                                                                </label>
-                                                            ))}
-                                                        </div>
-                                                        <div className={styles.popupActions}>
-                                                            <button 
-                                                                className={styles.inviteButton}
-                                                                onClick={() => handleInviteToGroup(group.id)}
-                                                                disabled={selectedUsers.length === 0}
-                                                            >
-                                                                Invite Selected Users
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
-
-                {activeButton !== 'your groups' && (
-                    <>
-                        {groups.length === 0 ? (
-                            <div className={styles.emptyState}>
-                                No groups found in this section
-                            </div>
-                        ) : (
-                            <div className={styles.groupsGrid}>
-                                {groups.map(group => (
-                                    <div key={`${activeButton}-${group.id}`} className={styles.groupCard}>
-                                        <h3>{group.name}</h3>
-                                        <p>{group.description}</p>
-                                        <div className={styles.groupActions}>
-                                            <button
-                                                className={styles.actionButton}
-                                                onClick={() => window.location.href = `/groups/${group.id}`}
-                                            >
-                                                Go to Group
-                                            </button>
-                                            <button
-                                                className={styles.actionButton}
-                                                onClick={() => handleExpandCommunity(group.id)}
-                                            >
-                                                Expand Community
-                                            </button>
-                                            {expandedGroupId === group.id && (
-                                                <div className={styles.popupOverlay}>
-                                                    <div className={styles.invitePopup}>
-                                                        <div className={styles.popupHeader}>
-                                                            <h3>Invite Users to {group.name}</h3>
-                                                            <button 
-                                                                className={styles.closeButton}
-                                                                onClick={() => {
-                                                                    setExpandedGroupId(null);
-                                                                    setSelectedUsers([]);
-                                                                }}
-                                                            >
-                                                                ×
-                                                            </button>
-                                                        </div>
-                                                        <div className={styles.usersList}>
-                                                            {users.map(user => (
-                                                                <label key={user.id} className={styles.userItem}>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedUsers.includes(user.id)}
-                                                                        onChange={() => handleUserSelect(user.id)}
-                                                                    />
-                                                                    <span className={styles.checkmark}></span>
-                                                                    <span className={styles.username}>{user.username}</span>
-                                                                </label>
-                                                            ))}
-                                                        </div>
-                                                        <div className={styles.popupActions}>
-                                                            <button 
-                                                                className={styles.inviteButton}
-                                                                onClick={() => handleInviteToGroup(group.id)}
-                                                                disabled={selectedUsers.length === 0}
-                                                            >
-                                                                Invite Selected Users
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {activeButton === 'all groups' && (
-                                                <button
-                                                    className={styles.joinButton}
-                                                    onClick={() => handleJoinGroup(group.id)}
-                                                >
-                                                    Join Group
-                                                </button>
-                                            )}
-                                            {activeButton === 'joined groups' && (
-                                                <button
-                                                    className={styles.leaveButton}
-                                                    onClick={() => handleLeaveGroup(group.id)}
-                                                >
-                                                    Leave Group
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
-        </div>
         </div>
     );
 }

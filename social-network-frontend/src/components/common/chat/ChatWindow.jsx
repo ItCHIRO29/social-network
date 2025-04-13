@@ -301,7 +301,10 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         <div className="header-left">
           {hasOpponentData && (
             <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
+              // src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
+              src={opponentData.image ?
+                `${process.env.NEXT_PUBLIC_API_URL}/${opponentData.image}`
+                : '/images/groupIcon.png'}
               alt="profile"
               className="profile-pic"
             />

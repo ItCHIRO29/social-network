@@ -38,7 +38,9 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	author = first_name + " " + last_name
 	GroupPost.Title = r.FormValue("title")
 	GroupPost.Content = r.FormValue("content")
-	// GroupPost.Type = r.FormValue("privacy")
+	///
+	GroupPost.Type = r.FormValue("privacy")
+	///
 	GroupPost.Post_creator = author
 	GroupPost.GroupId = group_id
 	GroupPost.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
@@ -59,10 +61,10 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(GroupPost.ID, 10))
 	GroupPost.UserID = userId
 	GroupPost.GroupId = group_id
-	GroupPost.Type = ""
+	// GroupPost.Type = ""
 	fmt.Println("GroupPost ==============++>", GroupPost)
-	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image, privacy) VALUES ( ?, ?, ?, ?,?, ?,?)"
-	_, err1 := db.Exec(query, GroupPost.UserID, GroupPost.GroupId, Title, Content, createdAt, GroupPost.Image, GroupPost.Type)
+	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image, privacy ) VALUES ( ?, ?, ?, ?, ?, ?, ?)"
+	_, err1 := db.Exec(query, &GroupPost.UserID, &GroupPost.GroupId, &Title, &Content, &createdAt, &GroupPost.Image, &GroupPost.Type)
 	if err1 != nil {
 		fmt.Println("error in inserting post:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting GroupPost: "+err1.Error())

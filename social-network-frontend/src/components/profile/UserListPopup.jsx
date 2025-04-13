@@ -19,6 +19,7 @@ export default function UserListPopup({ isOpen, onClose, title, username, follow
                     `${process.env.NEXT_PUBLIC_API_URL}/api/users/${endpoint}?username=${username}`,
                     { credentials: 'include' }
                 );
+                console.log("response ===>", response);
                 if (!response.ok) throw new Error('Failed to fetch users');
                 setUsers(await response.json());
             } catch (error) {

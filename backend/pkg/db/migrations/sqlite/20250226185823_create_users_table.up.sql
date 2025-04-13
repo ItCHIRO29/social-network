@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     age INTEGER NOT NULL,
     bio TEXT,
     nickname TEXT,
-    username TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     image TEXT,
     email TEXT NOT NULL,
     public BOOLEAN DEFAULT false,
