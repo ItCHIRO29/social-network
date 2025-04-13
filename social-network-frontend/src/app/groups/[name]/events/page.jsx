@@ -7,7 +7,7 @@ import styles from './events.module.css';
 
 export default function GroupEvents() {
     const [events, setEvents] = useState([]);
-    const { id: groupId } = useParams();
+    const { name: groupId } = useParams();
 
     useEffect(() => {
         fetchEvents();

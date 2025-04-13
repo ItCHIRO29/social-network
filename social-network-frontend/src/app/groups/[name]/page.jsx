@@ -7,7 +7,7 @@ import GroupNavigation from '../../../components/groups/GroupNavigation';
 import Posts from '../../../components/posts/groupPosts'
 // import CreateGrpPost from '../../../components/posts/CreateGrpPost';
 export default function GroupPage() {
-    const { id: groupId } = useParams();
+    const { name: groupId } = useParams();
     const [group, setGroup] = useState(null);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
