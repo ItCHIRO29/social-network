@@ -356,7 +356,7 @@ export default function Groups() {
                                             <div className={styles.groupActions}>
                                                 <button
                                                     className={styles.actionButton}
-                                                    onClick={() => window.location.href = `/groups/${group.id}`}
+                                                    onClick={() => window.location.href = `/groups/${group.name}`}
                                                 >
                                                     Go to Group
                                                 </button>
