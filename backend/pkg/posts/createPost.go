@@ -13,9 +13,8 @@ import (
 	"social-network/pkg/utils"
 )
 
-var post models.Posts
-
 func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	var post models.Posts
 	// fmt.Println("CreatePost triggered")
 	var first_name string
 	var last_name string
@@ -38,6 +37,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		utils.WriteJSON(w, http.StatusBadRequest, "Title and Content are required")
 		return
 	}
+	post.ID = int64(LastId(db))
 	// if len(strings.TrimSpace(post.Title)) < 10 || len(strings.TrimSpace(post.Content)) < 10 {
 	// 	utils.WriteJSON(w, http.StatusBadRequest, "Title and Content should be at least 10 characters long")
 	// 	return
@@ -47,10 +47,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	Content := strings.TrimSpace(html.EscapeString(post.Content))
 	post.Type = strings.ToLower(post.Type)
 	query := ""
-	// if post.Image != "" {
-	// post.Image = strings.TrimSpace(html.EscapeString(post.Image))
-	// strID := strconv.Itoa(post.ID)
-	post.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(post.ID, 10))
+	post.Image, _ = utils.ValidateAndSaveImage(r, "post", strconv.FormatInt(post.ID+1, 10))
 	// fmt.Println("post.Image:", post.Image)
 	post.UserID = userId
 	post.Username = utils.GetUserName(db, userId)
@@ -65,5 +62,17 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	post.ID, _ = res.LastInsertId()
 	post.ProfileImage = strings.Trim(image, "./")
 	// fmt.Println("post:", post)
+	fmt.Println(post)
 	utils.WriteJSON(w, http.StatusOK, post)
+}
+
+func LastId(db *sql.DB) int {
+	query := `SELECT id FROM posts ORDER BY id DESC LIMIT 1`
+	var lastid int
+	err := db.QueryRow(query).Scan(&lastid)
+	if err != nil {
+		fmt.Println("error in db.Exec:", err)
+		return 0
+	}
+	return lastid
 }

@@ -21,11 +21,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var err error
 	query := ""
 	user_id_str := r.URL.Query().Get("id")
-	// var user_id int
-	// if user_id_str != "" {
-	// }
 	if user_id_str == "" {
-		fmt.Println("m here in get posts user id is empty")
 		query = `SELECT 
     posts.id, 
     posts.user_id, 
@@ -123,6 +119,7 @@ ORDER BY posts.id DESC;`
 		post.ProfileImage = strings.Trim(profile_image, "./")
 		posts = append(posts, post)
 	}
+	fmt.Println(posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }
 

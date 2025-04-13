@@ -76,7 +76,7 @@ export default function Nav() {
                     onMouseLeave={() => setHovered("")}>
                     <Link href={`/profile/${userData?.username}`}>
                         <Image
-                            src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/profile.png"}
+                            src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : `${process.env.NEXT_PUBLIC_API_URL}/uploads/profileImages/default-avatar.svg`}
                             alt="profile"
                             width={iconSize}
                             height={iconSize}

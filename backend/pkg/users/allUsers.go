@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 )
@@ -25,7 +26,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 			u.username,
 			u.first_name, 
 			u.last_name, 
-			u.image,
+			COALESCE(u.image , 'default-avatar.svg'),
 			COALESCE(f.id, 0) AS reference_id,
 			CASE
 				WHEN f.id IS NOT NULL AND f.accepted = 1 THEN 'unfollow'
@@ -54,7 +55,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 		users = append(users, user)
 	}
 	utils.WriteJSON(w, http.StatusOK, users)
-
 }
 
 // func GetAllUserToJoinGroup(db *sql.DB, userID int) ([]User, error) {
