@@ -8,8 +8,8 @@ import (
 	"social-network/pkg/utils"
 )
 
-func getGroupData(r *http.Request, w http.ResponseWriter, db *sql.DB, userID int) {
-	groupId, middlewareErr := groupsMiddleware(r, db, userID, false)
+func groupPageHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	groupId, middlewareErr := groupsMiddleware(r, db, userId, false)
 	if middlewareErr != nil {
 		utils.WriteJSON(w, middlewareErr.Code, middlewareErr.Err)
 		return

@@ -32,6 +32,8 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	mux.Handle("POST /insert_vote", auth.Middleware(db, 20, 20, 20*time.Millisecond, InsertVote))
 	// Send invitation to join group
 	mux.Handle("POST /invitation", auth.Middleware(db, 1, 1, 20*time.Millisecond, SendInvitation))
+	// Group page
+	mux.Handle("GET /group", auth.Middleware(db, 10, 20, time.Second, groupPageHandler))
 
 	return mux
 }
