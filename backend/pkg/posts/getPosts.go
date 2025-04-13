@@ -126,7 +126,7 @@ ORDER BY posts.id DESC;`
 		post.ProfileImage = strings.Trim(profile_image, "./")
 		posts = append(posts, post)
 	}
-	fmt.Println("posts array:", posts)
+	// fmt.Println("posts array:", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }
 

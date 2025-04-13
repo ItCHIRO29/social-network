@@ -1,31 +1,32 @@
 'use client'
 import { useState } from 'react';
 import styles from './EventForm.module.css';
+import { stringify } from 'querystring';
 
 export default function EventForm({ groupId, onEventCreated }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [datetime, setDatetime] = useState('');
     const [error, setError] = useState(null);
-
+    console.log("groupId ==>", groupId)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/events`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/CreateEvent`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    group_name: decodeURIComponent(groupId),
                     title,
                     description,
-                    datetime: new Date(datetime).toISOString(),
+                    date : new Date(datetime).toISOString(),
                 }),
             });
-
             if (response.ok) {
                 // Reset form fields after successful submission
                 setTitle('');
