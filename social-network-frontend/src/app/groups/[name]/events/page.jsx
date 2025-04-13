@@ -15,11 +15,12 @@ export default function GroupEvents() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/events`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/CreateEvent?group=${groupId}`, {
                 credentials: 'include',
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log("response for events ::", data)
                 setEvents(data);
             }
         } catch (error) {
@@ -37,7 +38,7 @@ export default function GroupEvents() {
                 },
                 body: JSON.stringify({ choice }),
             });
-            
+
             if (response.ok) {
                 fetchEvents(); // Refresh events to show updated votes
             }
@@ -55,29 +56,29 @@ export default function GroupEvents() {
             <GroupNavigation groupId={groupId} activeTab="events" />
 
             <div className={styles.formSection}>
-                <EventForm 
+                <EventForm
                     groupId={groupId}
                     onEventCreated={fetchEvents}
                 />
             </div>
 
             <div className={styles.eventsList}>
-                {events.map((event) => (
+                {events && events.map((event) => (
                     <div key={event.id} className={styles.eventCard}>
                         <h2>{event.title}</h2>
-                        <p>{event.description}</p>
+                        <p className={styles.datetime}>{event.description}</p>
                         <p className={styles.datetime}>
-                            {new Date(event.datetime).toLocaleString()}
+                            {new Date(event.date).toLocaleString()}
                         </p>
-                        
+
                         <div className={styles.votingSection}>
-                            <button 
+                            <button
                                 className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
                                 onClick={() => handleVote(event.id, 'going')}
                             >
                                 Going ({event.goingCount})
                             </button>
-                            <button 
+                            <button
                                 className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
                                 onClick={() => handleVote(event.id, 'not_going')}
                             >
@@ -86,7 +87,7 @@ export default function GroupEvents() {
                         </div>
                     </div>
                 ))}
-                {events.length === 0 && (
+                {(!events) && (
                     <p className={styles.noEvents}>No events scheduled yet.</p>
                 )}
             </div>

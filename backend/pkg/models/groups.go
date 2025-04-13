@@ -1,11 +1,13 @@
 package models
 
 type Group struct {
-	Id           int    `json:"id"`
-	AdminId      int    `json:"admin_id"`
-	Name         string `json:"name"`
-	Description  string `json:"description"`
-	InvitedUsers []int  `json:"invited_users"`
+	Id           int      `json:"id"`
+	AdminId      int      `json:"admin_id"`
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	InvitedUsers []int    `json:"invited_users"`
+	Members      []Member `json:"members"`
+	Events       []Event  `json:"events"`
 }
 
 type Member struct {

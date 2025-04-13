@@ -16,9 +16,7 @@ export default function GroupPostsPage() {
                 <h1>Group Posts</h1>
                 <GroupNavigation groupId={name} />
             </div>
-            <div className={styles.content}>
                 <Posts />
-            </div>
         </div>
     );
 } 
