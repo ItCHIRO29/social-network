@@ -26,7 +26,7 @@ export class Ws {
 
     handleMessage(data: any) {
         const message = JSON.parse(data);
-        console.log("message", message)
+        console.log("messageeeeeeeeeeeeeeeeeeeeeeeee", message)
         switch (message.type) {
             case 'private message':
                 const eventName = `privateMessage-${message.sender}`;
@@ -41,7 +41,9 @@ export class Ws {
             case 'status':
                 const sEvent = new CustomEvent(`status`, { detail: message });
                 document.dispatchEvent(sEvent);
+                break;
             case 'notification':
+                message.type = message.notification_type;
                 const nEvent = new CustomEvent('notification', { detail: message });
                 document.dispatchEvent(nEvent);
                 break;

@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import styles from './notifications.module.css';
 import { useRouter } from 'next/navigation';
+
 export default function NotificationItem({ notification, setNotifications }) {
     const router = useRouter();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleAction = async (action, notification) => {
         setIsProcessing(true);
@@ -25,7 +27,7 @@ export default function NotificationItem({ notification, setNotifications }) {
                     });
                 }
                 
-            }else if (notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation') {
+            } else if (notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation') {
                 if (action === 'accept') {
                     response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/invitation`, {
                         body: JSON.stringify({
@@ -40,8 +42,12 @@ export default function NotificationItem({ notification, setNotifications }) {
                 }
             }
 
-            if (response.ok) {
-                setNotifications(prev => prev.filter(n => n.id !== notification.id));
+            if (response) {
+                if (response.ok) {
+                    setNotifications(prev => prev.filter(n => n.id !== notification.id));
+                }else if (response.status === 400) {
+                    notification.error = "You cannot do any actions, maybe because sender canceled the request"
+                }
             }
         } catch (error) {
             console.error('Error handling notification action:', error);
@@ -49,6 +55,8 @@ export default function NotificationItem({ notification, setNotifications }) {
             setIsProcessing(false);
         }
     };
+
+
 
     const getNotificationDescription = () => {
         switch (notification.notification_type) {
@@ -86,17 +94,23 @@ export default function NotificationItem({ notification, setNotifications }) {
             notification.notification_type === 'group_invitation' || 
             notification.notification_type === 'request_join_group') {
             return (
-                <div className={styles.actions}>
+                notification.error ? null : <div className={styles.actions}>
                     <button 
                         className={styles.acceptButton}
-                        onClick={() => handleAction('accept', notification)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAction('accept', notification);
+                        }}
                         disabled={isProcessing}
                     >
                         Accept
                     </button>
                     <button 
                         className={styles.rejectButton}
-                        onClick={() => handleAction('reject', notification)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAction('reject', notification);
+                        }}
                         disabled={isProcessing}
                     >
                         Reject
@@ -110,7 +124,10 @@ export default function NotificationItem({ notification, setNotifications }) {
                 <div className={styles.actions}>
                     <button 
                         className={styles.acceptButton}
-                        onClick={() => handleAction('view', notification)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAction('view', notification);
+                        }}
                         disabled={isProcessing}
                     >
                         View Event
@@ -123,9 +140,11 @@ export default function NotificationItem({ notification, setNotifications }) {
     };
 
     return (
-        <div className={styles.notification}>
+        <div 
+            className={`${styles.notification} ${notification.read ? '' : styles.unread} ${loading ? styles.loading : ''}`}
+        >
             <div className={styles.notificationContent}>
-                <Link href={`/profile/${notification.sender}`}>
+                <Link href={`/profile/${notification.sender}`} onClick={(e) => e.stopPropagation()}>
                     <img 
                         src={profileImage} 
                         alt="Profile" 
@@ -137,9 +156,23 @@ export default function NotificationItem({ notification, setNotifications }) {
                 <div className={styles.notificationText}>
                     <span className={styles.username}>{notification.sender}</span>
                     <span>{getNotificationDescription()}</span>
-                    {notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation' && <span className={styles.groupName} onClick={() => router.push(`/groups/${notification.additional_data.group_id}`)}>{notification.additional_data.group_name}</span>}
+                    {notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation' && 
+                        <span 
+                            className={styles.groupName} 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/groups/${notification.additional_data.group_id}`);
+                            }}
+                        >
+                            {notification.additional_data.group_name}
+                        </span>
+                    }
                 </div>
+                <span className={styles.timestamp}>
+                    {new Date(notification.createdAt).toLocaleString()}
+                </span>
             </div>
+            {notification.error && <span className={styles.error}>{notification.error}</span>}
             {renderActionButtons()}
         </div>
     );
