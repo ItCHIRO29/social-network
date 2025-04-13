@@ -60,7 +60,7 @@ WHERE
             (follower_id = u.id AND following_id = $1) 
             OR (follower_id = $1 AND following_id = u.id)
         ) 
-        AND accepted = true
+        AND accepted = 1
     );`
 
 	rows, err := db.Query(query, userId)
@@ -100,5 +100,6 @@ WHERE
 			return users[i].LastMessageId > users[j].LastMessageId
 		})
 	}
+	fmt.Println("users in chat ===>", users)
 	utils.WriteJSON(w, http.StatusOK, users)
 }

@@ -57,14 +57,21 @@ ORDER BY posts.id DESC;`
 			return
 		}
 		if user_id == userId {
-			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? ORDER BY id DESC"
-			rows, err = db.Query(query, userId)
+			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? AND privacy != '' ORDER BY id DESC"
+			rows, err = db.Query(query, userId, nil)
 			if err != nil {
-				fmt.Println("error in GetPosts:", err)
+				fmt.Println("error in GetPosts 1 :", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
 		} else {
+			isfollowing := utils.CheckFollowing(db, userId, user_id_str)
+			fmt.Println("user is following ====>", isfollowing)
+			if isfollowing == false {
+				fmt.Println("user is not following")
+				utils.WriteJSON(w, http.StatusOK, posts)
+				return
+			}
 			fmt.Println("rani hna f post dial user akhour!!!!!!!!!!!!!!!!!!!!")
 			fmt.Println("m here in get posts user id  !==== userid = ")
 			query := `
@@ -100,7 +107,7 @@ ORDER BY posts.id DESC;`
 		post.GroupId = 1
 		err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.Image, &post.Type)
 		if err != nil {
-			fmt.Println("error in GetPosts:", err)
+			fmt.Println("error in GetPosts 2 :", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -119,7 +126,7 @@ ORDER BY posts.id DESC;`
 		post.ProfileImage = strings.Trim(profile_image, "./")
 		posts = append(posts, post)
 	}
-	fmt.Println(posts)
+	fmt.Println("posts array:", posts)
 	utils.WriteJSON(w, http.StatusOK, posts)
 }
 

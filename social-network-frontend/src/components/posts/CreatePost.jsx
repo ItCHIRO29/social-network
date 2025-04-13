@@ -197,11 +197,11 @@ export default function CreatePost({ onPostCreated }) {
                         className={styles.privacySelect}
                     >
                         <option value="Public">Public</option>
+                        <option value="semi-Private">Semi-Private</option>
                         <option value="Private">Private</option>
-                        <option value="semi-private">Semi-Private</option>
                     </select>
 
-                    {post.privacy === "semi-private" && (
+                    {post.privacy === "Private" && (
                         <SemiPrivateList 
                             selectedFollowers={selectedFollowers}
                             onSelectionChange={setSelectedFollowers}
