@@ -30,13 +30,16 @@ export default function GroupEvents() {
 
     const handleVote = async (eventId, choice) => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/${groupId}/events/${eventId}/vote`, {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/groups/insert_vote?action=${choice}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ choice }),
+                body: JSON.stringify(
+                    eventId,
+                    // choice: choice,
+                 ),
             });
 
             if (response.ok) {
@@ -76,13 +79,13 @@ export default function GroupEvents() {
                                 className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
                                 onClick={() => handleVote(event.id, 'going')}
                             >
-                                Going ({event.goingCount})
+                                Going ({event.GoingCount})
                             </button>
                             <button
                                 className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
                                 onClick={() => handleVote(event.id, 'not_going')}
                             >
-                                Not Going ({event.notGoingCount})
+                                Not Going ({event.NotGoingCount})
                             </button>
                         </div>
                     </div>

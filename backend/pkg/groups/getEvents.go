@@ -79,7 +79,7 @@ func GetEvents(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var votes []models.Event
 	for rows.Next() {
 		var vote models.Event
-		err = rows.Scan(&vote.EventID, &vote.UserID, &vote.Title, &vote.Description, &vote.Username, &vote.GroupId, &vote.Count)
+		err = rows.Scan(&vote.EventID, &vote.UserID, &vote.Title, &vote.Description, &vote.Username, &vote.GroupId, &vote.Going)
 		if err != nil {
 			http.Error(w, "internal server error", 500)
 			return

@@ -40,47 +40,73 @@ func GetVotes(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var vote models.Event_members
 	action := r.URL.Query().Get("action")
-
+	fmt.Println("action : ", action)
+	// fmt.Println("vote1111111 : ", vote)
+	// return
 	if action != "going" {
-		err := json.NewDecoder(r.Body).Decode(&vote)
+		err := json.NewDecoder(r.Body).Decode(&vote.EventID)
 		if err != nil {
 			fmt.Println("error in remove vote1 : ", err)
 			utils.WriteJSON(w, 400, "bad request")
 			return
 		}
-		_, err = db.Exec("DELETE FROM event_members WHERE user_id = ? AND event_id = ?", userId, vote.EventID)
+		fmt.Println("ana f not going")
+		_, err = db.Exec("DELETE FROM event_members WHERE user_id = ? AND event_id = ? AND going = 1", userId, vote.EventID)
 		if err != nil {
 			fmt.Println("error in remove vote2 : ", err)
 			http.Error(w, "internal server error", 500)
 			return
 		}
+		_, err = db.Exec("INSERT INTO event_members (user_id, event_id, going) VALUES (?, ?, ?)", userId, vote.EventID, false)
+		if err != nil {
+			fmt.Println("error in insert vote2 : ", err)
+			// http.Error(w, "internal server error", 500)
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+		if err != nil {
+			fmt.Println("error in remove vote2 : ", err)
+			// http.Error(w, "internal server error", 500)
+			utils.WriteJSON(w, 500, "internal server error")
+
+			return
+		}
 		utils.WriteJSON(w, 200, vote.Going)
 		return
 	} else {
-		err := json.NewDecoder(r.Body).Decode(&vote)
+		err := json.NewDecoder(r.Body).Decode(&vote.EventID)
+		fmt.Println("voteXXXXXX : ", vote)
 		if err != nil {
-			fmt.Println("error in insert vote1 : ", err)
+			fmt.Println("error in insert vote11 : ", err)
 			utils.WriteJSON(w, 400, "bad request")
 			return
 		}
+		fmt.Println("vote2 : ", vote)
+		// return
 		var currentGoing bool
 		err = db.QueryRow("SELECT going FROM event_members WHERE user_id = ? AND event_id = ?", userId, vote.EventID).Scan(&currentGoing)
 		if err != nil {
 			if err == sql.ErrNoRows {
+				fmt.Println("ana f going ::::: going not Exist (INSERT)")
 				_, err = db.Exec("INSERT INTO event_members (user_id, event_id, going) VALUES (?, ?, ?)", userId, vote.EventID, true)
 				if err != nil {
 					fmt.Println("error in insert vote2 : ", err)
-					http.Error(w, "internal server error", 500)
+					// http.Error(w, "internal server error", 500)
+					utils.WriteJSON(w, 500, "internal server error")
 					return
 				}
 			} else {
-				_, err = db.Exec("UPDATE event_members SET going = ? WHERE user_id = ? AND event_id = ?", vote.Going, userId, vote.EventID)
+				fmt.Println("ana f going case with going already Exists (UPDATE)")
+				// _, err = db.Exec("DELETE event_members SET going = ? WHERE user_id = ? AND event_id = ?", false, userId, vote.EventID)
+				_, err = db.Exec("DELETE FROM event_members WHERE user_id = ? AND event_id = ? AND going = 0", userId, vote.EventID)
 				if err != nil {
 					fmt.Println("error in insert vote3 : ", err)
-					http.Error(w, "internal server error", 500)
+					// http.Error(w, "internal server error", 500)
+					utils.WriteJSON(w, 500, "internal server error")
 					return
 				}
 			}
+			// fmt.Println("vote3 : ", vote)
 			utils.WriteJSON(w, 200, vote.Going)
 			return
 		}

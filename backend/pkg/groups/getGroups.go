@@ -107,7 +107,6 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	FROM groups g
 	LEFT JOIN events e ON g.id = e.group_id
 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
-	LEFT JOIN event_members em ON e.id = em.event_id
 	WHERE g.name = ?
 	GROUP BY g.id, e.id, m.id;
 	`
@@ -125,32 +124,32 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	group.Members = []models.Member{}
 
 	// Maps to track unique events and members
-	eventMap := make(map[int]bool)
+	// eventMap := make(map[int]bool)
 	memberMap := make(map[int]bool)
 
 	for rows.Next() {
-		var event models.Event
+		// var event models.Event
 		var member models.Member
 
 		err := rows.Scan(&group.Id, &group.Name, &group.Description,
-			&event.EventID, &event.GroupId, &event.Title, &event.Description,
+			// &event.EventID, &event.GroupId, &event.Title, &event.Description,
 			&member.Id, &member.User_id, &member.Group_id, &member.Accepted,
-			&event.Count, &event.Going,
+			// &event.Count, &event.Going,
 		)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
 		}
 		// Add unique events
-		if event.EventID != 0 && !eventMap[event.EventID] {
-			event.Going, err = CheckVote(db, userId, event.EventID)
-			if err != nil {
-				fmt.Println("Error getting vote:", err)
-				continue
-			}
-			group.Events = append(group.Events, event)
-			eventMap[event.EventID] = true
-		}
+		// if event.EventID != 0 && !eventMap[event.EventID] {
+		// 	event.Going, err = CheckVote(db, userId, event.EventID)
+		// 	if err != nil {
+		// 		fmt.Println("Error getting vote:", err)
+		// 		continue
+		// 	}
+		// 	group.Events = append(group.Events, event)
+		// 	eventMap[event.EventID] = true
+		// }
 
 		// Add unique members
 		if member.Id != 0 && !memberMap[member.Id] {

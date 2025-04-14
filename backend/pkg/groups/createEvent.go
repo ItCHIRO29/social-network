@@ -56,7 +56,23 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
-	query := `SELECT id, group_id, creator_id, title, description, date FROM events WHERE group_id = ?`
+	// query := `SELECT id, group_id, creator_id, title, description, date FROM events WHERE group_id = ?`
+	query := `
+	SELECT 
+		e.id, 
+		e.group_id, 
+		e.creator_id, 
+		e.title, 
+		e.description, 
+		e.date,
+		SUM(CASE WHEN em.going = true THEN 1 ELSE 0 END) AS going_count,
+		SUM(CASE WHEN em.going = false THEN 1 ELSE 0 END) AS not_going_count
+	FROM events e
+	LEFT JOIN event_members em ON e.id = em.event_id 
+	WHERE e.group_id = ?
+	GROUP BY e.id
+`
+
 	rows, err := db.Query(query, Event.GroupId)
 	if err != nil {
 		fmt.Println("Error getting events", err)
@@ -67,7 +83,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	var Events []models.Event
 	for rows.Next() {
 		var Event models.Event
-		err = rows.Scan(&Event.EventID, &Event.GroupId, &Event.UserID, &Event.Title, &Event.Description, &Event.Date)
+		err = rows.Scan(&Event.EventID, &Event.GroupId, &Event.UserID, &Event.Title, &Event.Description, &Event.Date, &Event.GoingCount, &Event.NotGoingCount)
 		if err != nil {
 			fmt.Println("Error getting events", err)
 			utils.WriteJSON(w, 500, "internal server error")
@@ -75,7 +91,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		Events = append(Events, Event)
 	}
-	fmt.Println("Events", Events)
+	// fmt.Println("Events", Events)
 	utils.WriteJSON(w, 200, Events)
 }
 

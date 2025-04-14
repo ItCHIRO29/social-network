@@ -9,7 +9,8 @@ type Event struct {
 	UserID      int
 	Date        string `json:"date"`
 	Username    string
-	Count       int
+	GoingCount       int
+	NotGoingCount  int
 	Going       bool `json:"going"`
 }
 
