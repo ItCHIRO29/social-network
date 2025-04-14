@@ -27,7 +27,7 @@ const Message = ({ message, myData, opponentData }) => {
   }
   return (
     <div className={`message ${Mymessages ? 'message-sent' : 'message-received'}`}>
-      {!isSent && (
+      {!Mymessages && (
         <div className="message-pic">
           <img
             src={urlImage}

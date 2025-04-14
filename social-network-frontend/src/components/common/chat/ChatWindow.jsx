@@ -339,18 +339,23 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
           )}
           <div className="header-info">
             <h3>{username}</h3>
-            <p>
-              {hasOpponentData ? (
-                opponentData.online
-                  ? "online"
-                  : opponentData.last_active
-                    ? `Online ${dateFormat(opponentData.last_active)}`
-                    : "offline"
-              ) : (
-                "Loading status..."
-              )}
-            </p>
+            {type !== "groupe" && (
+              <p>
+                {hasOpponentData ? (
+                  opponentData.online ? (
+                    "online"
+                  ) : opponentData.last_active ? (
+                    `Online ${dateFormat(opponentData.last_active)}`
+                  ) : (
+                    "offline"
+                  )
+                ) : (
+                  "Loading status..."
+                )}
+              </p>
+            )}
           </div>
+
         </div>
         <div className="header-right">
           <button className="icon-btn" onClick={onHide}>—</button>
