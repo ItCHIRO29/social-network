@@ -3,11 +3,11 @@ import { useEffect, useRef } from 'react';
 
 const Message = ({ message, myData, opponentData }) => {
   // console.log("this", opponentData.get(message.sender).username);
-
+  console.warn("mydata", opponentData)
   console.log("data message fetshed:", message, myData.userData.username)
   const router = useRouter();
   const isSent = message.sender === myData.username;
-  let Mymessages = message.sender !== myData.username;
+  let Mymessages = message.sender === myData.username;
   if (message.type === "groupe") {
     Mymessages = message.sender === myData.userData.username
   }

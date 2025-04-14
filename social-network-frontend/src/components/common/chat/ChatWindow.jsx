@@ -57,7 +57,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       }
     };
 
-    fetchMembers();
+    if (type === "groupe") fetchMembers();
   }, []);
 
 
