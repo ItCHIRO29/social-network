@@ -12,7 +12,10 @@ func SendGroupNotification(tx *sql.Tx, db *sql.DB, senderId int, groupId int, no
 	members := utils.GetGroupMembers(groupId, db)
 	for _, member := range members {
 		if member != senderId {
-			SendNotification(tx, db, senderId, member, notifType, referenceId, additionalData)
+			err := SendNotification(tx, db, senderId, member, notifType, referenceId, additionalData)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

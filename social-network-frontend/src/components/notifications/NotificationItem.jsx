@@ -42,7 +42,7 @@ export default function NotificationItem({ notification, setNotifications }) {
                     // TODO: reject join group
                 }
             } else if (notification.notification_type === 'event') {
-                    router.push(`/groups/${notification.additional_data.group_name}/events/${notification.reference_id}`);
+                router.push(`/groups/${notification.additional_data.group_name}/events/${notification.reference_id}`);
             }
 
             if (response) {
