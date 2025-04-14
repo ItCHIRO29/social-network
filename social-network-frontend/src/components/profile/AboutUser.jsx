@@ -12,8 +12,6 @@ export default function AboutUser({ user }) {
     const [showFollowing, setShowFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
-
-
     
     const { userData } = useUserData();
     const isOwnProfile = userData?.username === user.username;

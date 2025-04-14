@@ -14,6 +14,8 @@ func GetFollowers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		http.Error(w, "username is required", http.StatusBadRequest)
 		return
 	}
+	// page := r.URL.Query().Get("page")
+
 	uId, err := utils.GetUserIdFromUsername(db, username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -49,6 +51,9 @@ WHERE f.following_id = $1
 	for rows.Next() {
 		var follower models.Followers
 		err := rows.Scan(&follower.ID, &follower.Image)
+		if err != nil {
+			continue
+		}
 		follower.Username, err = utils.GetUsernameFromId(db, follower.ID)
 		if err != nil {
 			http.Error(w, "internal server error", http.StatusInternalServerError)

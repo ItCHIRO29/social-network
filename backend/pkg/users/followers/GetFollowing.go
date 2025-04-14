@@ -51,6 +51,9 @@ WHERE f.follower_id = $1
 	for rows.Next() {
 		var following models.Following
 		err := rows.Scan(&following.ID, &following.Image)
+		if err != nil {
+			continue
+		}
 		following.Username, err = utils.GetUsernameFromId(db, following.ID)
 		if err != nil {
 			fmt.Println("Error getting username:", err)

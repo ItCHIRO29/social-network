@@ -1,17 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import useDebounce from '../../app/hooks/useDebounce';
 import styles from './FollowButton.module.css';
 
 export default function FollowButton({ userData }) {
     const followButton = userData.follow_button;
-    console.log(followButton);
+    const debounce = useDebounce()
     if (!followButton || followButton.state === 'none') {
         return null;
     }
 
     const [followState, setFollowState] = useState(followButton.state);
-    const [referenceId, setReferenceId] = useState(followButton.reference_id);
+    const [referenceId, setReferenceId] = useState(followButton.reference_id);   
 
     const handleFollow = async () => {
         try {
@@ -62,7 +63,7 @@ export default function FollowButton({ userData }) {
     };
 
     return (
-        <button className={styles.followButton} onClick={handleClick}>
+        <button className={styles.followButton} onClick={()=>{debounce(handleClick, 500)}}>
             {followState === "follow" && "Follow"}
             {followState === "unfollow" && "Unfollow"}
             {followState === "pending" && "Cancel Request"}
