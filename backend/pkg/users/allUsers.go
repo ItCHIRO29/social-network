@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -20,6 +21,9 @@ type User struct {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+	}
 	query := `
 		SELECT 
 			u.id, 
@@ -35,8 +39,9 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 			END AS follow_button_state 
 		FROM users u
 		LEFT JOIN followers f ON f.follower_id = ? AND f.following_id = u.id
-		WHERE u.id != ?`
-	rows, err := db.Query(query, userID, userID, userID)
+		WHERE u.id != ?
+		LIMIT ? OFFSET ?`
+	rows, err := db.Query(query, userID, userID, userID, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Println("Error executing query ===>", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
