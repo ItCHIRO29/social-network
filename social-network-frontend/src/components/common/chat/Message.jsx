@@ -2,16 +2,18 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 const Message = ({ message, myData, opponentData }) => {
+  // console.log("this", opponentData.get(message.sender).username);
+
   console.log("data message fetshed:", message, myData.userData.username)
   const router = useRouter();
   const isSent = message.sender === myData.username;
-  let Mymessages = message.sender !== opponentData.username
+  let Mymessages = message.sender !== myData.username;
   if (message.type === "groupe") {
     Mymessages = message.sender === myData.userData.username
   }
   const handleImageClick = () => {
     // router.push(`/profile?id=${!Mymessages ? message.sender_id : message.receiver_id}`);
-    router.push(`/profile/${Mymessages ? message.sender : message.receiver}`);
+    router.push(`/profile/${message.sender}`);
     return
   };
   let urlImage = '';

@@ -12,8 +12,10 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
 	// Create group
 	mux.Handle("POST /create_group", auth.Middleware(db, 10, 20, time.Second, CreateGroup))
+
 	// request to join
 	mux.Handle("POST /join", auth.Middleware(db, 10, 20, time.Second, Requestjoin))
+
 	// mux.Handle("DELETE /leave", auth.Middleware(db, 10, 20, time.Second, LeaveGrp))
 	// Get members to invite
 	mux.Handle("GET /get_members_to_invite", auth.Middleware(db, 10, 20, time.Second, GetMembersToInvite))
@@ -22,12 +24,14 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	mux.Handle("GET /getGroups/MyGroups", auth.Middleware(db, 10, 20, time.Second, GetMyGroups))
 	mux.Handle("GET /getGroups/joined", auth.Middleware(db, 10, 20, time.Second, GetJoinedGroups))
 	mux.Handle("GET /getGroups/GroupsMember", auth.Middleware(db, 10, 20, time.Second, GetGroupsMember))
+
 	// Get group activity TODO : fix later
 	mux.Handle("GET /getGroupActivity", auth.Middleware(db, 10, 20, time.Second, GetGroupActivity))
+
 	/// Create event
 	mux.Handle(" /CreateEvent", auth.Middleware(db, 10, 20, time.Second, CreateEvent))
-	// Refuse invitation
 
+	// Refuse invitation
 	mux.Handle("DELETE /invitation", auth.Middleware(db, 1, 1, time.Second, RefuseInvitation))
 	// Accept invitation
 	mux.Handle("PUT /invitation", auth.Middleware(db, 10, 20, time.Second, AcceptInvitation))
@@ -35,5 +39,8 @@ func CreateGroupsMux(db *sql.DB) http.Handler {
 	mux.Handle("POST /insert_vote", auth.Middleware(db, 20, 20, 20*time.Millisecond, InsertVote))
 	// Send invitation to join group
 	mux.Handle("POST /invitation", auth.Middleware(db, 1, 1, 20*time.Millisecond, SendInvitation))
+	// GET members of Group
+	mux.Handle("GET /members", auth.Middleware(db, 100, 100, 20*time.Millisecond, GroupMembers))
+
 	return mux
 }

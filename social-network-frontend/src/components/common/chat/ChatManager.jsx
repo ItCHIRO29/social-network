@@ -57,11 +57,12 @@ const ChatManager = () => {
         return
       }
       const groups = await resp.json();
+     
       const newgrps = new Map();
       groups.forEach(grp => {
         newgrps.set(grp.name, {
           groupedata: grp,
-          type: "groupe"
+          type: "groupe",
         });
       })
 
@@ -113,22 +114,22 @@ const ChatManager = () => {
 
   // Handle private messages
   useEffect(() => {
-    const handlegroupmessage = (event) => {
-      if (event instanceof CustomEvent && event.detail && event.detail.message) {
-        const message = event.detail.message;
-        const senderUsername = message.sender;
-        const groupname = event.detail.receiver
-        const hasActiveChatWindow = chatWindows.has(groupname) &&
-          chatWindows.get(groupname).focused;
-        if (!hasActiveChatWindow) {
-          setGrps(prevgrps => {
-            const groups = prevgrps.get
-          })
-        }
-      }
-    }
+    // const handlegroupmessage = (event) => {
+    //   if (event instanceof CustomEvent && event.detail && event.detail.message) {
+    //     const message = event.detail.message;
+    //     const senderUsername = message.sender;
+    //     const groupname = event.detail.receiver
+    //     const hasActiveChatWindow = chatWindows.has(groupname) &&
+    //       chatWindows.get(groupname).focused;
+    //     if (!hasActiveChatWindow) {
+    //       setGrps(prevgrps => {
+    //         const groups = prevgrps.get
+    //       })
+    //     }
+    //   }
+    // }
+    
     const handlePrivateMessage = (event) => {
-      console.warn('fired', event.detail)
       if (event instanceof CustomEvent && event.detail && event.detail.message) {
         const message = event.detail.message;
         const senderUsername = message.sender;
@@ -166,18 +167,11 @@ const ChatManager = () => {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
 
-    // for (const [groupename] of grps) {
-    //   document.addEventListener(`groupMessage-${groupename}`, handlePrivateMessage);
-    // }
-
     // Clean up
     return () => {
       for (const [username] of users) {
         document.removeEventListener(`privateMessage-${username}`, handlePrivateMessage);
       }
-      // for (const [groupename] of grps) {
-      //   document.removeEventListener(`groupMessage-${groupename}`, handlePrivateMessage);
-      // }
     };
   }, [users, chatWindows, myData.username]);
 

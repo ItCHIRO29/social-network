@@ -4,30 +4,44 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 )
 
-func groupPageHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	groupId, middlewareErr := groupsMiddleware(r, db, userId, false)
-	if middlewareErr != nil {
-		utils.WriteJSON(w, middlewareErr.Code, middlewareErr.Err)
+func GroupMembers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	groupId := r.URL.Query().Get("groupId")
+	query := `
+		SELECT 
+			u.id, 
+			u.first_name, 
+			u.last_name, 
+			u.username, 
+			u.image
+		FROM 
+			users u
+		INNER JOIN 
+			group_members gm 
+		ON 
+			gm.user_id = u.id
+		WHERE 
+			gm.group_id = ?`
+	result, err := db.Query(query, groupId)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Error geting members", err)
+		utils.WriteJSON(w, http.StatusInternalServerError, []models.User{})
 		return
 	}
-
-	getGroupQuery := `SELECT * FROM groups WHERE id = $1`
-	group := models.Group{}
-	err := db.QueryRow(getGroupQuery, groupId).Scan(&group.Id, &group.AdminId, &group.Name, &group.Description)
-	if err != nil {
-		fmt.Println(err)
-		if err == sql.ErrNoRows {
-			utils.WriteJSON(w, 404, "group not found")
+	users := []models.User{}
+	for result.Next() {
+		user := models.User{}
+		if err := result.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Image); err != nil {
+			fmt.Println("Error geting members", err)
+			utils.WriteJSON(w, http.StatusInternalServerError, []models.User{})
 			return
 		}
-
-		utils.WriteJSON(w, 500, "internal server error")
-		return
+		users = append(users, user)
 	}
-	utils.WriteJSON(w, 200, group)
-
+	fmt.Println("users", users)
+	utils.WriteJSON(w, http.StatusAccepted, users)
 }

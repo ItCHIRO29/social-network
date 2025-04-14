@@ -28,6 +28,38 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isAppending, setIsAppending] = useState(true);
+  const [members, setMembers] = useState(new Map());
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const respond = await fetch(`http://localhost:8080/api/groups/members?groupId=${chatdata.chatdata.groupedata.id}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        });
+
+        if (!respond.ok) {
+          console.error('Error fetching groups', respond.status);
+          return;
+        }
+
+        const membersArray = await respond.json();
+
+        const membersMap = new Map();
+        membersArray.forEach(user => {
+          membersMap.set(user.username, user);
+        });
+
+        setMembers(membersMap);
+      } catch (error) {
+        console.error('Fetch failed:', error);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
 
   // Update opponentData when users Map changes
   useEffect(() => {
@@ -131,15 +163,12 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         throw new Error('Failed to fetch messages');
       }
       const data = await response.json();
-      console.log('response', data);
 
       if (!data.messages || data.messages.length < 10 || data.offset === -1) {
         // setHasMoreMessages(false);
       }
 
       if (data.messages && data.messages.length > 0) {
-        // data.type = type;
-        // Object.assign(data.messages, { type: type })
         prependMessages(data.messages.map(createMessageObject));
         setOffset(data.offset || -1);
         if (isAppending) {
@@ -293,8 +322,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
 
   // Check if opponentData is empty
   const hasOpponentData = Object.keys(opponentData).length > 0;
-  // console.log("messages ======>", messages);
-  // console.log("opponentData ======>", opponentData);
+  console.warn("members", members);
   return (
     <div className="chat-container" style={{ position: 'relative' }}>
       <div className="chat-header">
@@ -345,7 +373,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
             <Message
               message={message}
               myData={myData}
-              opponentData={opponentData}
+              opponentData={hasOpponentData ? opponentData : members.get(message.sender)}
             />
             {message.status === 'failed' && (
               <div className="message-error">
