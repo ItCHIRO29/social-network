@@ -8,6 +8,16 @@ import (
 	"time"
 )
 
+func SendGroupNotification(tx *sql.Tx, db *sql.DB, senderId int, groupId int, notifType string, referenceId int, additionalData map[string]any) error {
+	members := utils.GetGroupMembers(groupId, db)
+	for _, member := range members {
+		if member != senderId {
+			SendNotification(tx, db, senderId, member, notifType, referenceId, additionalData)
+		}
+	}
+	return nil
+}
+
 func SendNotification(tx *sql.Tx, db *sql.DB, senderId int, receiverId int, notifType string, referenceId int, additionalData map[string]any) error {
 	jsonAdditionalData, err := json.Marshal(additionalData)
 	if err != nil {
@@ -31,7 +41,7 @@ func SendNotification(tx *sql.Tx, db *sql.DB, senderId int, receiverId int, noti
 		"seen":              false,
 		"reference_id":      referenceId,
 	}
-	if (notifType == "group_invitation" || notifType == "request_join_group") && additionalData != nil {
+	if (notifType == "group_invitation" || notifType == "request_join_group" || notifType == "event") && additionalData != nil {
 		message["additional_data"] = additionalData
 	}
 

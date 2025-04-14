@@ -198,8 +198,8 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 
 func IsMember(db *sql.DB, groupId int, userId int) bool {
 	var isMember bool
-	query := "SELECT EXISTS (SELECT 1 FROM group_members WHERE user_id = ? AND group_id= ?)"
-	err := db.QueryRow(query,userId, groupId ).Scan(&isMember)
+	query := "SELECT EXISTS (SELECT 1 FROM group_members WHERE user_id = ? AND group_id= ? AND accepted = 1)"
+	err := db.QueryRow(query, userId, groupId).Scan(&isMember)
 	if err != nil {
 		fmt.Println("Error checking if user is a member:", err)
 		return false

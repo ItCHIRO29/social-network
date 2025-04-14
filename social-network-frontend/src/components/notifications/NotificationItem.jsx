@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import styles from './notifications.module.css';
 import { useRouter } from 'next/navigation';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default function NotificationItem({ notification, setNotifications }) {
     const router = useRouter();
@@ -40,6 +41,8 @@ export default function NotificationItem({ notification, setNotifications }) {
                 } else if (action === 'reject') {
                     // TODO: reject join group
                 }
+            } else if (notification.notification_type === 'event') {
+                    router.push(`/groups/${notification.additional_data.group_name}/events/${notification.reference_id}`);
             }
 
             if (response) {
@@ -73,7 +76,7 @@ export default function NotificationItem({ notification, setNotifications }) {
             case 'request_join_group':
                 return `requested to join your group`;
             case 'event':
-                return 'created a new event';
+                return 'created a new event in the group';
             default:
                 return '';
         }
@@ -156,12 +159,12 @@ export default function NotificationItem({ notification, setNotifications }) {
                 <div className={styles.notificationText}>
                     <span className={styles.username}>{notification.sender}</span>
                     <span>{getNotificationDescription()}</span>
-                    {notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation' && 
+                    {(notification.notification_type === 'request_join_group' || notification.notification_type === 'group_invitation' || notification.notification_type === 'event') && 
                         <span 
                             className={styles.groupName} 
                             onClick={(e) => {
                                 e.stopPropagation();
-                                router.push(`/groups/${notification.additional_data.group_id}`);
+                                router.push(`/groups/${notification.additional_data.group_name}`);
                             }}
                         >
                             {notification.additional_data.group_name}
@@ -169,7 +172,7 @@ export default function NotificationItem({ notification, setNotifications }) {
                     }
                 </div>
                 <span className={styles.timestamp}>
-                    {new Date(notification.createdAt).toLocaleString()}
+                    {dateFormat(notification.created_at)}
                 </span>
             </div>
             {notification.error && <span className={styles.error}>{notification.error}</span>}

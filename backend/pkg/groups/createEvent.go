@@ -7,13 +7,13 @@ import (
 	"net/http"
 
 	"social-network/pkg/models"
+	"social-network/pkg/notifications"
 	"social-network/pkg/utils"
 )
 
 func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var Event models.Event
 	if r.Method == "POST" {
-		fmt.Println("CreateEvent METHOD POST")
 		err := json.NewDecoder(r.Body).Decode(&Event)
 		if err != nil {
 			fmt.Println("Error decoding request body", err)
@@ -35,12 +35,39 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 			utils.WriteJSON(w, 500, "internal server error")
 			return
 		}
-		_, err = db.Exec("INSERT INTO events (group_id, creator_id, title,description, date) VALUES (?, ?, ?, ?, ?)", Event.GroupId, userId, Event.Title, Event.Description, Event.Date)
+		var eventId int
+		tx, err := db.Begin()
 		if err != nil {
+			fmt.Println("Error beginning transaction", err)
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+
+		err = tx.QueryRow("INSERT INTO events (group_id, creator_id, title,description, date) VALUES (?, ?, ?, ?, ?) RETURNING id", Event.GroupId, userId, Event.Title, Event.Description, Event.Date).Scan(&eventId)
+		if err != nil {
+			tx.Rollback()
 			fmt.Println("Error creating event", err)
 			utils.WriteJSON(w, 500, "internal server error")
 			return
 		}
+
+		getGroupNameQuery := `SELECT name FROM groups WHERE id = ?`
+		var groupName string
+		err = tx.QueryRow(getGroupNameQuery, Event.GroupId).Scan(&groupName)
+		if err != nil {
+			fmt.Println("Error getting group name", err)
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+		additionalData := map[string]any{"group_name": groupName}
+		notifications.SendGroupNotification(tx, db, userId, Event.GroupId, "event", eventId, additionalData)
+		err = tx.Commit()
+		if err != nil {
+			fmt.Println("Error committing transaction", err)
+			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+		utils.WriteJSON(w, 200, "event created successfully")
 		return
 	}
 	fmt.Println("Method GET")

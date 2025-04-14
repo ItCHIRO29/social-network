@@ -12,6 +12,7 @@ export default function GroupPage() {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     // const [posts, setPosts] = useState([]);
+    const [unauthorized, setUnauthorized] = useState(false);
 
 
     useEffect(() => {
@@ -31,6 +32,9 @@ export default function GroupPage() {
                 console.log('groupData to  ===>', groupData)
                 setGroup(groupData);
                 setMembers(groupData.members);
+            }else if (groupResponse.status === 401) {
+                setUnauthorized(true);
+                setLoading(false);
             }
 
             // Fetch group members
@@ -53,14 +57,12 @@ export default function GroupPage() {
     // };
     return (
         <div className={styles.groupContainer}>
-            {/* <div className={styles.header}> */}
-                <h1>Group</h1>
-            {/* </div> */}
-            <GroupNavigation groupId={groupId} activeTab="overview" />
             {loading ? (
                 <div className={styles.loading}>Loading group details...</div>
             ) : group ? (
                 <>
+                 <h1>Group</h1>
+                 <GroupNavigation groupId={groupId} activeTab="overview" />
                     <div className={styles.groupInfo}>
                         <h2 className={styles.groupTitle}>{group.name}</h2>
                         <p className={styles.groupDescription}>{group.description}</p>
@@ -94,7 +96,10 @@ export default function GroupPage() {
                     {/* </div> */}
                 </>
             ) : (
+                !unauthorized ?
                 <div className={styles.error}>Group not found</div>
+                :
+                <div className={styles.error}>You are not authorized to access this group</div>
             )}
         </div>
     );

@@ -12,7 +12,7 @@ export default function GroupPostsPage() {
     const { name } = useParams();
     console.log('groupId in navGroup BAr', name);
     const userData = useUserData();
-
+    // const [unauthorized, setUnauthorized] = useState(false);
     return (
         <div className={styles.container}>
             <div className={styles.header}>
