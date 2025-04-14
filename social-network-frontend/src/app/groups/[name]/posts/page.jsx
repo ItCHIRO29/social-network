@@ -16,7 +16,7 @@ export default function GroupPostsPage() {
                 <h1>Group Posts</h1>
                 <GroupNavigation groupId={name} />
             </div>
-                <Posts />
+                <Posts  />
         </div>
     );
 } 

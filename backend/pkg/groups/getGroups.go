@@ -100,10 +100,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 	query := `
 	SELECT
     g.id, g.name, g.description,
-    COALESCE(e.id, 0), COALESCE(e.group_id, 0), COALESCE(e.title, ''), COALESCE(e.description, ''),
-    COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0),
-	COUNT(em.id) ,
-	 em.going NOT NULL
+    COALESCE(m.id, 0), COALESCE(m.user_id, 0), COALESCE(m.group_id, 0), COALESCE(m.accepted, 0)
 	FROM groups g
 	LEFT JOIN events e ON g.id = e.group_id
 	LEFT JOIN group_members m ON g.id = m.group_id AND m.accepted = 1
