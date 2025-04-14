@@ -63,7 +63,7 @@ export default function GroupEvents() {
             </div>
 
             <div className={styles.eventsList}>
-                {events.map((event) => (
+                {events && events.map((event) => (
                     <div key={event.id} className={styles.eventCard}>
                         <h2>{event.title}</h2>
                         <p className={styles.datetime}>{event.description}</p>
@@ -87,7 +87,7 @@ export default function GroupEvents() {
                         </div>
                     </div>
                 ))}
-                {events.length === 0 && (
+                {(!events) && (
                     <p className={styles.noEvents}>No events scheduled yet.</p>
                 )}
             </div>

@@ -11,4 +11,5 @@ type Notification struct {
 	CreatedAt      time.Time      `json:"created_at"`
 	Image          string         `json:"image"`
 	AdditionalData map[string]any `json:"additional_data"`
+	Seen           bool           `json:"seen"`
 }

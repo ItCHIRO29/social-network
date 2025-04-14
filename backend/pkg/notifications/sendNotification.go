@@ -28,10 +28,11 @@ func SendNotification(tx *sql.Tx, db *sql.DB, senderId int, receiverId int, noti
 		"sender":            senderUsername,
 		"receiver":          receiverUsername,
 		"notification_type": notifType,
+		"seen":              false,
 		"reference_id":      referenceId,
 	}
 	if (notifType == "group_invitation" || notifType == "request_join_group") && additionalData != nil {
-		message["group_data"] = additionalData
+		message["additional_data"] = additionalData
 	}
 
 	ws.Hub.Private <- message

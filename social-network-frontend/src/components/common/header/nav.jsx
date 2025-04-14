@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./nav.module.css";
 import NotificationsList from "@/components/notifications/NotificationsList";
@@ -10,41 +10,9 @@ import { useUserData } from '@/components/common/providers/userDataContext';
 
 export default function Nav() {
     const [hovered, setHovered] = useState("");
-    const [showNotifications, setShowNotifications] = useState(false);
-    const [notificationCount, setNotificationCount] = useState(0);
     const iconSize = 25;
     const router = useRouter();
     const { userData } = useUserData();
-
-    useEffect(() => {
-        // Initial fetch of notification count
-        fetchNotificationCount();
-
-        // Listen for new notifications from websocket
-        document.addEventListener('notification', () => {
-            setNotificationCount(prev => prev + 1);
-        });
-
-        return () => {
-            document.removeEventListener('notification', () => {
-                setNotificationCount(prev => prev + 1);
-            });
-        };
-    }, []);
-
-    const fetchNotificationCount = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications/count`, {
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setNotificationCount(data.count);
-            }
-        } catch (error) {
-            console.error('Error fetching notification count:', error);
-        }
-    };
 
     const handleLogout = async function () {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
@@ -61,11 +29,7 @@ export default function Nav() {
     }
 
     const toggleNotifications = () => {
-        console.log('Toggle notifications clicked. Current state:', showNotifications);
         setShowNotifications(!showNotifications);
-        if (!showNotifications) {
-            setNotificationCount(0);
-        }
     };
 
     return (
@@ -117,31 +81,10 @@ export default function Nav() {
                 <div className={styles.navItem}
                     onMouseEnter={() => setHovered("Notifications")}
                     onMouseLeave={() => setHovered("")}>
-                    <button
-                        className={styles.iconButton}
-                        onClick={toggleNotifications}
-                        type="button"
-                    >
-                        <Image
-                            src="/icons/notifications.svg"
-                            alt="notifications"
-                            width={iconSize}
-                            height={iconSize}
-                        />
-                        {notificationCount > 0 && (
-                            <span className={styles.notificationBadge}>
-                                {notificationCount > 99 ? '99+' : notificationCount}
-                            </span>
-                        )}
-                    </button>
+                    <div className={styles.notificationIconWrapper}>
+                    <NotificationsList/>
+                    </div>
                     {hovered === "Notifications" && <div className={styles.description}>Notifications</div>}
-                    {showNotifications && (
-                        <NotificationsList
-                            isVisible={showNotifications}
-                            onClose={() => setShowNotifications(false)}
-                            onNotificationsRead={() => setNotificationCount(0)}
-                        />
-                    )}
                 </div>
             </div>
 
