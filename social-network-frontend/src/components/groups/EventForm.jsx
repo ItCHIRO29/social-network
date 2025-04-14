@@ -24,7 +24,7 @@ export default function EventForm({ groupId, onEventCreated }) {
                     group_name: decodeURIComponent(groupId),
                     title,
                     description,
-                    date : new Date(datetime).toISOString(),
+                    date: new Date(datetime).toISOString(),
                 }),
             });
             if (response.ok) {
@@ -35,7 +35,9 @@ export default function EventForm({ groupId, onEventCreated }) {
                 onEventCreated();
             } else {
                 const data = await response.json();
-                setError(data.message || 'Failed to create event');
+                // console.log("response for events ::", data)
+                alert("Error: " +  data);
+                setError(data);
             }
         } catch (error) {
             console.error('Error creating event:', error);

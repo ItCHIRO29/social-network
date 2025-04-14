@@ -22,6 +22,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		// fmt.Println("Event from request :::", Event.Date)
 		if len(Event.Title) < 3 || len(Event.Title) > 15 {
+			fmt.Println("Error decoding request body", err)
 			utils.WriteJSON(w, 400, "invalid Title length")
 			return
 		} else if len(Event.Description) < 1 || len(Event.Description) > 500 {
