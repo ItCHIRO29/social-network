@@ -14,6 +14,8 @@ import (
 
 var MaxUploadSize int64 = 10_485_760
 
+const Limit = 10
+
 func WriteJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)

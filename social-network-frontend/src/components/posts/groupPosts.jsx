@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useUserData } from '../common/providers/userDataContext';
 // import CreatePost from './CreatePost';
 import Post from './Post';
@@ -10,12 +10,12 @@ export default function Posts({ groupId = null, showCreatePost = true }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [currentPage, setCurrentPage] = useState(0)
     useEffect(() => {
         fetchPosts();
     }, [groupId, userData]);
 
-    const fetchPosts = async () => {
+    const fetchPosts = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -47,7 +47,7 @@ export default function Posts({ groupId = null, showCreatePost = true }) {
         } finally {
             setLoading(false);
         }
-    };
+    })
 
     const handlePostCreated = (newPost) => {
         setPosts(prev => [newPost, ...(prev || [])]);

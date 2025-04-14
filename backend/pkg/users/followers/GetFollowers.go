@@ -3,6 +3,7 @@ package followers
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -14,7 +15,11 @@ func GetFollowers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		http.Error(w, "username is required", http.StatusBadRequest)
 		return
 	}
-	// page := r.URL.Query().Get("page")
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
 
 	uId, err := utils.GetUserIdFromUsername(db, username)
 	if err != nil {
@@ -38,10 +43,11 @@ WHERE f.following_id = $1
         AND accepted = 1
     ) 
     OR $1 = $2
-  );
+  )
+	LIMIT ? OFFSET ?
 `
 
-	rows, err := db.Query(query, uId, userId)
+	rows, err := db.Query(query, uId, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return

@@ -7,7 +7,10 @@ const Message = ({ message, myData, opponentData }) => {
   console.log("data message fetshed:", message, myData.userData.username)
   const router = useRouter();
   const isSent = message.sender === myData.username;
-  let Mymessages = message.sender === myData.username;
+  let Mymessages
+  if (opponentData) {
+    Mymessages = message.sender !== opponentData.username;
+  }
   if (message.type === "groupe") {
     Mymessages = message.sender === myData.userData.username
   }
@@ -24,7 +27,7 @@ const Message = ({ message, myData, opponentData }) => {
   }
   return (
     <div className={`message ${Mymessages ? 'message-sent' : 'message-received'}`}>
-      {!isSent && (
+      {!Mymessages && (
         <div className="message-pic">
           <img
             src={urlImage}
