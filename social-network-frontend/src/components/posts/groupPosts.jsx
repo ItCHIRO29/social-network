@@ -38,6 +38,7 @@ export default function Posts({ groupId = null, showCreatePost = true }) {
             }
 
             const data = await response.json();
+            console.log('response for posts ::', data)
             setPosts(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error fetching posts:', err);

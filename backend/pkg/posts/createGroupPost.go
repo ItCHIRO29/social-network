@@ -19,11 +19,21 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	// fmt.Println("CreatePost triggered")
 	fmt.Println("CreateGroupPost triggered !!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	group_id_str := r.URL.Query().Get("groupId")
-	group_id, errr := strconv.Atoi(group_id_str)
-	if errr != nil {
-		fmt.Println("error in CreateGroupPost:", errr)
-		utils.WriteJSON(w, http.StatusBadRequest, "Invalid group ID")
-		return
+	// group_id, errr := strconv.Atoi(group_id_str)
+	// if errr != nil {
+	// 	fmt.Println("error in CreateGroupPost:", errr)
+	// 	utils.WriteJSON(w, http.StatusBadRequest, "Invalid group ID")
+	// 	return
+	// }
+	group_id := 0
+	if group_id_str != "" {
+		query := `SELECT id FROM groups WHERE name = ?`
+		err := db.QueryRow(query, group_id_str).Scan(&group_id)
+		if err != nil {
+			fmt.Println("error in GetPosts:", err)
+			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
 	}
 	var first_name string
 	var last_name string
@@ -42,7 +52,7 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.Type = r.FormValue("privacy")
 	///
 	GroupPost.Post_creator = author
-	GroupPost.GroupId = group_id
+	// GroupPost.GroupId = group_id
 	GroupPost.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 	if GroupPost.Title == "" || GroupPost.Content == "" {
 		utils.WriteJSON(w, http.StatusBadRequest, "Title and Content are required")
@@ -63,8 +73,8 @@ func CreateGroupPost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	GroupPost.GroupId = group_id
 	// GroupPost.Type = ""
 	fmt.Println("GroupPost ==============++>", GroupPost)
-	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image, privacy ) VALUES ( ?, ?, ?, ?, ?, ?, ?)"
-	_, err1 := db.Exec(query, &GroupPost.UserID, &GroupPost.GroupId, &Title, &Content, &createdAt, &GroupPost.Image, &GroupPost.Type)
+	query = "INSERT INTO posts (user_id,group_id, title, content, created_at, image ) VALUES ( ?, ?, ?, ?, ?, ?)"
+	_, err1 := db.Exec(query, userId, &GroupPost.GroupId, &Title, &Content, &createdAt, &GroupPost.Image)
 	if err1 != nil {
 		fmt.Println("error in inserting post:", err1)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Error inserting GroupPost: "+err1.Error())

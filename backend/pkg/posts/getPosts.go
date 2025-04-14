@@ -139,6 +139,7 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	var err error
 	query := ""
 	group_name := r.URL.Query().Get("groupId")
+	fmt.Println("group name is :", group_name)
 	var group_id int
 	if group_name != "" {
 		query = `SELECT id FROM groups WHERE name = ?`
@@ -151,8 +152,11 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 
 	}
 	var IsMemb bool
-	IsMemb = IsMember(db, userId, group_id)
+	fmt.Println("group id is :", group_id)
+	fmt.Println("user id is :", userId)
+	IsMemb = IsMember(db, group_id, userId)
 	if !IsMemb {
+		fmt.Println("You are not a member of this group")
 		utils.WriteJSON(w, http.StatusUnauthorized, "You are not a member of this group")
 		return
 	}
@@ -194,8 +198,8 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 
 func IsMember(db *sql.DB, groupId int, userId int) bool {
 	var isMember bool
-	query := "SELECT EXISTS (SELECT 1 FROM group_members WHERE group_id = ? AND user_id = ?)"
-	err := db.QueryRow(query, groupId, userId).Scan(&isMember)
+	query := "SELECT EXISTS (SELECT 1 FROM group_members WHERE user_id = ? AND group_id= ?)"
+	err := db.QueryRow(query,userId, groupId ).Scan(&isMember)
 	if err != nil {
 		fmt.Println("Error checking if user is a member:", err)
 		return false
