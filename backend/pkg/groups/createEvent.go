@@ -43,10 +43,35 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		return
 	}
-	fmt.Println("Method GET")
 	groupName := r.URL.Query().Get("group")
 	if groupName == "" {
 		utils.WriteJSON(w, 400, "invalid group name")
+		return
+	}
+	eventId := r.URL.Query().Get("id")
+	if eventId != "" {
+		var event models.Event
+		query := `SELECT 
+    e.id, 
+    e.group_id, 
+    e.title, 
+    e.description, 
+    e.date, 
+    g.name AS group_name
+FROM events e
+JOIN groups g ON g.id = e.group_id
+WHERE g.name = ? AND e.id = ?`
+		err := db.QueryRow(query, groupName, eventId).Scan(&event.EventID, &event.GroupId, &event.Title, &event.Description, &event.Date, &event.GroupName)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				utils.WriteJSON(w, 400, "bad request")
+				return
+			}
+			fmt.Println("error ", err)
+			utils.WriteJSON(w, 500, "Internal server")
+			return
+		}
+		utils.WriteJSON(w, 200, event)
 		return
 	}
 	var err1 error
