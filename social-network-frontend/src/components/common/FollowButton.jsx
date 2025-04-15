@@ -5,7 +5,6 @@ import styles from './FollowButton.module.css';
 
 export default function FollowButton({ userData }) {
     const followButton = userData.follow_button;
-    console.log(followButton);
     if (!followButton || followButton.state === 'none') {
         return null;
     }
