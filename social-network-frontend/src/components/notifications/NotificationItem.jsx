@@ -39,7 +39,16 @@ export default function NotificationItem({ notification, setNotifications }) {
                         credentials: 'include',
                     });
                 } else if (action === 'reject') {
-                    // TODO: reject join group
+                    response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/invitation`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            group_id: notification.additional_data.group_id,
+                            type: notification.notification_type,
+                            sender: notification.sender,
+                        }),
+                    });
+                    
                 }
             } else if (notification.notification_type === 'event') {
                 router.push(`/groups/${notification.additional_data.group_name}/events/${notification.reference_id}`);

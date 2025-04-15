@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
-	"strconv"
 )
 
 func GetMembersToInvite(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {

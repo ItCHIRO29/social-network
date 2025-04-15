@@ -12,13 +12,12 @@ export default function NotificationsList() {
 
 
     const updateNotificationsCount = () => {
-        console.log("updateNotificationsCount", notifications)
         let newCount = 0;
         if (notifications.length > 0) {
-            for (let i = notifications.length - 1; i >= 0; i--) {
+            for (let i = 0; i < notifications.length; i++) {
                 if (notifications[i].seen !== true) {
                     newCount++
-                }else{
+                } else {
                     break;
                 }
             }
@@ -31,17 +30,16 @@ export default function NotificationsList() {
     }, [notifications]);
 
     const markAsSeen = async () => {
-        
         try {
-            if (notifications.length > 0 && notifications[notifications.length-1].seen === false){
-                notifications[notifications.length - 1].seen = true;
+            if (notifications.length > 0 && notifications[0].seen === false) {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications/seen`, {
                     credentials: 'include',
-                method: 'PUT'
-            });
-            if (response.ok) {
-                setNotifications(notifications);
-                updateNotificationsCount();
+                    method: 'PUT'
+                });
+                if (response.ok) {
+                    notifications[0].seen = true;
+                    setNotifications(notifications);
+                    updateNotificationsCount();
                 }
             }
         } catch (error) {
@@ -77,10 +75,9 @@ export default function NotificationsList() {
 
     const toggleNotifications = () => {
         setShowList(!showList);
+        markAsSeen();
         if (!showList) {
             fetchNotifications();
-        }else{
-            markAsSeen();
         }
     }
 
@@ -96,7 +93,7 @@ export default function NotificationsList() {
                     width={iconSize}
                     height={iconSize} 
                 />
-                {notificationsCount > 0 && (
+                {notificationsCount > 0 && notifications[0] && notifications[0].seen === false && (
                     <span className={styles.notificationBadge}>
                         {notificationsCount > 99 ? '99+' : notificationsCount}
                     </span>
