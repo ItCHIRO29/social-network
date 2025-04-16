@@ -195,7 +195,7 @@ func CheckVote(db *sql.DB, userId int, eventId int) (bool, error) {
 }
 
 func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	query := `SELECT * FROM groups WHERE admin_id = ?`
+	query := `SELECT * FROM groups WHERE admin_id = ? ORDER BY name`
 	group := models.Group{}
 	rows, err := db.Query(query, userId)
 	if err != nil {
