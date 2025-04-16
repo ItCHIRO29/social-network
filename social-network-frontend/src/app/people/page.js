@@ -12,10 +12,9 @@ export default function People() {
   const [loading, setLoading] = useState(false);
   const observer = useRef();
   const router = useRouter();
-
+  let counter = 0;
   const fetchUsers = useCallback(async () => {
     console.log(currentPage);
-    
     if (!hasMore || loading) return;
     setLoading(true);
     const params = new URLSearchParams({ page: currentPage });
@@ -29,11 +28,19 @@ export default function People() {
       if (response.ok) {
         const data = await response.json();
         if (data && data.length > 0) {
-          setUsers((prev) => [...prev, ...data]);
+          // setUsers((prev) => [...prev, ...data]);
+          setUsers((prev) => {
+            const existingIds = new Set(prev.map((u) => u.id)); // assuming unique `id`
+            const filteredData = data.filter((user) => !existingIds.has(user.id));
+            return [...prev, ...filteredData];
+          });
+          counter++
         } else {
           setHasMore(false);
         }
       }
+      console.log("I'm here in line 38 in Peple.js:  " + counter);
+
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
