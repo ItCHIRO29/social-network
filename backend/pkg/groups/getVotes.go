@@ -34,6 +34,7 @@ func GetVotes(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		}
 		votes = append(votes, vote)
 	}
+	fmt.Println("VOTES :::::", votes)
 	utils.WriteJSON(w, 200, votes)
 }
 
@@ -73,7 +74,8 @@ func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 				return
 			}
 		}
-		utils.WriteJSON(w, 200, vote.Going)
+		vote.UserID = userId
+		utils.WriteJSON(w, 200, vote)
 		return
 	} else {
 		err := json.NewDecoder(r.Body).Decode(&vote.EventID)
@@ -101,6 +103,7 @@ func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 				return
 			}
 		}
-		utils.WriteJSON(w, 200, vote.Going)
+		vote.UserID = userId
+		utils.WriteJSON(w, 200, vote)
 	}
 }

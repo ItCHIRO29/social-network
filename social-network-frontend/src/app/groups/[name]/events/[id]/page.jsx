@@ -54,6 +54,8 @@ export default function Event() {
             });
 
             if (response.ok) {
+                const resp = await response.json();
+                console.log("response", resp);
                 fetchevent(); // Refresh events to show updated votes
             }
         } catch (error) {
