@@ -16,7 +16,7 @@ func GetJoinedGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
     FROM groups g
     LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
     WHERE gm.user_id = $1 AND g.admin_id != $1
-	`, userId)
+	ORDER BY g.name `, userId)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)
@@ -45,7 +45,7 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
     FROM groups g
 	WHERE g.admin_id != ? AND g.id NOT IN (
 		SELECT group_id FROM group_members WHERE user_id = ?
-	)`
+	) ORDER BY g.name `
 	rows, err := db.Query(query, userId, userId)
 	if err != nil {
 		fmt.Println("Error getting groups", err)

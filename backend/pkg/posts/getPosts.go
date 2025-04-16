@@ -87,9 +87,9 @@ ORDER BY posts.id DESC;`
    						) AND user_id = ?)
     					OR 
     					(privacy = 'private' AND user_id IN (
-       					SELECT following_id
+       					SELECT follower_id
        					FROM followers
-        				WHERE follower_id = ? AND accepted = 1
+        				WHERE following_id = ? AND accepted = 1
     					))
 						ORDER BY id DESC;`
 			rows, err = db.Query(query, user_id, userId, user_id, userId)

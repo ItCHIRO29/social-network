@@ -59,6 +59,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	addAdminQuery := `INSERT INTO group_members (user_id, group_id, accepted) VALUES (?, ?, ?)`
 	_, err = tx.Exec(addAdminQuery, userId, groupId, 1)
 	if err != nil {
+		fmt.Println("Error adding admin to group:", err)
 		fmt.Fprintln(os.Stderr, err)
 		tx.Rollback()
 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal server error")
