@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useUserData } from "../common/providers/userDataContext";
 import { validateTitle, validateContent, validateImage, validatePost } from "@/utils/postValidators";
 import SemiPrivateList from "./SemiPrivateList";
@@ -28,7 +29,7 @@ export default function CreatePost({ onPostCreated }) {
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        
+
         if (name === 'image') {
             const file = files?.[0];
             if (!file) {
@@ -76,7 +77,7 @@ export default function CreatePost({ onPostCreated }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!userData || !userData.id) {
             console.error('No user data available');
             alert('Please log in to create a post');
@@ -98,7 +99,7 @@ export default function CreatePost({ onPostCreated }) {
         }
 
         setIsSubmitting(true);
-        
+
         const formData = new FormData();
         formData.append('title', post.title.trim());
         formData.append('content', post.content.trim());
@@ -124,7 +125,7 @@ export default function CreatePost({ onPostCreated }) {
 
             const data = await response.json();
             console.log('Post created successfully:', data);
-            
+
             onPostCreated(data);
             // Reset form
             setPost({ title: "", content: "", image: null, privacy: "Public" });
@@ -144,54 +145,56 @@ export default function CreatePost({ onPostCreated }) {
         <div className={styles.createPostContainer}>
             <form onSubmit={handleSubmit} className={styles.postForm}>
                 <div className={styles.userInfo}>
-                    <img 
+                    <Image
+                        width={50}
+                        height={50}
                         src={userData.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/default-avatar.svg"}
-                        alt="profile" 
+                        alt="profile"
                         className={styles.profileImage}
                     />
                 </div>
-                
+
                 <section className={styles.postContent}>
-                    <input 
-                        type="text" 
-                        name="title" 
-                        placeholder="Title" 
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Title"
                         value={post.title}
                         onChange={handleChange}
                         className={`${styles.titleInput} ${errors?.title ? styles.inputError : ''}`}
                     />
                     {errors?.title && <p className={styles.errorText}>{errors.title}</p>}
-                    
-                    <textarea 
-                        name="content" 
-                        placeholder="Content" 
+
+                    <textarea
+                        name="content"
+                        placeholder="Content"
                         value={post.content}
                         onChange={handleChange}
                         className={`${styles.contentInput} ${errors?.content ? styles.inputError : ''}`}
                     />
                     {errors?.content && <p className={styles.errorText}>{errors.content}</p>}
-                    
-                    <input 
-                        type="file" 
-                        name="image" 
+
+                    <input
+                        type="file"
+                        name="image"
                         accept="image/*"
                         onChange={handleChange}
                         className={`${styles.fileInput} ${errors?.image ? styles.inputError : ''}`}
                     />
                     {errors?.image && <p className={styles.errorText}>{errors.image}</p>}
-                    
+
                     {imagePreview && (
-                        <img 
-                            src={imagePreview} 
-                            alt="Post preview" 
+                        <Image
+                            src={imagePreview}
+                            alt="Post preview"
                             className={styles.previewImage}
                         />
                     )}
                 </section>
 
                 <section className={styles.postOptions}>
-                    <select 
-                        name="privacy" 
+                    <select
+                        name="privacy"
                         value={post.privacy}
                         onChange={handlePrivacyChange}
                         className={styles.privacySelect}
@@ -202,14 +205,14 @@ export default function CreatePost({ onPostCreated }) {
                     </select>
 
                     {post.privacy === "Private" && (
-                        <SemiPrivateList 
+                        <SemiPrivateList
                             selectedFollowers={selectedFollowers}
                             onSelectionChange={setSelectedFollowers}
                         />
                     )}
 
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         className={styles.submitButton}
                         disabled={isSubmitting}
                         onClick={() => console.log('Submit button clicked')}

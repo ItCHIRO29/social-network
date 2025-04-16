@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-
+import Image from 'next/image';
 const Message = ({ message, myData, opponentData }) => {
   // console.log("this", opponentData.get(message.sender).username);
   console.warn("mydata", opponentData)
@@ -29,7 +29,7 @@ const Message = ({ message, myData, opponentData }) => {
     <div className={`message ${Mymessages ? 'message-sent' : 'message-received'}`}>
       {!Mymessages && (
         <div className="message-pic">
-          <img
+          <Image 
             src={urlImage}
             alt="Profile Picture"
             onClick={handleImageClick}

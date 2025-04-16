@@ -60,45 +60,56 @@ export default function Event() {
             console.error('Error voting:', error);
         }
     };
+    console.log("event Data :::: ", event);
     return (
         <div className={styles.eventsContainer}>
             {isloading ? (
                 <div className={styles.noEvents}> is loading</div>
             ) : (
                 <>
+
                     <div className={styles.header}>
                         <h1>Group Events</h1>
                     </div>
+                    {error && <h1 className={styles.Error}>{error}</h1>}
                     <div className={styles.eventsList}>
-                        {error && <h1 className={styles.Error}>{error}</h1>}
-                        {event && (
-                            <div key={event.id} className={styles.eventCard}>
-                                <h2>{event.title}</h2>
-                                <p className={styles.datetime}>{event.description}</p>
-                                <p className={styles.datetime}>
-                                    {new Date(event.date).toLocaleString()}
-                                </p>
-
-                                <div className={styles.votingSection}>
-                                    <button
-                                        className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
-                                        onClick={() => handleVote(event.id, 'going')}
-                                    >
-                                        Going ({event.GoingCount})
-                                    </button>
-                                    <button
-                                        className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
-                                        onClick={() => handleVote(event.id, 'not_going')}
-                                    >
-                                        Not Going ({event.NotGoingCount})
-                                    </button>
+                        {
+                            (event.id == 0 || !event) ? (
+                                <div className={styles.noEvents}>
+                                    <h2>No Events Found</h2>
                                 </div>
-                            </div>
-                        )}
+                            ) : (
+                                <div key={event.id} className={styles.eventCard}>
+                                    <h2>{event.title}</h2>
+                                    <p className={styles.datetime}>{event.description}</p>
+                                    <p className={styles.datetime}>
+                                        {new Date(event.date).toLocaleString()}
+                                    </p>
+
+                                    <div className={styles.votingSection}>
+                                        <button
+                                            className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
+                                            onClick={() => handleVote(event.id, 'going')}
+                                        >
+                                            Going ({event.GoingCount})
+                                        </button>
+                                        <button
+                                            className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
+                                            onClick={() => handleVote(event.id, 'not_going')}
+                                        >
+                                            Not Going ({event.NotGoingCount})
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        }
+
+
 
                     </div>
                 </>
             )}
+
         </div>
     );
 }

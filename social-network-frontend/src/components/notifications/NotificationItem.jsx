@@ -1,5 +1,5 @@
 'use client';
-
+import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
 import styles from './notifications.module.css';
@@ -157,7 +157,7 @@ export default function NotificationItem({ notification, setNotifications }) {
         >
             <div className={styles.notificationContent}>
                 <Link href={`/profile/${notification.sender}`} onClick={(e) => e.stopPropagation()}>
-                    <img 
+                    <Image  
                         src={profileImage} 
                         alt="Profile" 
                         className={styles.profileImage}

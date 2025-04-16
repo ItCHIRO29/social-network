@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Message, TypingIndicator } from './Message';
 import EmojiSelector from './EmojiSelector';
+import Image from 'next/image';
 import './ChatWindow.css';
 
 function dateFormat(timestamp) {
@@ -328,7 +329,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       <div className="chat-header">
         <div className="header-left">
           {hasOpponentData && (
-            <img
+            <Image 
               // src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
               src={opponentData.image ?
                 `${process.env.NEXT_PUBLIC_API_URL}/${opponentData.image}`

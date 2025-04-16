@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./register.module.css";
 import {
     isValidAge,
@@ -143,7 +144,7 @@ export default function RegisterPage() {
     return (
         <div className={styles.container}>
             <div className={styles.logoSection}>
-                <img
+                <Image
                     width={170}
                     height={170}
                     src="/images/logo.png"

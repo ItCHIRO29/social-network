@@ -70,6 +70,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		utils.WriteJSON(w, 200, "event created successfully")
 		return
 	}
+	// Method Get to get events data
 	groupName := r.URL.Query().Get("group")
 	if groupName == "" {
 		utils.WriteJSON(w, 400, "invalid group name")
@@ -77,18 +78,23 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	}
 	eventId := r.URL.Query().Get("id")
 	if eventId != "" {
+		fmt.Println("eventId and it's data from here", eventId)
 		var event models.Event
 		query := `SELECT 
-    e.id, 
-    e.group_id, 
-    e.title, 
-    e.description, 
-    e.date, 
-    g.name AS group_name
-FROM events e
-JOIN groups g ON g.id = e.group_id
-WHERE g.name = ? AND e.id = ?`
-		err := db.QueryRow(query, groupName, eventId).Scan(&event.EventID, &event.GroupId, &event.Title, &event.Description, &event.Date, &event.GroupName)
+   	COALESCE(e.id, 0), 
+	COALESCE(e.group_id, 0),
+	COALESCE(e.title, ''),
+	COALESCE(e.description, ''),
+	COALESCE(e.date, ''),
+	COALESCE(g.name, '') AS group_name,
+		COALESCE(SUM(CASE WHEN em.going = 1 THEN 1 ELSE 0 END), 0) AS going_count,
+		COALESCE(SUM(CASE WHEN em.going = 0 THEN 1 ELSE 0 END), 0) AS not_going_count
+	FROM events e
+	JOIN groups g ON g.id = e.group_id
+	LEFT JOIN event_members em ON em.event_id = e.id
+	WHERE g.name = ? AND e.id = ?`
+
+		err := db.QueryRow(query, groupName, eventId).Scan(&event.EventID, &event.GroupId, &event.Title, &event.Description, &event.Date, &event.GroupName, &event.GoingCount, &event.NotGoingCount)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				utils.WriteJSON(w, 400, "bad request")
@@ -111,20 +117,19 @@ WHERE g.name = ? AND e.id = ?`
 	// query := `SELECT id, group_id, creator_id, title, description, date FROM events WHERE group_id = ?`
 	query := `
 	SELECT 
-		e.id, 
+		COALESCE(e.id, 0), 
 		e.group_id, 
-		e.creator_id, 
+		e.creator_id,
 		e.title, 
 		e.description, 
 		e.date,
-		SUM(CASE WHEN em.going = true THEN 1 ELSE 0 END) AS going_count,
-		SUM(CASE WHEN em.going = false THEN 1 ELSE 0 END) AS not_going_count
+		SUM(CASE WHEN em.going = 1 THEN 1 ELSE 0 END) AS going_count,
+		SUM(CASE WHEN em.going = 0 THEN 1 ELSE 0 END) AS not_going_count
 	FROM events e
 	LEFT JOIN event_members em ON e.id = em.event_id 
 	WHERE e.group_id = ?
 	GROUP BY e.id
 `
-
 	rows, err := db.Query(query, Event.GroupId)
 	if err != nil {
 		fmt.Println("Error getting events", err)
@@ -143,7 +148,7 @@ WHERE g.name = ? AND e.id = ?`
 		}
 		Events = append(Events, Event)
 	}
-	// fmt.Println("Events", Events)
+	fmt.Println("Events in create event method posts:::", Events)
 	utils.WriteJSON(w, 200, Events)
 }
 

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { dateFormat } from '../../utils/dateFormat';
 import Comments from '../comments/Comments';
 import styles from './Post.module.css';
+import Image from 'next/image';
 
 export default function Post({ post }) {
     const [showComments, setShowComments] = useState(false);
@@ -17,7 +18,7 @@ export default function Post({ post }) {
             <h1 style={{ color: "black" }}>ID: {post.ID}</h1 >
             <section className={styles.postHeader}>
                 <Link href={`/profile/${post.Username}`} className={styles.userInfo}>
-                    <img
+                    <Image
                         src={profileImage}
                         alt="profile"
                         width={40}
@@ -42,7 +43,9 @@ export default function Post({ post }) {
                 <p className={styles.content}>{post.Content}</p>
                 {imagePath && (
                     <div className={styles.imageContainer}>
-                        <img
+                        <Image
+                            width={500}
+                            height={500}
                             src={imagePath}
                             alt="Post content"
                             className={styles.postImage}

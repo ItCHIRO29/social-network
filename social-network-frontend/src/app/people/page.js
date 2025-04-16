@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import styles from "./people.module.css";
 import FollowButton from "@/components/common/FollowButton";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 export default function People() {
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
@@ -93,7 +93,9 @@ export default function People() {
             className={styles.userCard}
             ref={users.length - 1 == index ? lastUserRef : null}
           >
-            <img
+            <Image
+              width={100}
+              height={100}
               src={
                 user.image
                   ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}`

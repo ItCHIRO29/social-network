@@ -3,6 +3,7 @@ import ChatWindow from './ChatWindow';
 import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
+import Image from 'next/image';
 // import { fips } from 'crypto';
 // import { type } from 'os';
 // import { group } from 'console';
@@ -57,7 +58,7 @@ const ChatManager = () => {
         return
       }
       const groups = await resp.json();
-     
+
       const newgrps = new Map();
       groups.forEach(grp => {
         newgrps.set(grp.name, {
@@ -128,7 +129,7 @@ const ChatManager = () => {
     //     }
     //   }
     // }
-    
+
     const handlePrivateMessage = (event) => {
       if (event instanceof CustomEvent && event.detail && event.detail.message) {
         const message = event.detail.message;
@@ -267,12 +268,14 @@ const ChatManager = () => {
               id={`usersListItem-${username}`}
               key={username}
             >
-              <img
+              <Image
                 className={styles.avatar}
                 src={userObj?.userData?.image
                   ? `${process.env.NEXT_PUBLIC_API_URL}/${userObj.userData.image}`
                   : '/images/profile.png'}
                 alt="User avatar"
+                width={40}
+                height={40}
               />
               <button
                 id="chatButtons"
@@ -305,7 +308,9 @@ const ChatManager = () => {
               id={`usersListItem-${grpname}`}
               key={grpname}
             >
-              <img
+              <Image
+                width={40}
+                height={40}
                 className={styles.avatar}
                 ///home/iichi/social-network/social-network-frontend/public/images/groupIcon.jpg
                 src={`/images/groupIcon.jpg`}

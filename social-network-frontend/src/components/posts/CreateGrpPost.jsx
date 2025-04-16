@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUserData } from "../common/providers/userDataContext";
 import { validateTitle, validateContent, validateImage, validatePost } from "@/utils/postValidators";
+import Image from "next/image";
 // import SemiPrivateList from "./SemiPrivateList";
 import styles from "./CreateGrpPost.module.css";
 
@@ -145,7 +146,7 @@ export default function CreateGrpPost({ groupId, onPostCreated }) {
         <div className={styles.createPostContainer}>
             <form onSubmit={handleSubmit} className={styles.postForm}>
                 <div className={styles.userInfo}>
-                    {/* <img
+                    {/* <Image 
                         src={userData.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/default-avatar.svg"}
                         alt="profile"
                         className={styles.profileImage}
@@ -182,7 +183,7 @@ export default function CreateGrpPost({ groupId, onPostCreated }) {
                     {errors?.image && <p className={styles.errorText}>{errors.image}</p>}
 
                     {imagePreview && (
-                        <img
+                        <Image 
                             src={imagePreview}
                             alt="Post preview"
                             className={styles.previewImage}

@@ -68,27 +68,28 @@ export default function GroupEvents() {
             <div className={styles.eventsList}>
                 {events && events.map((event) => (
                     <div key={event.id} className={styles.eventCard}>
-                        <a href={`http://localhost:3000/groups/${groupId}/events/${event.id}`}>
-                            <h2>{event.title}</h2>
-                            <p className={styles.datetime}>{event.description}</p>
-                            <p className={styles.datetime}>
-                                {new Date(event.date).toLocaleString()}
-                            </p>
+                        <h2>{event.title}</h2>
+                        <p className={styles.datetime}>{event.description}</p>
+                        <p className={styles.datetime}>
+                            {new Date(event.date).toLocaleString()}
+                        </p>
 
-                            <div className={styles.votingSection}>
-                                <button
-                                    className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
-                                    onClick={() => handleVote(event.id, 'going')}
-                                >
-                                    Going ({event.GoingCount})
-                                </button>
-                                <button
-                                    className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
-                                    onClick={() => handleVote(event.id, 'not_going')}
-                                >
-                                    Not Going ({event.NotGoingCount})
-                                </button>
-                            </div>
+                        {/* <div className={styles.votingSection}>
+                            <button
+                                className={`${styles.voteButton} ${event.userVote === 'going' ? styles.selected : ''}`}
+                                onClick={() => handleVote(event.id, 'going')}
+                            >
+                                Going ({event.GoingCount})
+                            </button>
+                            <button
+                                className={`${styles.voteButton} ${event.userVote === 'not_going' ? styles.selected : ''}`}
+                                onClick={() => handleVote(event.id, 'not_going')}
+                            >
+                                Not Going ({event.NotGoingCount})
+                            </button>
+                        </div> */}
+                        <a href={`http://localhost:3000/groups/${groupId}/events/${event.id}`}>
+                            <p>See event details →</p>
                         </a>
                     </div>
                 ))}
