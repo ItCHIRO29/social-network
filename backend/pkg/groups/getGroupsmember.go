@@ -4,17 +4,22 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 )
 
 func GetGroupsMember(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		return
+	}
 	rows, err := db.Query(`
     SELECT g.*  
     FROM groups g
     LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
-    WHERE gm.user_id = ?`, userId)
+    WHERE gm.user_id = ? LIMIT ? OFFSET ?`, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)

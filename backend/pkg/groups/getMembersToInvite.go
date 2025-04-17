@@ -12,10 +12,16 @@ import (
 )
 
 func GetMembersToInvite(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	groupId, err := strconv.Atoi(r.FormValue("group_id"))
+	groupId, err := strconv.Atoi(r.URL.Query().Get("group_id"))
 	if err != nil || groupId < 0 {
 		fmt.Fprintln(os.Stderr, "Error converting groupId to int:", err)
 		utils.WriteJSON(w, http.StatusBadRequest, "Invalid groupId")
+		return
+	}
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error converting groupId to int:", err)
+		utils.WriteJSON(w, http.StatusBadRequest, "Invalid page")
 		return
 	}
 
@@ -37,9 +43,9 @@ func GetMembersToInvite(w http.ResponseWriter, r *http.Request, db *sql.DB, user
 		OR
 		(g.id IS NULL AND u.id != $2)
 	)
-	`
+	LIMIT ? OFFSET ?`
 
-	rows, err := db.Query(query, groupId, userId)
+	rows, err := db.Query(query, groupId, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error querying members to invite:", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, "Internal server error")

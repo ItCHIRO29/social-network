@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"social-network/pkg/models"
 	"social-network/pkg/posts"
@@ -11,12 +12,16 @@ import (
 )
 
 func GetJoinedGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		return
+	}
 	rows, err := db.Query(`
     SELECT g.*  
     FROM groups g
     LEFT JOIN group_members gm ON g.id = gm.group_id AND gm.accepted = 1
     WHERE gm.user_id = $1 AND g.admin_id != $1
-	ORDER BY g.name `, userId)
+	ORDER BY g.name LIMIT ? OFFSET ?`, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)
@@ -40,13 +45,18 @@ func GetJoinedGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 }
 
 func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		return
+	}
 	query := `
     SELECT g.*
     FROM groups g
 	WHERE g.admin_id != ? AND g.id NOT IN (
 		SELECT group_id FROM group_members WHERE user_id = ?
-	) ORDER BY g.name `
-	rows, err := db.Query(query, userId, userId)
+	) ORDER BY g.name 
+	 LIMIT ? OFFSET ?`
+	rows, err := db.Query(query, userId, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)
@@ -195,9 +205,13 @@ func CheckVote(db *sql.DB, userId int, eventId int) (bool, error) {
 }
 
 func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	query := `SELECT * FROM groups WHERE admin_id = ? ORDER BY name`
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		return
+	}
+	query := `SELECT * FROM groups WHERE admin_id = ? ORDER BY name LIMIT ? OFFSET ?`
 	group := models.Group{}
-	rows, err := db.Query(query, userId)
+	rows, err := db.Query(query, userId, utils.Limit, utils.Limit*page)
 	if err != nil {
 		fmt.Println("Error getting groups", err)
 		http.Error(w, "internal server error", 500)

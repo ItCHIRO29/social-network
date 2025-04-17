@@ -79,6 +79,9 @@ func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		return
 	} else {
 		err := json.NewDecoder(r.Body).Decode(&vote.EventID)
+		if err != nil {
+			return
+		}
 		fmt.Println("voteXXXXXX : ", vote)
 		var exists bool
 		err = db.QueryRow("SELECT id FROM event_members WHERE user_id = ? AND event_id = ? AND (going = 1)", userId, vote.EventID).Scan(&exists)

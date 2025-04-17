@@ -21,6 +21,10 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var err error
 	query := ""
 	user_id_str := r.URL.Query().Get("id")
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		return
+	}
 	if user_id_str == "" {
 		query = `SELECT 
     posts.id, 
@@ -40,8 +44,8 @@ WHERE
         WHERE follower_id = ? AND accepted = 1
     ))
     OR (posts.privacy = 'semi-private' AND json_each.value = ?)
-ORDER BY posts.id DESC;`
-		rows, err = db.Query(query, userId, userId)
+ORDER BY posts.id DESC LIMIT ? OFFSET ?;`
+		rows, err = db.Query(query, userId, userId, utils.Limit, utils.Limit*page)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -57,8 +61,8 @@ ORDER BY posts.id DESC;`
 			return
 		}
 		if user_id == userId {
-			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? AND privacy != '' ORDER BY id DESC"
-			rows, err = db.Query(query, userId, nil)
+			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? AND privacy != '' ORDER BY id DESC LIMIT = ? OFFSET ?"
+			rows, err = db.Query(query, userId, nil, utils.Limit, utils.Limit*page)
 			if err != nil {
 				fmt.Println("error in GetPosts 1 :", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -91,8 +95,8 @@ ORDER BY posts.id DESC;`
        					FROM followers
         				WHERE following_id = ? AND accepted = 1
     					))
-						ORDER BY id DESC;`
-			rows, err = db.Query(query, user_id, userId, user_id, userId)
+						ORDER BY id DESC LIMIT ? OFFSET ?;`
+			rows, err = db.Query(query, user_id, userId, user_id, userId, utils.Limit, utils.Limit*page)
 			if err != nil {
 				fmt.Println("error in GetPosts:", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")

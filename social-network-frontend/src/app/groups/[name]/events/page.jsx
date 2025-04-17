@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import EventForm from '../../../../components/groups/EventForm';
 import GroupNavigation from '../../../../components/groups/GroupNavigation';
@@ -8,7 +8,9 @@ import styles from './events.module.css';
 export default function GroupEvents() {
     const [events, setEvents] = useState([]);
     const { name: groupId } = useParams();
-
+    const [currentPage, setCurrentPage] = useState(0)
+    const observer = useRef()
+    const [hasMore, setHasMore] = useState(true)
     useEffect(() => {
         fetchEvents();
     }, [groupId]);
