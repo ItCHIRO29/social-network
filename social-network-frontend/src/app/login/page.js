@@ -52,7 +52,7 @@ export default function LoginPage() {
     return (
         <div className={styles.container}>
             <div className={styles.logoSection}>
-                <Image  width={150} height={150} src="images/logo.png" alt="logo" />
+                <Image  width={150} height={150} src="/images/logo.png" alt="logo" />
                 <h2 className={styles.logoTitle}>Login</h2>
             </div>
             <div className={styles.loginContainer}>
