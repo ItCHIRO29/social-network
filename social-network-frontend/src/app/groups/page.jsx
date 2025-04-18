@@ -23,14 +23,7 @@ export default function Groups() {
   const groupsObserver = useRef();
 
   useEffect(() => {
-    setGroups([]); 
-    setCurrentPageGroups(0); 
-    setHasMoreGroups(true); 
-    setUsers([]);
-    setCurrentPageUsers(0);
-    setHasMoreUsers(true);
-    setLoading(false); 
-    fetchGroups(); 
+    fetchGroups();
 
     if (activeButton !== "your groups") {
       setShowCreateForm(false);
@@ -42,7 +35,7 @@ export default function Groups() {
 
   useEffect(() => {
     if (currentPageGroups > 0) {
-      fetchGroups(); 
+      fetchGroups();
     }
   }, [currentPageGroups]);
 
@@ -195,7 +188,7 @@ export default function Groups() {
         setNewGroupName("");
         setNewGroupDescription("");
         setSelectedUsers([]);
-        setGroups([]); 
+        setGroups([]);
         setCurrentPageGroups(0);
         setHasMoreGroups(true);
         fetchGroups();
@@ -260,8 +253,8 @@ export default function Groups() {
   const handleExpandCommunity = (groupId) => {
     setExpandedGroupId(expandedGroupId === groupId ? null : groupId);
     if (expandedGroupId !== groupId) {
-      setUsers([]); 
-      setCurrentPageUsers(0); 
+      setUsers([]);
+      setCurrentPageUsers(0);
       setHasMoreUsers(true);
       fetchUsers(groupId);
     }
@@ -301,26 +294,35 @@ export default function Groups() {
         <div className={styles.header}>
           <div className={styles.tabs}>
             <button
-              className={`${styles.tab} ${
-                activeButton === "your groups" ? styles.active : ""
-              }`}
-              onClick={() => setActiveButton("your groups")}
+              className={`${styles.tab} ${activeButton === "your groups" ? styles.active : ""
+                }`}
+              onClick={() => {
+                setCurrentPageGroups(0)
+                setHasMoreGroups(true)
+                setActiveButton("your groups")
+              }}
             >
               Your Groups
             </button>
             <button
-              className={`${styles.tab} ${
-                activeButton === "joined groups" ? styles.active : ""
-              }`}
-              onClick={() => setActiveButton("joined groups")}
+              className={`${styles.tab} ${activeButton === "joined groups" ? styles.active : ""
+                }`}
+              onClick={() => {
+                setCurrentPageGroups(0)
+                setHasMoreGroups(true)
+                setActiveButton("joined groups")
+              }}
             >
               Joined Groups
             </button>
             <button
-              className={`${styles.tab} ${
-                activeButton === "all groups" ? styles.active : ""
-              }`}
-              onClick={() => setActiveButton("all groups")}
+              className={`${styles.tab} ${activeButton === "all groups" ? styles.active : ""
+                }`}
+              onClick={() => {
+                setCurrentPageGroups(0)
+                setHasMoreGroups(true)
+                setActiveButton("all groups")
+              }}
             >
               Find New Communities
             </button>

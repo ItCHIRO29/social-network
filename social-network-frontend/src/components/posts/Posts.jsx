@@ -45,7 +45,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
       const data = await response.json();
       if (data) {
-        setPosts((prev) => [...prev, ...data]);
+        setPosts((prev) => {
+          const seen = new Set(prev.map(p => p.ID));
+          const newPosts = data.filter(p => !seen.has(p.ID));
+          return [...prev, ...newPosts];
+        });
       } else {
         setHasMore(false);
       }
