@@ -23,6 +23,8 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	user_id_str := r.URL.Query().Get("id")
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
+		fmt.Println(err)
+		utils.WriteJSON(w, http.StatusBadRequest, "probleme in provided page")
 		return
 	}
 	if user_id_str == "" {
@@ -57,12 +59,12 @@ ORDER BY posts.id DESC LIMIT ? OFFSET ?;`
 		user_id, err := strconv.Atoi(user_id_str)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
-			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+			utils.WriteJSON(w, http.StatusBadRequest, "probleme in provided user id")
 			return
 		}
 		if user_id == userId {
-			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? AND privacy != '' ORDER BY id DESC LIMIT = ? OFFSET ?"
-			rows, err = db.Query(query, userId, nil, utils.Limit, utils.Limit*page)
+			query = "SELECT id, user_id, title, content, created_at, image , privacy  FROM posts WHERE user_id = ? AND privacy != '' ORDER BY id DESC LIMIT ? OFFSET ?"
+			rows, err = db.Query(query, userId, utils.Limit, utils.Limit*page)
 			if err != nil {
 				fmt.Println("error in GetPosts 1 :", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -71,7 +73,7 @@ ORDER BY posts.id DESC LIMIT ? OFFSET ?;`
 		} else {
 			isfollowing := utils.CheckFollowing(db, userId, user_id_str)
 			fmt.Println("user is following ====>", isfollowing)
-			if isfollowing == false {
+			if !isfollowing {
 				fmt.Println("user is not following")
 				utils.WriteJSON(w, http.StatusOK, posts)
 				return

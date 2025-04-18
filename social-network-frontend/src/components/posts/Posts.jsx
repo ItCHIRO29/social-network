@@ -5,20 +5,16 @@ import Post from "./Post";
 import styles from "./Posts.module.css";
 
 export default function Posts({ userId = null, showCreatePost = true }) {
-  const { userData } = useUserData();
+  const { userData, loadingUser } = useUserData();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
-
   const fetchPosts = useCallback(async () => {
-    if (loading || !hasMore) return;
-    console.log('====================================');
-    console.log(userId);
-    console.log('====================================');
-    const params = new URLSearchParams({ page: currentPage, id: userId });
+    if (loading || !hasMore || loadingUser) return;
+    const params = new URLSearchParams({ page: currentPage,  id: userData.id });
     try {
       setLoading(true);
       setError(null);
@@ -53,7 +49,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
     } finally {
       setLoading(false);
     }
-  }, [hasMore, currentPage, loading]);
+  }, [hasMore, currentPage, loading, userData]);
 
   const lastPostRef = useCallback(
     (node) => {
