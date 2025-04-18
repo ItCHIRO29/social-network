@@ -111,7 +111,12 @@ export default function Groups() {
       });
       const data = await response.json();
       if (data) {
-        setGroups((prev) => [...prev, ...data]);
+        // setGroups((prev) => [...prev, ...data]);
+        setGroups((prev) => {
+          const existingIds = new Set(prev.map((u) => u.id)); // assuming unique `id`
+          const filteredData = data.filter((grp) => !existingIds.has(grp.id));
+          return [...prev, ...filteredData];
+        });
       } else {
         setHasMoreGroups(false);
       }
@@ -203,7 +208,6 @@ export default function Groups() {
       if (!response.ok) {
         throw new Error("Failed to join group");
       } else {
-        // Just remove the joined group and don't fetch again
         setGroups(groups.filter((grp) => grp.id != groupId));
       }
     } catch (error) {
@@ -227,9 +231,8 @@ export default function Groups() {
       if (!response.ok) {
         throw new Error("Failed to leave group");
       } else {
-        setGroups(groups.filter((grp, _) => grp.id != groupId))
+        setGroups(groups.filter((grp) => grp.id != groupId));
       }
-      fetchGroups();
     } catch (error) {
       console.error("Error leaving group:", error);
     }
