@@ -65,7 +65,7 @@ export default function NotificationsList() {
 
 
     useEffect(() => {
-       
+
         fetchNotifications();
 
         document.addEventListener('notification', (event) => {
@@ -83,15 +83,15 @@ export default function NotificationsList() {
 
     return (
         <div className={styles.notificationWrapper}>
-            <button 
+            <button
                 onClick={toggleNotifications}
                 className={styles.notificationButton}
             >
-                <Image 
-                    src="/icons/notifications.svg" 
+                <Image
+                    src="/icons/notifications.svg"
                     alt="notifications"
                     width={iconSize}
-                    height={iconSize} 
+                    height={iconSize}
                 />
                 {notificationsCount > 0 && notifications[0] && notifications[0].seen === false && (
                     <span className={styles.notificationBadge}>
@@ -99,7 +99,7 @@ export default function NotificationsList() {
                     </span>
                 )}
             </button>
-            
+
             {showList && (
                 <div className={styles.notificationsContainer}>
                     <div className={styles.notificationsHeader}>
@@ -111,10 +111,11 @@ export default function NotificationsList() {
                             <div className={styles.loading}>Loading notifications...</div>
                         ) : notifications.length > 0 ? (
                             notifications.map((notification) => (
-                                <NotificationItem 
-                                    key={`${notification.id}-${notification.type}`} 
-                                    notification={notification} 
-                                    setNotifications={setNotifications} 
+                                <NotificationItem
+                                    key={`${notification.id}-${notification.type}`}
+                                    notification={notification}
+                                    setNotifications={setNotifications}
+                                    notifs={notifications}
                                 />
                             ))
                         ) : (
