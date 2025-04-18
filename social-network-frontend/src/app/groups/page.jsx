@@ -22,7 +22,7 @@ export default function Groups() {
 
   useEffect(() => {
     console.log("active button changed lol");
-    
+
     setCurrentPageGroups(0);
     setCurrentPageUsers(0);
     setHasMoreGroups(true);
@@ -54,7 +54,7 @@ export default function Groups() {
       try {
         const response = await fetch(
           process.env.NEXT_PUBLIC_API_URL +
-            `/api/groups/get_members_to_invite?${params}`,
+          `/api/groups/get_members_to_invite?${params}`,
           {
             method: "GET",
             credentials: "include",
@@ -191,7 +191,7 @@ export default function Groups() {
     try {
       const response = await fetch(
         process.env.NEXT_PUBLIC_API_URL +
-          `/api/groups/join?group_id=${groupId}`,
+        `/api/groups/join?group_id=${groupId}`,
         {
           method: "POST",
           credentials: "include",
@@ -202,8 +202,10 @@ export default function Groups() {
       );
       if (!response.ok) {
         throw new Error("Failed to join group");
+      } else {
+        // Just remove the joined group and don't fetch again
+        setGroups(groups.filter((grp) => grp.id != groupId));
       }
-      fetchGroups();
     } catch (error) {
       console.error("Error joining group:", error);
     }
@@ -213,7 +215,7 @@ export default function Groups() {
     try {
       const response = await fetch(
         process.env.NEXT_PUBLIC_API_URL +
-          `/api/groups/leave?groupId=${groupId}`,
+        `/api/groups/leave?groupId=${groupId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -224,6 +226,8 @@ export default function Groups() {
       );
       if (!response.ok) {
         throw new Error("Failed to leave group");
+      } else {
+        setGroups(groups.filter((grp, _) => grp.id != groupId))
       }
       fetchGroups();
     } catch (error) {
@@ -271,25 +275,22 @@ export default function Groups() {
         <div className={styles.header}>
           <div className={styles.tabs}>
             <button
-              className={`${styles.tab} ${
-                activeButton === "your groups" ? styles.active : ""
-              }`}
+              className={`${styles.tab} ${activeButton === "your groups" ? styles.active : ""
+                }`}
               onClick={() => setActiveButton("your groups")}
             >
               Your Groups
             </button>
             <button
-              className={`${styles.tab} ${
-                activeButton === "joined groups" ? styles.active : ""
-              }`}
+              className={`${styles.tab} ${activeButton === "joined groups" ? styles.active : ""
+                }`}
               onClick={() => setActiveButton("joined groups")}
             >
               Joined Groups
             </button>
             <button
-              className={`${styles.tab} ${
-                activeButton === "all groups" ? styles.active : ""
-              }`}
+              className={`${styles.tab} ${activeButton === "all groups" ? styles.active : ""
+                }`}
               onClick={() => setActiveButton("all groups")}
             >
               Find New Communities
