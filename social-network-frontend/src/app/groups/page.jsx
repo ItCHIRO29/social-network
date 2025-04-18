@@ -1,6 +1,6 @@
 "use client";
 import styles from "./groups.module.css";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 export default function Groups() {
   const [activeButton, setActiveButton] = useState("your groups");
@@ -21,6 +21,14 @@ export default function Groups() {
   const groupsObserver = useRef();
 
   useEffect(() => {
+    console.log("active button changed lol");
+    
+    setCurrentPageGroups(0);
+    setCurrentPageUsers(0);
+    setHasMoreGroups(true);
+    setHasMoreUsers(true);
+    setGroups([]);
+    setUsers([]);
     fetchGroups();
     if (activeButton !== "your groups") {
       setShowCreateForm(false);
@@ -28,7 +36,7 @@ export default function Groups() {
       setNewGroupDescription("");
       setSelectedUsers([]);
     }
-  }, [activeButton, currentPageGroups]);
+  }, [activeButton]);
 
   useEffect(() => {
     if (showCreateForm) {
@@ -57,9 +65,7 @@ export default function Groups() {
         );
         const data = await response.json();
         if (data) {
-          setUsers((prev) => {
-            [...prev, ...data];
-          });
+          setUsers((prev) => [...prev, ...data]);
         } else {
           setHasMoreUsers(false);
         }
@@ -94,7 +100,7 @@ export default function Groups() {
           endpoint = `/api/groups/getGroups/joined?${params}`;
           break;
         default:
-          endpoint = `/api/groups/getGroups/all${params}`;
+          endpoint = `/api/groups/getGroups/all?${params}`;
       }
       const response = await fetch(process.env.NEXT_PUBLIC_API_URL + endpoint, {
         method: "GET",
@@ -105,16 +111,14 @@ export default function Groups() {
       });
       const data = await response.json();
       if (data) {
-        setGroups((prev) => {
-          [...prev, ...data];
-        });
+        setGroups((prev) => [...prev, ...data]);
       } else {
         setHasMoreGroups(false);
       }
     } catch (error) {
       console.error("Error fetching groups:", error);
     }
-  }, [currentPageGroups, hasMoreGroups]);
+  }, [currentPageGroups, hasMoreGroups, activeButton]);
 
   const lastUserRef = useCallback(
     (node) => {

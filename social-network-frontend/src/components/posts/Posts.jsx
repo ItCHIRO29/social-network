@@ -7,7 +7,7 @@ import styles from "./Posts.module.css";
 export default function Posts({ userId = null, showCreatePost = true }) {
   const { userData } = useUserData();
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -15,6 +15,9 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
   const fetchPosts = useCallback(async () => {
     if (loading || !hasMore) return;
+    console.log('====================================');
+    console.log(userId);
+    console.log('====================================');
     const params = new URLSearchParams({ page: currentPage, id: userId });
     try {
       setLoading(true);
