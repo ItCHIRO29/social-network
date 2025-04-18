@@ -1,57 +1,83 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Post from '@/components/posts/Post';
-import styles from './UserPosts.module.css';
+import { useState, useEffect, useRef, useCallback } from "react";
+import Post from "@/components/posts/Post";
+import styles from "./UserPosts.module.css";
 
 export default function UserPosts({ userId }) {
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const observer = useRef();
+  const fetchPosts = useCallback(async () => {
+    if (!hasMore || loading) return
+    setLoading(true)
+    const params = new URLSearchParams({page: currentPage})
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts/user/${userId}?${params}`,
+        {
+          credentials: "include",
+        }
+      );
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/user/${userId}`, {
-                    credentials: 'include',
-                });
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts");
+      }
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch posts');
-                }
+      const data = await response.json();
+      if (data) {
+          setPosts((prev) => [...prev, ...data]);
 
-                const data = await response.json();
-                setPosts(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPosts();
-    }, [userId]);
-
-    if (loading) {
-        return <div className={styles.loading}>Loading posts...</div>;
+      } else {
+        setHasMore(false)
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  }, []);
 
-    if (error) {
-        return <div className={styles.error}>{error}</div>;
-    }
+  const lastPostRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log("hello im the pagination");
 
-    if (posts.length === 0) {
-        return <div className={styles.noPosts}>No posts yet</div>;
-    }
+          setCurrentPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
 
-    return (
-        <div className={styles.userPosts}>
-            <h2>Posts</h2>
-            <div className={styles.postsGrid}>
-                {posts.map(post => (
-                    <Post key={post.id} post={post} />
-                ))}
+  useEffect(() => {
+    fetchPosts();
+  }, [userId]);
+
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
+
+  if (posts.length === 0) {
+    return <div className={styles.noPosts}>No posts yet</div>;
+  }
+
+  return (
+    <div className={styles.userPosts}>
+      <h2>Posts</h2>
+      <div className={styles.postsGrid}>
+        {posts.map((post, index) => (
+            <div key={post.id} ref={posts.length-1 == index ? lastPostRef : null}>
+                <Post post={post} />
             </div>
-        </div>
-    );
-} 
+        ))}
+      </div>
+    </div>
+  );
+}

@@ -17,12 +17,11 @@ export default function Groups() {
   const [hasMoreGroups, setHasMoreGroups] = useState(true);
   const [currentPageUsers, setCurrentPageUsers] = useState(0);
   const [currentPageGroups, setCurrentPageGroups] = useState(0);
+  const [loading, setLoading] = useState(false)
   const usersObserver = useRef();
   const groupsObserver = useRef();
 
-  useEffect(() => {
-    console.log("active button changed lol");
-    
+  useEffect(() => {    
     setCurrentPageGroups(0);
     setCurrentPageUsers(0);
     setHasMoreGroups(true);
@@ -46,7 +45,8 @@ export default function Groups() {
 
   const fetchUsers = useCallback(
     async (groupId) => {
-      if (!hasMoreUsers) return;
+      if (!hasMoreUsers || loading) return;
+      setLoading(true)
       const params = new URLSearchParams({
         page: currentPageUsers,
         group_id: groupId,
@@ -72,6 +72,8 @@ export default function Groups() {
         console.log(data);
       } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false)
       }
     },
     [currentPageUsers, hasMoreUsers]
@@ -88,7 +90,8 @@ export default function Groups() {
   };
 
   const fetchGroups = useCallback(async () => {
-    if (!hasMoreGroups) return;
+    if (!hasMoreGroups || loading) return;
+    setLoading(true)
     const params = new URLSearchParams({ page: currentPageGroups });
     try {
       let endpoint = "";
@@ -117,6 +120,8 @@ export default function Groups() {
       }
     } catch (error) {
       console.error("Error fetching groups:", error);
+    } finally {
+      setLoading(false)
     }
   }, [currentPageGroups, hasMoreGroups, activeButton]);
 
