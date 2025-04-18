@@ -6,5 +6,6 @@ trigger the getposts of the user based on the userId (wrong should be fixed)
 backaend end point linking to the group
 --notifications :
 always appears that you have a notif but the notification is not there.
-
---post/youssef
+hashpassword
+dockerfile
+test pagination

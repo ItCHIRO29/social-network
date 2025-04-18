@@ -24,7 +24,6 @@ export default function Groups() {
 
   useEffect(() => {
     fetchGroups();
-
     if (activeButton !== "your groups") {
       setShowCreateForm(false);
       setNewGroupName("");
