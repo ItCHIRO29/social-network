@@ -230,3 +230,16 @@ func GetMyGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	}
 	utils.WriteJSON(w, http.StatusAccepted, AllGroups)
 }
+
+func LeaveGrp(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
+	groupId := r.URL.Query().Get("groupId")
+	query := `DELETE FROM group_members where (group_id = ? AND user_id= ?)`
+	_, err := db.Exec(query, groupId, userId)
+	if err != nil {
+		utils.WriteJSON(w, http.StatusInternalServerError, nil)
+		fmt.Println(err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusAccepted, nil)
+}
