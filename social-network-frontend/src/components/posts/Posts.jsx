@@ -18,7 +18,12 @@ export default function Posts({ userId = null, showCreatePost = true }) {
     console.log('====================================');
     console.log(userId);
     console.log('====================================');
-    const params = new URLSearchParams({ page: currentPage, id: userId });
+    const params = new URLSearchParams();
+    params.set('page', currentPage);
+
+    if (userId) {
+      params.set('id', userId);
+    }
     try {
       setLoading(true);
       setError(null);
