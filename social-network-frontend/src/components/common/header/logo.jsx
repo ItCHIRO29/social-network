@@ -1,10 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Logo() {
-    return (
-        <Link href="/">
-            <Image  src="/images/logo.png" alt="logo" width={50} height={50} />
-        </Link>  
-    );
+  const router = useRouter();
+  return (
+    <div
+      onClick={() => {
+        router.push("/");
+      }}
+    >
+      <Image src="/images/logo.png" alt="logo" width={50} height={50} />
+    </div>
+  );
 }

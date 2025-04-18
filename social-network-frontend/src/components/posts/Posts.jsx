@@ -12,6 +12,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
+  
   const fetchPosts = useCallback(async () => {
     if (loading || !hasMore) return;
 
@@ -45,7 +46,6 @@ export default function Posts({ userId = null, showCreatePost = true }) {
       const data = await response.json();
       if (data) {
         setPosts((prev) => [...prev, ...data]);
-        console.log("prev", data);
       } else {
         setHasMore(false);
       }
@@ -73,7 +73,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
   useEffect(() => {
     fetchPosts();
-  }, [userId, currentPage]);
+  }, [currentPage]);
 
   const handlePostCreated = (newPost) => {
     setPosts((prev) => [newPost, ...(prev || [])]);
