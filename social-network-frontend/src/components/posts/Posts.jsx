@@ -5,7 +5,7 @@ import Post from "./Post";
 import styles from "./Posts.module.css";
 
 export default function Posts({ userId = null, showCreatePost = true }) {
-  const { userData, loadingUser } = useUserData();
+  const { userData } = useUserData();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -13,8 +13,14 @@ export default function Posts({ userId = null, showCreatePost = true }) {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
   const fetchPosts = useCallback(async () => {
-    if (loading || !hasMore || loadingUser) return;
-    const params = new URLSearchParams({ page: currentPage,  id: userData.id });
+    if (loading || !hasMore) return;
+
+    const params = new URLSearchParams();
+    params.set("page", currentPage);
+
+    if (userId) {
+      params.set("id", userId);
+    }
     try {
       setLoading(true);
       setError(null);
@@ -39,6 +45,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
       const data = await response.json();
       if (data) {
         setPosts((prev) => [...prev, ...data]);
+        console.log("prev", data);
       } else {
         setHasMore(false);
       }
@@ -49,13 +56,15 @@ export default function Posts({ userId = null, showCreatePost = true }) {
     } finally {
       setLoading(false);
     }
-  }, [hasMore, currentPage, loading, userData]);
+  }, [hasMore, currentPage, loading, userId]);
 
   const lastPostRef = useCallback(
     (node) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
+          console.log("hello im the pagination");
+
           setCurrentPage((prevPage) => prevPage + 1);
         }
       });
@@ -66,15 +75,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
   useEffect(() => {
     fetchPosts();
-  }, [userId, userData, currentPage]);
+  }, [userId, currentPage]);
 
   const handlePostCreated = (newPost) => {
     setPosts((prev) => [newPost, ...(prev || [])]);
   };
-
-  if (loading) {
-    return <div className={styles.loading}>Loading posts...</div>;
-  }
 
   if (error) {
     return (
@@ -100,8 +105,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
           </div>
         ) : (
           posts.map((post, index) => (
-            <div ref={post.length - 1 == index ? lastPostRef : null}>
-              <Post key={post.ID} post={post} />
+            <div
+              key={post.ID}
+              ref={posts.length - 1 == index ? lastPostRef : null}
+            >
+              <Post post={post} />
             </div>
           ))
         )}

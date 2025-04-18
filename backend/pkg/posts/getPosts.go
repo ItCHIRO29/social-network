@@ -15,7 +15,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var creator_first_name string
 	var creator_last_name string
 	var profile_image string
-	var posts []models.Posts
+	posts := make([]models.Posts, 0)
 	// var specific_id int
 	var rows *sql.Rows
 	var err error
