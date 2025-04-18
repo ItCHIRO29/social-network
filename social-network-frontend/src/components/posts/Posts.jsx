@@ -12,17 +12,14 @@ export default function Posts({ userId = null, showCreatePost = true }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
-
   const fetchPosts = useCallback(async () => {
     if (loading || !hasMore) return;
-    console.log('====================================');
-    console.log(userId);
-    console.log('====================================');
+
     const params = new URLSearchParams();
-    params.set('page', currentPage);
+    params.set("page", currentPage);
 
     if (userId) {
-      params.set('id', userId);
+      params.set("id", userId);
     }
     try {
       setLoading(true);
@@ -48,6 +45,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
       const data = await response.json();
       if (data) {
         setPosts((prev) => [...prev, ...data]);
+        console.log("prev", data);
       } else {
         setHasMore(false);
       }
@@ -58,13 +56,15 @@ export default function Posts({ userId = null, showCreatePost = true }) {
     } finally {
       setLoading(false);
     }
-  }, [hasMore, currentPage, loading]);
+  }, [hasMore, currentPage, loading, userId]);
 
   const lastPostRef = useCallback(
     (node) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
+          console.log("hello im the pagination");
+
           setCurrentPage((prevPage) => prevPage + 1);
         }
       });
@@ -75,15 +75,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
   useEffect(() => {
     fetchPosts();
-  }, [userId, userData, currentPage]);
+  }, [userId, currentPage]);
 
   const handlePostCreated = (newPost) => {
     setPosts((prev) => [newPost, ...(prev || [])]);
   };
-
-  if (loading) {
-    return <div className={styles.loading}>Loading posts...</div>;
-  }
 
   if (error) {
     return (
@@ -109,8 +105,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
           </div>
         ) : (
           posts.map((post, index) => (
-            <div ref={post.length - 1 == index ? lastPostRef : null}>
-              <Post key={post.ID} post={post} />
+            <div
+              key={post.ID}
+              ref={posts.length - 1 == index ? lastPostRef : null}
+            >
+              <Post post={post} />
             </div>
           ))
         )}
