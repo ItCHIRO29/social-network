@@ -24,7 +24,7 @@ export class Ws {
         };
     }
 
-    handleMessage(data: any) {
+    handleMessage(data: string) {
         const message = JSON.parse(data);
         console.log("messageeeeeeeeeeeeeeeeeeeeeeeee", message)
         switch (message.type) {

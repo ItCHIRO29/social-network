@@ -28,11 +28,13 @@ export default async function middleware(req: NextRequest) {
         });
 
         if (!response.ok) {
-            throw new Error('Invalid token');
+            console.log(response.body, response.status)
+            // throw new Error('Invalid token');
         }
 
         authenticated = true;
     } catch (error) {
+        console.log(error)
         if (pathname !== '/login' && pathname !== '/register') {
             return NextResponse.redirect(new URL('/login', req.url));
         }

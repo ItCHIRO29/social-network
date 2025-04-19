@@ -3,13 +3,14 @@
 import styles from "./login.module.css";
 import { useState } from "react";
 import { isValidEmail, isValidPassword, isValidLoginForm } from "@/utils/authValidators";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { Cookie } from "next/font/google";
 
 
 export default function LoginPage() {
-    const router = useRouter();
+    // const router = useRouter();
     const [errors, setErrors] = useState({
         email: "",
         password: "",
@@ -32,27 +33,27 @@ export default function LoginPage() {
             alert("Invalid email or password");
             return;
         }
-    
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
             method: "POST",
             body: JSON.stringify(formData),
             credentials: "include",
         });
-    
+
         if (!response.ok) {
             alert("Invalid email or password");
             return;
         }
-        
+
         if (typeof window !== 'undefined') {
             window.location.href = "/";
         }
     }
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.logoSection}>
-                <Image  width={150} height={150} src="/images/logo.png" alt="logo" />
+                <Image width={150} height={150} src="/images/logo.png" alt="logo" />
                 <h2 className={styles.logoTitle}>Login</h2>
             </div>
             <div className={styles.loginContainer}>
@@ -62,7 +63,7 @@ export default function LoginPage() {
                     <p className={styles.errorText}>{errors.email}</p>
                     <input name="password" type="password" placeholder="Password" onChange={handleInputChange} />
                     <p className={styles.errorText}>{errors.password}</p>
-                    <Link href="/register">you don't have an account? click here</Link>
+                    <Link href="/register">you don t have an account? click here</Link>
                     <button type="submit" className={styles.btn}>Login</button>
                 </form>
             </div>

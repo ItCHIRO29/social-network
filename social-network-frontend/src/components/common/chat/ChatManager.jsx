@@ -48,29 +48,45 @@ const ChatManager = () => {
     };
 
     const getgrps = async () => {
-      const resp = await fetch('http://localhost:8080/api/groups/getGroups/GroupsMember', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
-      if (!resp.ok) {
-        console.log('Error fetching grps:')
-        return
-      }
-      const groups = await resp.json();
-
-      const newgrps = new Map();
-      groups.forEach(grp => {
-        newgrps.set(grp.name, {
-          groupedata: grp,
-          type: "groupe",
+      try {
+        const resp = await fetch('http://localhost:8080/api/groups/getGroups/GroupsMember', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
-      })
 
-      // Set both state variables
-      setGrps(newgrps);
-      console.log(newgrps)
+        if (!resp.ok) {
+          throw new Error(`HTTP error! status: ${resp.status}`);
+        }
 
+        const contentType = resp.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error("Response wasn't JSON");
+        }
+
+        const groups = await resp.json();
+
+        if (!Array.isArray(groups)) {
+          throw new Error("Expected an array of groups");
+        }
+
+        const newgrps = new Map();
+        groups.forEach(grp => {
+          if (!grp.name) {
+            console.warn('Group missing name property:', grp);
+            return;
+          }
+          newgrps.set(grp.name, {
+            groupedata: grp,
+            type: "groupe",
+          });
+        });
+
+        setGrps(newgrps);
+      } catch (error) {
+        console.error('Failed to fetch groups:', error);
+        // Optionally set an error state here
+      }
     }
     getgrps();
     getUsers();
