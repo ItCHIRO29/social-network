@@ -30,6 +30,8 @@ const Message = ({ message, myData, opponentData }) => {
       {!Mymessages && (
         <div className="message-pic">
           <Image 
+          width={50}
+          height={50}
             src={urlImage}
             alt="Profile Picture"
             onClick={handleImageClick}

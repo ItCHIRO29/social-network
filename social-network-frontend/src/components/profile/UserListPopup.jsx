@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 export default function UserListPopup({ isOpen, onClose, title, username, followButtonState }) {
     const [users, setUsers] = useState([]);
-
+    
     useEffect(() => {
         console.log("followButtonState ===>", followButtonState);
         const fetchUsers = async () => {

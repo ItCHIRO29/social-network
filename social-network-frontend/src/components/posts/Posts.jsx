@@ -12,6 +12,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
+  
   const fetchPosts = useCallback(async () => {
     if (loading || !hasMore) return;
 
@@ -44,8 +45,11 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
       const data = await response.json();
       if (data) {
-        setPosts((prev) => [...prev, ...data]);
-        console.log("prev", data);
+        setPosts((prev) => {
+          const seen = new Set(prev.map(p => p.ID));
+          const newPosts = data.filter(p => !seen.has(p.ID));
+          return [...prev, ...newPosts];
+        });
       } else {
         setHasMore(false);
       }
@@ -63,8 +67,6 @@ export default function Posts({ userId = null, showCreatePost = true }) {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("hello im the pagination");
-
           setCurrentPage((prevPage) => prevPage + 1);
         }
       });
@@ -75,7 +77,7 @@ export default function Posts({ userId = null, showCreatePost = true }) {
 
   useEffect(() => {
     fetchPosts();
-  }, [userId, currentPage]);
+  }, [currentPage]);
 
   const handlePostCreated = (newPost) => {
     setPosts((prev) => [newPost, ...(prev || [])]);

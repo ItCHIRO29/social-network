@@ -2,7 +2,8 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export default async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
-
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
     if (
         pathname.startsWith('/_next/') ||
         pathname.startsWith('/static/') ||
@@ -19,7 +20,8 @@ export default async function middleware(req: NextRequest) {
             throw new Error('Token not found');
         }
 
-        const response = await fetch('http://localhost:8080/api/auth/verify', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_VERFY_UTL}/api/auth/verify`, {
+            signal: controller.signal,
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -28,16 +30,22 @@ export default async function middleware(req: NextRequest) {
         });
 
         if (!response.ok) {
+
             console.log(response.body, response.status)
             // throw new Error('Invalid token');
         }
 
         authenticated = true;
     } catch (error) {
+        if (error === 'AbortError') {
+            console.error('Request timed out');
+        }
         console.log(error)
         if (pathname !== '/login' && pathname !== '/register') {
             return NextResponse.redirect(new URL('/login', req.url));
         }
+    } finally {
+        clearTimeout(timeout);
     }
 
     if (authenticated && (pathname === '/login' || pathname === '/register')) {

@@ -54,38 +54,36 @@ const ChatManager = () => {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
         });
-
+        
         if (!resp.ok) {
-          throw new Error(`HTTP error! status: ${resp.status}`);
+          console.log('Error fetching grps:', resp.status, resp.statusText);
+          return;
         }
-
-        const contentType = resp.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error("Response wasn't JSON");
+        
+        // First check what the response actually contains
+        const responseText = await resp.text();
+        console.log('Raw response:', responseText);
+        
+        // Only try to parse if there's content
+        if (!responseText) {
+          console.log('Empty response from server');
+          return;
         }
-
-        const groups = await resp.json();
-
-        if (!Array.isArray(groups)) {
-          throw new Error("Expected an array of groups");
-        }
-
+        
+        const groups = JSON.parse(responseText);
+        
         const newgrps = new Map();
         groups.forEach(grp => {
-          if (!grp.name) {
-            console.warn('Group missing name property:', grp);
-            return;
-          }
           newgrps.set(grp.name, {
             groupedata: grp,
             type: "groupe",
           });
         });
-
+    
         setGrps(newgrps);
+        console.log(newgrps);
       } catch (error) {
-        console.error('Failed to fetch groups:', error);
-        // Optionally set an error state here
+        console.error('Error in getgrps:', error);
       }
     }
     getgrps();

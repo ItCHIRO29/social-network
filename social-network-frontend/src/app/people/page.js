@@ -14,7 +14,7 @@ export default function People() {
   const router = useRouter();
   let counter = 0;
   const fetchUsers = useCallback(async () => {
-    console.log(currentPage);
+    // console.log(currentPage);
     if (!hasMore || loading) return;
     setLoading(true);
     const params = new URLSearchParams({ page: currentPage });

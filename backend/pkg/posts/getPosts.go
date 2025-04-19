@@ -45,9 +45,9 @@ WHERE
         FROM followers
         WHERE follower_id = ? AND accepted = 1
     ))
-    OR (posts.privacy = 'semi-private' AND json_each.value = ?)
+    OR ((posts.privacy = 'semi-private' AND json_each.value = ?) OR (posts.privacy = 'semi-private' AND posts.user_id = ?))
 ORDER BY posts.id DESC LIMIT ? OFFSET ?;`
-		rows, err = db.Query(query, userId, userId, utils.Limit, utils.Limit*page)
+		rows, err = db.Query(query, userId, userId, userId, utils.Limit, utils.Limit*page)
 		if err != nil {
 			fmt.Println("error in GetPosts:", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
