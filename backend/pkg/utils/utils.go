@@ -62,10 +62,13 @@ func ValidateAndSaveImage(r *http.Request, imageType string, filename string) (s
 		}
 
 		var path string
-		if imageType == "profile" {
+		switch imageType {
+		case "profile":
 			path = "uploads/profileImages/" + filename + extension
-		} else if imageType == "post" {
+		case "post":
 			path = "uploads/postsImages/" + filename + extension
+		case "comment":
+			path = "uploads/commentsImages/" + filename + extension
 		}
 
 		err = os.MkdirAll(filepath.Dir(path), 0o755)
