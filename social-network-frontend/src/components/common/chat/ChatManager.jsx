@@ -48,29 +48,43 @@ const ChatManager = () => {
     };
 
     const getgrps = async () => {
-      const resp = await fetch('http://localhost:8080/api/groups/getGroups/GroupsMember', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
-      if (!resp.ok) {
-        console.log('Error fetching grps:')
-        return
-      }
-      const groups = await resp.json();
-
-      const newgrps = new Map();
-      groups.forEach(grp => {
-        newgrps.set(grp.name, {
-          groupedata: grp,
-          type: "groupe",
+      try {
+        const resp = await fetch('http://localhost:8080/api/groups/getGroups/GroupsMember', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
-      })
-
-      // Set both state variables
-      setGrps(newgrps);
-      console.log(newgrps)
-
+        
+        if (!resp.ok) {
+          console.log('Error fetching grps:', resp.status, resp.statusText);
+          return;
+        }
+        
+        // First check what the response actually contains
+        const responseText = await resp.text();
+        console.log('Raw response:', responseText);
+        
+        // Only try to parse if there's content
+        if (!responseText) {
+          console.log('Empty response from server');
+          return;
+        }
+        
+        const groups = JSON.parse(responseText);
+        
+        const newgrps = new Map();
+        groups.forEach(grp => {
+          newgrps.set(grp.name, {
+            groupedata: grp,
+            type: "groupe",
+          });
+        });
+    
+        setGrps(newgrps);
+        console.log(newgrps);
+      } catch (error) {
+        console.error('Error in getgrps:', error);
+      }
     }
     getgrps();
     getUsers();

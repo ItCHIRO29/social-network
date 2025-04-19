@@ -106,12 +106,20 @@ export default function Groups() {
       );
       const data = await response.json();
       if (data && data.length > 0) {
+        if (currentPageGroups === 0) {
+          setGroups([]);
+        }
         setGroups((prev) => {
-          const newGroups = data.filter(
-            (newGroup) => !prev.some((group) => group.id === newGroup.id)
-          );
-          return [...prev, ...newGroups];
+          const existingIds = new Set(prev.map((u) => u.id));
+          const filteredData = data.filter((user) => !existingIds.has(user.id));
+          return [...prev, ...filteredData];
         });
+        // setGroups((prev) => {
+        //   const newGroups = data.filter(
+        //     (newGroup) => !prev.some((group) => group.id === newGroup.id)
+        //   );
+        //   return [...prev, ...newGroups];
+        // });
       } else {
         setHasMoreGroups(false);
       }
@@ -298,6 +306,7 @@ export default function Groups() {
               onClick={() => {
                 setCurrentPageGroups(0)
                 setHasMoreGroups(true)
+                setGroups([])
                 setActiveButton("your groups")
               }}
             >
@@ -309,6 +318,7 @@ export default function Groups() {
               onClick={() => {
                 setCurrentPageGroups(0)
                 setHasMoreGroups(true)
+                setGroups([])
                 setActiveButton("joined groups")
               }}
             >
@@ -320,6 +330,7 @@ export default function Groups() {
               onClick={() => {
                 setCurrentPageGroups(0)
                 setHasMoreGroups(true)
+                setGroups([])
                 setActiveButton("all groups")
               }}
             >

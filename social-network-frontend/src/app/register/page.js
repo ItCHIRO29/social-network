@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./register.module.css";
@@ -17,7 +17,7 @@ import {
 } from "@/utils/authValidators";
 
 export default function RegisterPage() {
-    const router = useRouter();
+    // const router = useRouter();
 
     const [formData, setFormData] = useState({
         username: "",
@@ -121,7 +121,7 @@ export default function RegisterPage() {
         });
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
                 method: 'POST',
                 body: formDataToSend,
                 credentials: 'include',

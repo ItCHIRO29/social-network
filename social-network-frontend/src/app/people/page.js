@@ -14,7 +14,7 @@ export default function People() {
   const router = useRouter();
   let counter = 0;
   const fetchUsers = useCallback(async () => {
-    console.log(currentPage);
+    // console.log(currentPage);
     if (!hasMore || loading) return;
     setLoading(true);
     const params = new URLSearchParams({ page: currentPage });
@@ -46,7 +46,7 @@ export default function People() {
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, currentPage]);
+  }, [loading, hasMore, currentPage, counter]);
 
   const lastUserRef = useCallback(
     (node) => {
@@ -63,9 +63,9 @@ export default function People() {
 
   useEffect(() => {
     fetchUsers();
-  }, [currentPage]);
+  }, [currentPage, fetchUsers]);
 
-  const handleFollowStateChange = async (username) => {
+  const handleFollowStateChange = async () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/users/GetAllUsers`,
@@ -75,6 +75,7 @@ export default function People() {
       );
       if (response.ok) {
         const data = await response.json();
+        console.log(data)
       }
     } catch (error) {
       console.error("Error refreshing users:", error);
