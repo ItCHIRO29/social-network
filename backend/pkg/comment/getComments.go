@@ -21,7 +21,7 @@ func GetComments(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	var comments []models.Comment
 	for rows.Next() {
 		var comment models.Comment
-		err = rows.Scan(&comment.ID, &comment.Group_id, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Image, &comment.CreatedAt)
+		err = rows.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Image, &comment.CreatedAt)
 		if err != nil {
 			fmt.Printf("Error scanning comment: %v\n", err)
 			utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Internal server error"})
