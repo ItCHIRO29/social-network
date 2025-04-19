@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Comments.module.css";
+import Image from "next/image"; 
 
 export default function Comments({ postId }) {
   const [showComments, setShowComments] = useState(false);
@@ -49,22 +50,26 @@ export default function Comments({ postId }) {
             formData.append("text", comment.text);
             formData.append("image", comment.image);
             formData.append("postid", postId);
-            
+
             setComment({ text: "", image: null });
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/api/comment`,
-              {
-                method: "POST",
-                credentials: "include",
-                body: formData,
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/comment`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  body: formData,
+                }
+              );
+              if (!res.ok) {
+                throw new Error("Failed to post comment");
               }
-            );
-            if (!res.ok) {
-              throw new Error("Failed to post comment");
+              const data = await res.json();
+              setComments((prevComments) => [...prevComments, data]);
+              setComment({ text: "", image: null });
+            } catch (e) {
+              console.error(e);
             }
-            const data = await res.json();
-            setComments((prevComments) => [...prevComments, data]);
-            setComment({ text: "", image: null });
           }}
           className={styles.commentForm}
         >
@@ -144,26 +149,38 @@ export default function Comments({ postId }) {
       </button>
 
       {showComments && (
-        <div className={styles.commentsList}>
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.ID} className={styles.commentItem}>
-                <div className={styles.commentHeader}>
-                  <strong className={styles.authorName}>
-                    {comment.AuthorName}
-                  </strong>
-                  <span className={styles.timestamp}>
-                    {new Date(comment.CreatedAt).toLocaleString()}
-                  </span>
-                </div>
-                <p className={styles.commentContent}>{comment.content}</p>
+      <div className={styles.commentsList}>
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.ID} className={styles.commentItem}>
+              <div className={styles.commentHeader}>
+                <strong className={styles.authorName}>
+                  {comment.AuthorName}
+                </strong>
+                <span className={styles.timestamp}>
+                  {new Date(comment.CreatedAt).toLocaleString()}
+                </span>
               </div>
-            ))
-          ) : (
-            <p className={styles.noComments}>No comments yet.</p>
-          )}
-        </div>
-      )}
+              <p className={styles.commentContent}>{comment.content}</p>
+              {comment.Image && (
+                <div className={styles.commentImageContainer}>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${comment.Image}`}
+                    alt="Comment image"
+                    width={400} 
+                    height={300} 
+                    className={styles.commentImage}
+                    objectFit="cover"
+                  />
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className={styles.noComments}>No comments yet.</p>
+        )}
+      </div>
+    )}
     </div>
   );
 }

@@ -30,9 +30,8 @@ export default async function middleware(req: NextRequest) {
         });
 
         if (!response.ok) {
-
             console.log(response.body, response.status)
-            // throw new Error('Invalid token');
+            throw new Error('Invalid token');
         }
 
         authenticated = true;

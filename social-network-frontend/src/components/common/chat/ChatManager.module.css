@@ -68,7 +68,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #4CAF50; /* Brighter green */
+  background-color: #4CAF50;
+  /* Brighter green */
   display: inline-block;
   visibility: hidden;
   margin-right: 5px;
@@ -89,18 +90,21 @@
 .chatWindowsContainer {
   position: fixed;
   bottom: 0;
-  left: 20%; /* Align with the width of chat sidebar */
+  left: 20%;
+  /* Align with the width of chat sidebar */
   display: flex;
   flex-direction: row;
   gap: 10px;
   z-index: 1000;
+  overflow: scroll;
 }
 
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit: cover; /* Ensures the image covers the area nicely */
+  object-fit: cover;
+  /* Ensures the image covers the area nicely */
   cursor: pointer;
 }
 
