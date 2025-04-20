@@ -49,8 +49,6 @@ export default function Comments({ postId }) {
             formData.append("text", comment.text);
             formData.append("image", comment.image);
             formData.append("postid", postId);
-
-            setComment({ text: "", image: null });
             try {
               const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/comment`,
@@ -82,7 +80,7 @@ export default function Comments({ postId }) {
             />
             <div className={styles.actions}>
               <label
-                htmlFor="comment-image-upload"
+                htmlFor={`comment-image-upload-${postId}`}
                 className={styles.uploadButton}
               >
                 <svg
@@ -99,7 +97,7 @@ export default function Comments({ postId }) {
                   />
                 </svg>
                 <input
-                  id="comment-image-upload"
+                  id={`comment-image-upload-${postId}`}
                   type="file"
                   accept="image/*"
                   onChange={(e) =>
@@ -148,38 +146,37 @@ export default function Comments({ postId }) {
       </button>
 
       {showComments && (
-      <div className={styles.commentsList}>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment.ID} className={styles.commentItem}>
-              <div className={styles.commentHeader}>
-                <strong className={styles.authorName}>
-                  {comment.AuthorName}
-                </strong>
-                <span className={styles.timestamp}>
-                  {new Date(comment.CreatedAt).toLocaleString()}
-                </span>
-              </div>
-              <p className={styles.commentContent}>{comment.content}</p>
-              {comment.Image && (
-                <div className={styles.commentImageContainer}>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}/${comment.Image}`}
-                    alt="Comment image"
-                    width={400} 
-                    height={300} 
-                    className={styles.commentImage}
-                    objectFit="cover"
-                  />
+        <div className={styles.commentsList}>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.ID} className={styles.commentItem}>
+                <div className={styles.commentHeader}>
+                  <strong className={styles.authorName}>
+                    {comment.AuthorName}
+                  </strong>
+                  <span className={styles.timestamp}>
+                    {new Date(comment.CreatedAt).toLocaleString()}
+                  </span>
                 </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <p className={styles.noComments}>No comments yet.</p>
-        )}
-      </div>
-    )}
+                <p className={styles.commentContent}>{comment.content}</p>
+                {comment.Image && (
+                  <div className={styles.commentImageContainer}>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${comment.Image}`}
+                      alt="Comment image"
+                      width={400}
+                      height={300}
+                      className={styles.commentImage}
+                    />
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className={styles.noComments}>No comments yet.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
