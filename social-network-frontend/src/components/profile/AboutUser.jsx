@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import styles from './AboutUser.module.css';
 import UserListPopup from './UserListPopup';
 import { useUserData } from '@/components/common/providers/userDataContext';
@@ -26,7 +25,7 @@ export default function AboutUser({ user }) {
         <div className={styles.aboutUser}>
             <div className={styles.header}>
                 <div className={styles.profileImage}>
-                    <Image
+                    <img
                         src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/default-avatar.svg'}
                         alt={`Profile picture of ${user.first_name} ${user.last_name}`}
                         width={150}

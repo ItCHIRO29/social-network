@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUserData } from "../common/providers/userDataContext";
 import { validateTitle, validateContent, validateImage, validatePost } from "@/utils/postValidators";
-import Image from "next/image";
 // import SemiPrivateList from "./SemiPrivateList";
 import styles from "./CreateGrpPost.module.css";
 
@@ -183,7 +182,7 @@ export default function CreateGrpPost({ groupId, onPostCreated }) {
                     {errors?.image && <p className={styles.errorText}>{errors.image}</p>}
 
                     {imagePreview && (
-                        <Image 
+                        <img 
                             src={imagePreview}
                             alt="Post preview"
                             className={styles.previewImage}

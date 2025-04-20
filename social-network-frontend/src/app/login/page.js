@@ -5,7 +5,6 @@ import { useState } from "react";
 import { isValidEmail, isValidPassword, isValidLoginForm } from "@/utils/authValidators";
 // import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function LoginPage() {
     // const router = useRouter();
@@ -51,7 +50,7 @@ export default function LoginPage() {
     return (
         <div className={styles.container}>
             <div className={styles.logoSection}>
-                <Image width={150} height={150} src="/images/logo.png" alt="logo" />
+                <img width={150} height={150} src="/images/logo.png" alt="logo" />
                 <h2 className={styles.logoTitle}>Login</h2>
             </div>
             <div className={styles.loginContainer}>

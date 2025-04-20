@@ -13,6 +13,7 @@
   box-sizing: border-box;
   z-index: 199;
   border-right: 1px solid #303030;
+  overflow: auto;
 }
 
 .chatManager h2 {
@@ -31,6 +32,7 @@
   border-radius: 8px;
   flex: 1;
   margin-bottom: 10px;
+  overflow: auto;
 }
 
 .usersListItem {
@@ -96,7 +98,6 @@
   flex-direction: row;
   gap: 10px;
   z-index: 1000;
-  overflow: scroll;
 }
 
 .avatar {

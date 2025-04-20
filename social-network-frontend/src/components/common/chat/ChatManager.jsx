@@ -3,10 +3,6 @@ import ChatWindow from './ChatWindow';
 import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
-import Image from 'next/image';
-// import { fips } from 'crypto';
-// import { type } from 'os';
-// import { group } from 'console';
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -54,24 +50,24 @@ const ChatManager = () => {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
         });
-        
+
         if (!resp.ok) {
           console.log('Error fetching grps:', resp.status, resp.statusText);
           return;
         }
-        
+
         // First check what the response actually contains
         const responseText = await resp.text();
         console.log('Raw response:', responseText);
-        
+
         // Only try to parse if there's content
         if (!responseText) {
           console.log('Empty response from server');
           return;
         }
-        
+
         const groups = JSON.parse(responseText);
-        
+
         const newgrps = new Map();
         groups.forEach(grp => {
           newgrps.set(grp.name, {
@@ -79,7 +75,7 @@ const ChatManager = () => {
             type: "groupe",
           });
         });
-    
+
         setGrps(newgrps);
         console.log(newgrps);
       } catch (error) {
@@ -282,7 +278,7 @@ const ChatManager = () => {
               id={`usersListItem-${username}`}
               key={username}
             >
-              <Image
+              <img
                 className={styles.avatar}
                 src={userObj?.userData?.image
                   ? `${process.env.NEXT_PUBLIC_API_URL}/${userObj.userData.image}`
@@ -322,7 +318,7 @@ const ChatManager = () => {
               id={`usersListItem-${grpname}`}
               key={grpname}
             >
-              <Image
+              <img
                 width={40}
                 height={40}
                 className={styles.avatar}

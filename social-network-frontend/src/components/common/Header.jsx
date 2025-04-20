@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NotificationsList from './NotificationsList';
 import styles from './Header.module.css';
-import Image from 'next/image';
 
 export default function Header() {
     const [showNotifications, setShowNotifications] = useState(false);
@@ -48,7 +47,7 @@ export default function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.logo} onClick={handleHomeRoute}>
-                <Image
+                <img
                     src="/icons/logo.svg"
                     alt="Social Network"
                     width={40}
@@ -67,7 +66,7 @@ export default function Header() {
                         onClick={toggleNotifications}
                         type="button"
                     >
-                        <Image
+                        <img
                             src="/icons/notifications.svg"
                             alt="Notifications"
                             width={20}

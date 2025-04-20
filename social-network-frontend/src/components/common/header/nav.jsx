@@ -1,6 +1,5 @@
 'use client';
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -39,7 +38,7 @@ export default function Nav() {
                     onMouseEnter={() => setHovered("Profile")}
                     onMouseLeave={() => setHovered("")}>
                     <Link href={`/profile/${userData?.username}`}>
-                        <Image
+                        <img
                             src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : `${process.env.NEXT_PUBLIC_API_URL}/uploads/profileImages/default-avatar.svg`}
                             alt="profile"
                             width={iconSize}
@@ -54,7 +53,7 @@ export default function Nav() {
                     onMouseEnter={() => setHovered("Home")}
                     onMouseLeave={() => setHovered("")}>
                     <Link href="/">
-                        <Image src="/icons/home.svg" alt="home" width={iconSize} height={iconSize} />
+                        <img src="/icons/home.svg" alt="home" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "Home" && <div className={styles.description}>Home</div>}
                 </div>
@@ -64,7 +63,7 @@ export default function Nav() {
                     onMouseEnter={() => setHovered("People")}
                     onMouseLeave={() => setHovered("")}>
                     <Link href="/people">
-                        <Image src="/icons/pepole.svg" alt="people" width={iconSize} height={iconSize} />
+                        <img src="/icons/pepole.svg" alt="people" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "People" && <div className={styles.description}>People</div>}
                 </div>
@@ -73,7 +72,7 @@ export default function Nav() {
                     onMouseEnter={() => setHovered("Groups")}
                     onMouseLeave={() => setHovered("")}>
                     <Link href="/groups">
-                        <Image src="/icons/groups.svg" alt="groups" width={iconSize} height={iconSize} />
+                        <img src="/icons/groups.svg" alt="groups" width={iconSize} height={iconSize} />
                     </Link>
                     {hovered === "Groups" && <div className={styles.description}>Groups</div>}
                 </div>
@@ -82,7 +81,7 @@ export default function Nav() {
                     onMouseEnter={() => setHovered("Notifications")}
                     onMouseLeave={() => setHovered("")}>
                     <div className={styles.notificationIconWrapper}>
-                    <NotificationsList/>
+                        <NotificationsList />
                     </div>
                     {hovered === "Notifications" && <div className={styles.description}>Notifications</div>}
                 </div>
@@ -94,7 +93,7 @@ export default function Nav() {
                     onMouseLeave={() => setHovered("")}
                     onClick={() => handleLogout()}
                 >
-                    <Image src="/icons/logout.svg" alt="logout" width={iconSize} height={iconSize} />
+                    <img src="/icons/logout.svg" alt="logout" width={iconSize} height={iconSize} />
                     {hovered === "Logout" && <div className={styles.description}>Logout</div>}
                 </div>
             </div>

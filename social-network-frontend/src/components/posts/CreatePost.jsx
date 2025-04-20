@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useUserData } from "../common/providers/userDataContext";
 import { validateTitle, validateContent, validateImage, validatePost } from "@/utils/postValidators";
 import SemiPrivateList from "./SemiPrivateList";
@@ -145,7 +144,7 @@ export default function CreatePost({ onPostCreated }) {
         <div className={styles.createPostContainer}>
             <form onSubmit={handleSubmit} className={styles.postForm}>
                 <div className={styles.userInfo}>
-                    <Image
+                    <img
                         width={50}
                         height={50}
                         src={userData.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : "/images/default-avatar.svg"}
@@ -184,7 +183,7 @@ export default function CreatePost({ onPostCreated }) {
                     {errors?.image && <p className={styles.errorText}>{errors.image}</p>}
 
                     {imagePreview && (
-                        <Image
+                        <img
                             src={imagePreview}
                             alt="Post preview"
                             className={styles.previewImage}

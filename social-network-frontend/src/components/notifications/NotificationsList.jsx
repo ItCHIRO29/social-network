@@ -1,6 +1,5 @@
 import { useState, useEffect, use } from 'react';
 import NotificationItem from './NotificationItem';
-import Image from 'next/image';
 import styles from './notifications.module.css';
 
 export default function NotificationsList() {
@@ -87,7 +86,7 @@ export default function NotificationsList() {
                 onClick={toggleNotifications}
                 className={styles.notificationButton}
             >
-                <Image
+                <img
                     src="/icons/notifications.svg"
                     alt="notifications"
                     width={iconSize}

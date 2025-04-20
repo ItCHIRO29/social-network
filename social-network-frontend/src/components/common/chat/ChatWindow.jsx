@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Message, TypingIndicator } from './Message';
 import EmojiSelector from './EmojiSelector';
-import Image from 'next/image';
 import './ChatWindow.css';
 
 function dateFormat(timestamp) {
@@ -51,7 +50,6 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         membersArray.forEach(user => {
           membersMap.set(user.username, user);
         });
-
         setMembers(membersMap);
       } catch (error) {
         console.error('Fetch failed:', error);
@@ -102,24 +100,22 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
     uniqueId: `msg-${message.id || Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   });
 
-  const prependMessages = (newMessages) => {
+  const prependMessages = (newMessages, callback) => {
     if (!Array.isArray(newMessages)) {
       console.error("Error in prependMessages: messages is not an array");
       return;
     }
     setMessages(prev => {
-      console.log('newMessages 1');
-      const combinedMessages = [...newMessages, ...prev];
+      const combinedMessages = [...prev, ...newMessages];
       const uniqueMessages = combinedMessages.filter(
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
-      scrollToBottom();
       return uniqueMessages;
     });
-    setIsAppending(false);
+    // Use setTimeout to ensure scroll happens after render
+    if (callback) setTimeout(callback, 0);
   };
-
   const appendMessages = (newMessages) => {
     if (!Array.isArray(newMessages)) {
       console.error("Error in appendMessages: messages is not an array");
@@ -132,12 +128,14 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         (msg, index, self) =>
           index === self.findIndex((t) => t.id === msg.id)
       );
-      scrollToBottom();
+      // scrollToBottom();
+
       return uniqueMessages;
     });
     setIsAppending(true);
-
-    scrollToBottom();
+    setTimeout(() => {
+      scrollToBottom();
+    }, 0);
   };
 
   const fetchMessages = async (type, chatdata) => {
@@ -162,25 +160,28 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
 
       if (!response.ok) {
         throw new Error('Failed to fetch messages');
-      }
-      const data = await response.json();
+      } else {
 
-      if (!data.messages || data.messages.length < 10 || data.offset === -1) {
-        // setHasMoreMessages(false);
-      }
+        const data = await response.json();
 
-      if (data.messages && data.messages.length > 0) {
-        prependMessages(data.messages.map(createMessageObject));
-        setOffset(data.offset || -1);
-        if (isAppending) {
-          scrollToBottom();
+        if (!data.messages || data.messages.length < 10 || data.offset === -1) {
+          // setHasMoreMessages(false);
+        }
+
+        if (data.messages && data.messages.length > 0) {
+          prependMessages(data.messages.map(createMessageObject), () => {
+            if (offset === null) scrollToBottom();
+          });
+          setOffset(data.offset || -1);
         }
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
       setIsLoadingOlder(false);
+      // scrollToBottom();
     }
+    return
   };
 
   // Initial fetch of messages
@@ -191,7 +192,6 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   // Listen for private messages
   useEffect(() => {
     const handlePrivateMessage = (event) => {
-      console.warn('detail', event.detail)
       if (event.detail && event.detail.message) {
         if (event.detail.type === 'groupe') {
           addMessage(event.detail);
@@ -250,7 +250,6 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         status: 'sent'
       }
     });
-
     document.dispatchEvent(msgEvent);
   };
 
@@ -270,6 +269,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
     addMessage(newMessage);
     sendMessage(newMessage);
     setMessageInput('');
+    scrollToBottom();
   };
 
   const handleRetry = (uniqueId) => {
@@ -311,15 +311,20 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   };
 
   useEffect(() => {
-    if (isAppending) {
-      scrollToBottom();
-    }
+    // if (offset === null) {
+    // scrollToBottom();
+    // }
   }, [messages, isAppending]);
 
   // Mark messages as seen when component mounts
   useEffect(() => {
     markMessageAsSeen();
   }, []);
+
+  const closing = () => {
+    setOffset(null);
+    onClose()
+  }
 
   // Check if opponentData is empty
   const hasOpponentData = Object.keys(opponentData).length > 0;
@@ -329,10 +334,9 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       <div className="chat-header">
         <div className="header-left">
           {hasOpponentData && (
-            <Image
+            <img
               width={50}
               height={50}
-              // src={`${process.env.NEXT_PUBLIC_API_URL}/${opponentData?.image}`}
               src={opponentData.image ?
                 `${process.env.NEXT_PUBLIC_API_URL}/${opponentData.image}`
                 : '/images/groupIcon.png'}
@@ -362,14 +366,14 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
         </div>
         <div className="header-right">
           <button className="icon-btn" onClick={onHide}>—</button>
-          <button className="icon-btn" onClick={onClose}>❌</button>
+          <button className="icon-btn" onClick={closing}>❌</button>
         </div>
       </div>
 
       <div
         className="chat-messages"
         ref={messagesContainerRef}
-      // onScroll={handleScroll}
+        onScroll={handleScroll}
       >
         {isLoadingOlder && (
           <div className="loading-indicator">Loading older messages...</div>

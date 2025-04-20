@@ -1,18 +1,17 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import styles from './UserListPopup.module.css';
 import { useEffect, useState } from 'react';
 
 export default function UserListPopup({ isOpen, onClose, title, username, followButtonState }) {
     const [users, setUsers] = useState([]);
-    
+
     useEffect(() => {
         console.log("followButtonState ===>", followButtonState);
         const fetchUsers = async () => {
             if (!username || !isOpen) return;
-            
+
             try {
                 const endpoint = title.toLowerCase();
                 const response = await fetch(
@@ -48,7 +47,7 @@ export default function UserListPopup({ isOpen, onClose, title, username, follow
                             {users.map(user => (
                                 <li key={user.id} className={styles.userItem}>
                                     <Link href={`/profile/${user.username}`} onClick={onClose}>
-                                        <Image
+                                        <img
                                             src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/profile.png'}
                                             alt={user.username}
                                             width={40}

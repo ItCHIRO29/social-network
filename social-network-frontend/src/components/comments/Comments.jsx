@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./Comments.module.css";
-import Image from "next/image"; 
 
 export default function Comments({ postId }) {
   const [showComments, setShowComments] = useState(false);
@@ -164,7 +163,7 @@ export default function Comments({ postId }) {
               <p className={styles.commentContent}>{comment.content}</p>
               {comment.Image && (
                 <div className={styles.commentImageContainer}>
-                  <Image
+                  <img
                     src={`${process.env.NEXT_PUBLIC_API_URL}/${comment.Image}`}
                     alt="Comment image"
                     width={400} 
