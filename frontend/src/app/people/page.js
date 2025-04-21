@@ -30,16 +30,17 @@ export default function People() {
           // setUsers((prev) => [...prev, ...data]);
           setUsers((prev) => {
             const existingIds = new Set(prev.map((u) => u.id)); // assuming unique `id`
-            const filteredData = data.filter((user) => !existingIds.has(user.id));
+            const filteredData = data.filter(
+              (user) => !existingIds.has(user.id)
+            );
             return [...prev, ...filteredData];
           });
-          counter++
+          counter++;
         } else {
           setHasMore(false);
         }
       }
       console.log("I'm here in line 38 in Peple.js:  " + counter);
-
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -50,11 +51,13 @@ export default function People() {
   const lastUserRef = useCallback(
     (node) => {
       if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setCurrentPage((prevPage) => prevPage + 1);
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            setCurrentPage((prevPage) => prevPage + 1);
+          }
         }
-      });
+      );
       if (node) observer.current.observe(node);
     },
     [hasMore]
@@ -62,7 +65,7 @@ export default function People() {
 
   useEffect(() => {
     fetchUsers();
-  }, [currentPage, fetchUsers]);
+  }, [currentPage]);
 
   const handleFollowStateChange = async () => {
     try {
@@ -74,14 +77,12 @@ export default function People() {
       );
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
       }
     } catch (error) {
       console.error("Error refreshing users:", error);
     }
   };
-
-
 
   return (
     <div className={styles.container}>
