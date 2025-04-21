@@ -64,7 +64,6 @@ type FollowButton struct {
 }
 
 type EditProfile struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Public   string `json:"public"`
+	UserId int    `json:"user_id"`
+	Public bool `json:"public"`
 }

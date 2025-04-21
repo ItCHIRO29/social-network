@@ -11,10 +11,11 @@ export default function AboutUser({ user }) {
     const [showFollowing, setShowFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
+    const [showEdit, setShowEdit] = useState(false);
+    const [privacy, setPrivacy] = useState(user.public);
 
-
-    
     const { userData } = useUserData();
+    user.isOwnProfile 
     const isOwnProfile = userData?.username === user.username;
 
     // useEffect(() => {
@@ -26,11 +27,11 @@ export default function AboutUser({ user }) {
             <div className={styles.header}>
                 <div className={styles.profileImage}>
                     <img
+                        width={150}
                         src={user.image ? `${process.env.NEXT_PUBLIC_API_URL}/${user.image}` : '/images/default-avatar.svg'}
                         alt={`Profile picture of ${user.first_name} ${user.last_name}`}
-                        width={150}
                         height={150}
-                        priority
+                    // priority
                     />
                 </div>
                 <div className={styles.userInfo}>
@@ -38,26 +39,53 @@ export default function AboutUser({ user }) {
                     <p className={styles.username}>@{user.username}</p>
                     {user.nickname && <p className={styles.nickname}>({user.nickname})</p>}
                     {!user.public && <p className={styles.privateLabel}>(Private Account)</p>}
-                    
+
                     <div className={styles.stats}>
-                        <button 
-                            className={styles.statButton} 
+                        <button
+                            className={styles.statButton}
                             onClick={() => setShowFollowers(true)}
                         >
                             <span className={styles.count}>{user.followers_count || 0}</span> followers
                         </button>
-                        <button 
-                            className={styles.statButton} 
+                        <button
+                            className={styles.statButton}
                             onClick={() => setShowFollowing(true)}
                         >
                             <span className={styles.count}>{user.followings_count || 0}</span> following
                         </button>
                     </div>
-                    
+
                     {!isOwnProfile && user.follow_button?.state !== 'none' && (
                         <FollowButton userData={user} />
                     )}
+
+                    <button className={styles.followButton} onClick={async () => {
+                        try {
+                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/EditProfile`, {
+                                method: "POST",
+                                credentials: "include",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    "user_id": userData.id,
+                                    "public": privacy
+                                })
+                            })
+                            if (res.ok) {
+                                setPrivacy(!privacy);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                        }
+
+                    }
+                    }>Switch to : {!privacy ? "public" : "private"}</button>
                 </div>
+                {/* <button className={styles.followButton} onClick={() => {
+                    setShowEdit(true);
+                }}>Edit Profile</button> */}
+
             </div>
 
             {(user.public || isOwnProfile) && (
@@ -116,7 +144,7 @@ export default function AboutUser({ user }) {
                 username={user.username}
                 followers={followers}
                 setFollowers={setFollowers}
-                followButtonState = {user.follow_button?.state}
+                followButtonState={user.follow_button?.state}
             />
 
             <UserListPopup
@@ -127,8 +155,9 @@ export default function AboutUser({ user }) {
                 username={user.username}
                 following={following}
                 setFollowing={setFollowing}
-                followButtonState = {user.follow_button?.state}
+                followButtonState={user.follow_button?.state}
             />
+            
         </div>
     );
 } 

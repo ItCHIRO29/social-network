@@ -136,6 +136,13 @@
     line-height: 1.5;
 }
 
+.bio .Edit {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
 .followButton {
     background-color: #0095f6;
     color: white;
@@ -181,4 +188,4 @@
     .stats {
         justify-content: center;
     }
-} 
+}
