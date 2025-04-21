@@ -46,7 +46,8 @@ export default function Comments({ postId }) {
               return;
             }
             const formData = new FormData();
-            formData.append("text", comment.text);
+            formData.append("text", comment.text.trim());
+            console.log("comment.text");
             formData.append("image", comment.image);
             formData.append("postid", postId);
             try {
@@ -62,7 +63,7 @@ export default function Comments({ postId }) {
                 throw new Error("Failed to post comment");
               }
               const data = await res.json();
-              setComments((prevComments) => [...prevComments, data]);
+              setComments((prevComments) => [data, ...prevComments]);
               setComment({ text: "", image: null });
             } catch (e) {
               console.error(e);

@@ -11,7 +11,7 @@ import (
 
 func GetComments(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	post_id := r.URL.Query().Get("post_id")
-	rows, err := db.Query("SELECT * FROM comments WHERE post_id = ?", post_id)
+	rows, err := db.Query("SELECT * FROM comments WHERE post_id = ? ORDER BY id DESC", post_id)
 	if err != nil {
 		fmt.Printf("Error fetching comments: %v\n", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Internal server error"})

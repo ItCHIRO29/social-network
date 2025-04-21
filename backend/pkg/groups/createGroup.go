@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"social-network/pkg/auth"
 	"social-network/pkg/models"
 	"social-network/pkg/notifications"
 	"social-network/pkg/utils"
@@ -24,6 +25,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 
 	err = ValidateGroup(group)
 	if err != nil {
+		fmt.Println("Error in ValidateGroup", err)
 		utils.WriteJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -101,7 +103,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 }
 
 func ValidateGroup(group models.Group) error {
-	if len(group.Name) < 3 || len(group.Name) > 15 {
+	if len(group.Name) < 3 || len(group.Name) > 15 || !auth.IsValidName(group.Name) {
 		return errors.New("invalid Name length")
 	} else if len(group.Description) < 1 || len(group.Description) > 500 {
 		return errors.New("invalid Description length")
