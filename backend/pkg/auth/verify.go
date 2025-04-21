@@ -2,7 +2,6 @@ package auth
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -10,9 +9,9 @@ import (
 )
 
 func Verify(w http.ResponseWriter, r *http.Request, db *sql.DB, sessionToken string) {
-	fmt.Println("Fireeeeeeeeeeeeeeed")
+	// fmt.Println("Fireeeeeeeeeeeeeeed")
 	sessionToken = strings.TrimPrefix(sessionToken, "Bearer ")
-	fmt.Println("cookie", sessionToken)
+	// fmt.Println("cookie", sessionToken)
 	if sessionToken == "" {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

@@ -34,14 +34,14 @@ func GetVotes(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		}
 		votes = append(votes, vote)
 	}
-	fmt.Println("VOTES :::::", votes)
+	// fmt.Println("VOTES :::::", votes)
 	utils.WriteJSON(w, 200, votes)
 }
 
 func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 	var vote models.Event_members
 	action := r.URL.Query().Get("action")
-	fmt.Println("action : ", action)
+	// fmt.Println("action : ", action)
 	// fmt.Println("vote1111111 : ", vote)
 	// return
 	if action != "going" {
@@ -82,7 +82,7 @@ func InsertVote(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 		if err != nil {
 			return
 		}
-		fmt.Println("voteXXXXXX : ", vote)
+		// fmt.Println("voteXXXXXX : ", vote)
 		var exists bool
 		err = db.QueryRow("SELECT id FROM event_members WHERE user_id = ? AND event_id = ? AND (going = 1)", userId, vote.EventID).Scan(&exists)
 		if err == sql.ErrNoRows {

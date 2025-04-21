@@ -62,7 +62,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) 
 	post.ID, _ = res.LastInsertId()
 	post.ProfileImage = strings.Trim(image, "./")
 	// fmt.Println("post:", post)
-	fmt.Println(post)
+	// fmt.Println(post)
 	utils.WriteJSON(w, http.StatusOK, post)
 }
 

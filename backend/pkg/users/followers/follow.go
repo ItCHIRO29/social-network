@@ -25,7 +25,7 @@ func Follow(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		utils.WriteJSON(w, http.StatusBadRequest, models.HttpError{Error: "Invalid request"})
 		return
 	}
-	fmt.Println("her", username)
+	// fmt.Println("her", username)
 	followingId, err := utils.GetUserIdFromUsername(db, username)
 	if err != nil {
 		if err == sql.ErrNoRows {

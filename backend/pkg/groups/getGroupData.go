@@ -42,6 +42,6 @@ func GroupMembers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 		}
 		users = append(users, user)
 	}
-	fmt.Println("users", users)
+	// fmt.Println("users", users)
 	utils.WriteJSON(w, http.StatusAccepted, users)
 }
