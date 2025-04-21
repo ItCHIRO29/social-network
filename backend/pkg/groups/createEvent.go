@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"social-network/pkg/models"
 	"social-network/pkg/notifications"
@@ -40,6 +41,23 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		if err != nil {
 			fmt.Println("Error beginning transaction", err)
 			utils.WriteJSON(w, 500, "internal server error")
+			return
+		}
+		eventTime, err := time.Parse(time.RFC3339, Event.Date)
+		if err != nil {
+			fmt.Println("Error parsing event date:", err)
+			return
+		}
+
+		// Get the current time in UTC to match the same base
+		now := time.Now().UTC()
+
+		// fmt.Println("Event time:", eventTime)
+		// fmt.Println("Now:", now)
+
+		// Compare times
+		if eventTime.Before(now) {
+			utils.WriteJSON(w, 400, "Choose a future date!")
 			return
 		}
 
@@ -92,7 +110,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 	FROM events e
 	JOIN groups g ON g.id = e.group_id
 	LEFT JOIN event_members em ON em.event_id = e.id
-	WHERE g.name = ? AND e.id = ?`
+	WHERE  g.name = ? AND e.id = ? AND datetime(e.date) > datetime('now')`
 
 		err := db.QueryRow(query, groupName, eventId).Scan(&event.EventID, &event.GroupId, &event.Title, &event.Description, &event.Date, &event.GroupName, &event.GoingCount, &event.NotGoingCount)
 		if err != nil {
@@ -127,7 +145,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		SUM(CASE WHEN em.going = 0 THEN 1 ELSE 0 END) AS not_going_count
 	FROM events e
 	LEFT JOIN event_members em ON e.id = em.event_id 
-	WHERE e.group_id = ?
+	WHERE e.group_id = ? AND datetime(e.date) > datetime('now')
 	GROUP BY e.id
 `
 	rows, err := db.Query(query, Event.GroupId)
@@ -148,7 +166,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		Events = append(Events, Event)
 	}
-	fmt.Println("Events in create event method posts:::", Events)
+	// fmt.Println("Events in create event method posts:::", Events)
 	utils.WriteJSON(w, 200, Events)
 }
 

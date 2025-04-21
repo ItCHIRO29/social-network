@@ -49,7 +49,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request, db *sql.DB, userId in
 		return
 	}
 	comment.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
-	fmt.Println(comment)
+	// fmt.Println(comment)
 	query := "INSERT INTO comments (content, post_id, user_id, created_at, image) VALUES (?, ?, ?, ?, ?) RETURNING id"
 	err = db.QueryRow(query, comment.Content, comment.PostID, comment.AuthorID, comment.CreatedAt, comment.Image).Scan(&comment.ID)
 	if err != nil {

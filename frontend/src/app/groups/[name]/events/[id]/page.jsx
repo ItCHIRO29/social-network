@@ -23,6 +23,7 @@ export default function Event() {
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log("data ===>", data);
                 setEvent(data);
                 setisloading(false);
             } else if (response.status === 400) {

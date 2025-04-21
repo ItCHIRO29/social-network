@@ -76,14 +76,14 @@ ORDER BY posts.id DESC LIMIT ? OFFSET ?;`
 			}
 		} else {
 			isfollowing := utils.CheckFollowing(db, userId, user_id_str)
-			fmt.Println("user is following ====>", isfollowing)
+			// fmt.Println("user is following ====>", isfollowing)
 			if !isfollowing {
 				fmt.Println("user is not following")
 				utils.WriteJSON(w, http.StatusOK, posts)
 				return
 			}
-			fmt.Println("rani hna f post dial user akhour!!!!!!!!!!!!!!!!!!!!")
-			fmt.Println("m here in get posts user id  !==== userid = ")
+			// fmt.Println("rani hna f post dial user akhour!!!!!!!!!!!!!!!!!!!!")
+			// fmt.Println("m here in get posts user id  !==== userid = ")
 			query := `
    					 SELECT id, user_id, title, content, created_at, image , privacy
 						FROM posts
@@ -149,7 +149,7 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 	var err error
 	query := ""
 	group_name := r.URL.Query().Get("groupId")
-	fmt.Println("group name is :", group_name)
+	// fmt.Println("group name is :", group_name)
 	var group_id int
 	if group_name != "" {
 		query = `SELECT id FROM groups WHERE name = ?`
@@ -162,8 +162,8 @@ func GetPostsByGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 
 	}
 	var IsMemb bool
-	fmt.Println("group id is :", group_id)
-	fmt.Println("user id is :", userId)
+	// fmt.Println("group id is :", group_id)
+	// fmt.Println("user id is :", userId)
 	IsMemb = IsMember(db, group_id, userId)
 	if !IsMemb {
 		fmt.Println("You are not a member of this group")

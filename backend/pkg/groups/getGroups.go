@@ -82,13 +82,13 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int
 // `http://localhost:8080/api/groups/groupActivity?group=${group_name}
 
 func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	fmt.Println("GetGroupActivity!!!!!!!!!!!!!!!!!!!!!!!!!")
+	// fmt.Println("GetGroupActivity!!!!!!!!!!!!!!!!!!!!!!!!!")
 	group_name := r.URL.Query().Get("group")
 	if group_name == "" {
 		http.Error(w, "Missing group name", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("group_name ===>", group_name)
+	// fmt.Println("group_name ===>", group_name)
 	temp := `SELECT groups.id FROM groups WHERE name = ?`
 	var group_id int
 	err := db.QueryRow(temp, group_name).Scan(&group_id)
@@ -97,7 +97,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("group_id ===>", group_id)
+	// fmt.Println("group_id ===>", group_id)
 	// if group_name == "" {
 	// http.Error(w, "Missing group name", http.StatusBadRequest)
 	// return
@@ -181,7 +181,7 @@ func GetGroupActivity(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 		http.Error(w, "Group not found", http.StatusNotFound)
 		return
 	}
-	fmt.Println("Group data:", group)
+	// fmt.Println("Group data:", group)
 	utils.WriteJSON(w, http.StatusOK, group)
 }
 
