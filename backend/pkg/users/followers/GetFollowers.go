@@ -2,6 +2,7 @@ package followers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"social-network/pkg/models"
@@ -56,5 +57,6 @@ WHERE f.following_id = $1
 		}
 		Followers = append(Followers, follower)
 	}
+	fmt.Println("followers:", Followers)
 	utils.WriteJSON(w, http.StatusOK, Followers)
 }

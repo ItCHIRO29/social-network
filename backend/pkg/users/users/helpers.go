@@ -71,8 +71,8 @@ func GetUserData(db *sql.DB, viewerID, profileID int) (models.PublicProfile, err
 			u.bio,
 			u.image,
 			u.email,
-			(SELECT COUNT(id) FROM followers WHERE following_id = u.id AND accepted = 1) AS following_cont,
-			(SELECT COUNT(id) FROM followers WHERE follower_id = u.id AND accepted = 1) AS followers_cont,
+			(SELECT COUNT(id) FROM followers WHERE follower_id = u.id AND accepted = 1) AS following_cont,
+			(SELECT COUNT(id) FROM followers WHERE following_id = u.id AND accepted = 1) AS followers_cont,
 			COALESCE(f.id, 0) AS reference_id,
 			CASE
 				WHEN u.id = ? THEN 'none'
@@ -111,7 +111,6 @@ func GetUserData(db *sql.DB, viewerID, profileID int) (models.PublicProfile, err
 		&user.Followings_count, &user.Followers_count,
 		&user.FollowButton.ReferenceID, &user.FollowButton.State,
 	)
-
 	if err != nil {
 		return models.PublicProfile{}, err
 	}

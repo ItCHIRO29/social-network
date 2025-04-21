@@ -28,6 +28,7 @@ export default function UserListPopup({ isOpen, onClose, title, username, follow
         };
 
         fetchUsers();
+        console.log("staaaaaaaaate",followButtonState)
     }, [username, title, isOpen]);
 
     if (!isOpen) return null;
@@ -41,7 +42,8 @@ export default function UserListPopup({ isOpen, onClose, title, username, follow
                 </div>
                 <div className={styles.content}>
                     {users.length === 0 ? (
-                        <div className={styles.emptyState}>{(followButtonState === 'follow' || 'pending') ? `Follow ${username} to see their ${title.toLowerCase()}` : `No ${title.toLowerCase()} found`}</div>
+                        
+                        <div className={styles.emptyState}>{(followButtonState === 'follow' || followButtonState === 'pending') ? `Follow ${username} to see their ${title.toLowerCase()}` : `No ${title.toLowerCase()} found`}</div>
                     ) : (
                         <ul className={styles.userList}>
                             {users.map(user => (

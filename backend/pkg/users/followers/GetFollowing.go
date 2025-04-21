@@ -59,5 +59,6 @@ WHERE f.follower_id = $1
 		}
 		Followings = append(Followings, following)
 	}
+	fmt.Println("Followings:", Followings)
 	utils.WriteJSON(w, http.StatusOK, Followings)
 }

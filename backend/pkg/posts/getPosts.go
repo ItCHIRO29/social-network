@@ -82,13 +82,41 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 			}
 		} else {
 			query := ""
+			isfollowing := utils.CheckFollowing(db, userId, user_id_str)
 			isPub, err := utils.IsPublicProfile(db, user_id)
 			if err != nil {
 				fmt.Println("error in GetPosts isPublic :", err)
 				utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			if isPub {
+			// if !isfollowing {
+			// 	fmt.Println("user is not following")
+			// 	utils.WriteJSON(w, http.StatusOK, posts)
+			// 	return
+			// }
+			if isfollowing {
+				fmt.Println("user is following and is not public  profile .........")
+				query = `
+				SELECT id, user_id, title, content, created_at, image, privacy
+				FROM posts
+				WHERE 
+				(privacy = 'public' AND user_id = $1) 
+				OR (privacy = 'private' AND EXISTS (
+					SELECT 1 FROM json_each(posts.can_see)
+					WHERE json_each.value = $2
+					) AND user_id = $1)
+					OR (privacy = 'semi-private' AND user_id IN (
+						SELECT follower_id FROM followers
+						WHERE following_id = $1 AND follower_id = $2 AND accepted = 1
+						))
+						ORDER BY id DESC LIMIT $3 OFFSET $4;`
+				rows, err = db.Query(query, user_id, userId, utils.Limit, utils.Limit*page)
+				if err != nil {
+					fmt.Println("error in GetPosts:", err)
+					utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+					return
+				}
+			} else if isPub && !isfollowing {
 				fmt.Println("user is public")
 				query = `
 				SELECT id, user_id, title, content, created_at, image, privacy
@@ -102,36 +130,10 @@ func GetPosts(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 					utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
 					return
 				}
-
 			} else {
-				isfollowing := utils.CheckFollowing(db, userId, user_id_str)
-				if !isfollowing {
-					fmt.Println("user is not following")
-					utils.WriteJSON(w, http.StatusOK, posts)
-					return
-				}
-				query = `
-				SELECT id, user_id, title, content, created_at, image, privacy
-				FROM posts
-				WHERE 
-					(privacy = 'public' AND user_id = $1) 
-					OR (privacy = 'private' AND EXISTS (
-						SELECT 1 FROM json_each(posts.can_see)
-						WHERE json_each.value = $4
-					) AND user_id = $1)
-					OR (privacy = 'semi-private' AND user_id IN (
-						SELECT follower_id FROM followers
-						WHERE following_id = $1 AND follower_id = $4 AND accepted = 1
-					))
-				ORDER BY id DESC LIMIT $2 OFFSET $3;`
-				rows, err = db.Query(query, user_id, utils.Limit, utils.Limit*page, userId)
-				if err != nil {
-					fmt.Println("error in GetPosts:", err)
-					utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
-					return
-				}
-				// utils.WriteJSON(w, http.StatusOK, posts)
-
+				fmt.Println("user is not following and is not public  profile???")
+				utils.WriteJSON(w, http.StatusOK, []models.Posts{})
+				return
 			}
 
 			// rows, err = db.Query(query, user_id, utils.Limit, utils.Limit*page, userId)
