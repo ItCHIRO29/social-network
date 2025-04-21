@@ -1,17 +1,20 @@
 'use client';
 
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./nav.module.css";
 import NotificationsList from "@/components/notifications/NotificationsList";
 import { useUserData } from '@/components/common/providers/userDataContext';
+import { WebSocketContext } from '../providers/websocketContext';
+
 
 export default function Nav() {
     const [hovered, setHovered] = useState("");
     const iconSize = 25;
     const router = useRouter();
     const { userData } = useUserData();
+    const ws = useContext(WebSocketContext);
 
     const handleLogout = async function () {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
@@ -21,6 +24,7 @@ export default function Nav() {
             }
         )
         if (response.ok) {
+            ws.close();
             router.push("/login");
         } else {
             console.log("Error logging out");
@@ -34,10 +38,10 @@ export default function Nav() {
     return (
         <div className={styles.navContainer}>
             <div className={styles.mainNavItems}>
-                <div className={styles.navItem}
-                    onMouseEnter={() => setHovered("Profile")}
-                    onMouseLeave={() => setHovered("")}>
-                    <Link href={`/profile/${userData?.username}`}>
+                <Link href={`/profile/${userData?.username}`}>
+                    <div className={styles.navItem}
+                        onMouseEnter={() => setHovered("Profile")}
+                        onMouseLeave={() => setHovered("")}>
                         <img
                             src={userData?.image ? `${process.env.NEXT_PUBLIC_API_URL}/${userData?.image}` : `${process.env.NEXT_PUBLIC_API_URL}/uploads/profileImages/default-avatar.svg`}
                             alt="profile"
@@ -45,38 +49,38 @@ export default function Nav() {
                             height={iconSize}
                             className={styles.profileIcon}
                         />
-                    </Link>
-                    {hovered === "Profile" && <div className={styles.description}>Profile</div>}
-                </div>
+                        {hovered === "Profile" && <div className={styles.description}>Profile</div>}
+                    </div>
+                </Link>
 
-                <div className={styles.navItem}
-                    onMouseEnter={() => setHovered("Home")}
-                    onMouseLeave={() => setHovered("")}>
-                    <Link href="/">
+                <Link href="/">
+                    <div className={styles.navItem}
+                        onMouseEnter={() => setHovered("Home")}
+                        onMouseLeave={() => setHovered("")}>
                         <img src="/icons/home.svg" alt="home" width={iconSize} height={iconSize} />
-                    </Link>
-                    {hovered === "Home" && <div className={styles.description}>Home</div>}
-                </div>
+                        {hovered === "Home" && <div className={styles.description}>Home</div>}
+                    </div>
+                </Link>
 
 
-                <div className={styles.navItem}
-                    onMouseEnter={() => setHovered("People")}
-                    onMouseLeave={() => setHovered("")}>
-                    <Link href="/people">
+                <Link href="/people">
+                    <div className={styles.navItem}
+                        onMouseEnter={() => setHovered("People")}
+                        onMouseLeave={() => setHovered("")}>
                         <img src="/icons/pepole.svg" alt="people" width={iconSize} height={iconSize} />
-                    </Link>
-                    {hovered === "People" && <div className={styles.description}>People</div>}
-                </div>
+                        {hovered === "People" && <div className={styles.description}>People</div>}
+                    </div>
+                </Link>
 
-                <div className={styles.navItem}
-                    onMouseEnter={() => setHovered("Groups")}
-                    onMouseLeave={() => setHovered("")}>
-                    <Link href="/groups">
+                <Link href="/groups">
+                    <div className={styles.navItem}
+                        onMouseEnter={() => setHovered("Groups")}
+                        onMouseLeave={() => setHovered("")}>
                         <img src="/icons/groups.svg" alt="groups" width={iconSize} height={iconSize} />
-                    </Link>
-                    {hovered === "Groups" && <div className={styles.description}>Groups</div>}
-                </div>
-
+                        {hovered === "Groups" && <div className={styles.description}>Groups</div>}
+                    </div>
+                </Link>
+                
                 <div className={styles.navItem}
                     onMouseEnter={() => setHovered("Notifications")}
                     onMouseLeave={() => setHovered("")}>

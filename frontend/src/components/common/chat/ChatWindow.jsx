@@ -254,13 +254,14 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   };
 
   const handleSubmit = (e) => {
+    console.warn(myData);
     e.preventDefault();
     if (!messageInput.trim()) return;
-    console.log('sender', myData.username);
+    console.log('sender', myData.userData.username);
     const newMessage = {
       type: type === "groupe" ? "groupe" : 'private message',
       message: messageInput,
-      sender: myData.username,
+      sender: myData.userData.username,
       receiver: username,
       groupeId: type === "groupe" ? chatdata.chatdata.groupedata.id : '',
       id: Date.now() + Math.random(),
