@@ -9,9 +9,7 @@ import (
 )
 
 func Verify(w http.ResponseWriter, r *http.Request, db *sql.DB, sessionToken string) {
-	// fmt.Println("Fireeeeeeeeeeeeeeed")
 	sessionToken = strings.TrimPrefix(sessionToken, "Bearer ")
-	// fmt.Println("cookie", sessionToken)
 	if sessionToken == "" {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

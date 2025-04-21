@@ -27,7 +27,7 @@ func Upgrade(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
-	fmt.Println("new connection .................................................")
+	fmt.Println(".................................................new connection .................................................")
 	username, err := getUsername(db, userId)
 	if err != nil {
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "internal server error"})

@@ -22,7 +22,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 
 	_, err = db.Exec(query, !NewData.Public, userID)
 	if err != nil {
-		fmt.Println("/////////", err)
+		fmt.Println(err)
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to update profile"})
 		return
 	}

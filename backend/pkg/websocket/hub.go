@@ -32,10 +32,8 @@ type Client struct {
 type Message map[string]any
 
 func (message Message) isValidGroupMessage(userid int, db *sql.DB) bool {
-	// _, ok := message["groupe"].(string)
 	groupeId, ok5 := message["groupeId"].(float64)
 
-	// _, ok1 := message["sender"].(string)
 	_, ok2 := message["message"].(string)
 	_, ok3 := message["id"].(float64)
 	ok4 := utils.CheckUserInGrp(userid, int(groupeId), db)
@@ -80,8 +78,6 @@ func sendChatError(receiver string, conversation string, messageId float64) {
 }
 
 var ChatUsersLimiters sync.Map
-
-/*---------- upgrade connection from http to ws ----------*/
 
 var Hub = HubType{
 	Clients:    make(map[string]Client, 1024),
@@ -287,7 +283,6 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			fmt.Fprintln(os.Stderr, err)
 			break
 		}
-		fmt.Println("eeeeeeeeeeeee", message)
 		messageType, ok := message["type"].(string)
 		if !ok {
 			fmt.Fprintln(os.Stderr, "invalid message type")
@@ -309,7 +304,6 @@ func handleConn(conn *websocket.Conn, db *sql.DB, userId int, userName string) {
 			message["creation_date"] = time.Now().Format("2006-01-02 15:04")
 			id, err := saveInDb(db, userId, message)
 			if err != nil {
-				// fmt.Println("error in saving in db")
 				fmt.Fprintln(os.Stderr, err)
 				sendChatError(userName, message["receiver"].(string), message["id"].(float64))
 				continue

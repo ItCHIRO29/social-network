@@ -100,6 +100,5 @@ WHERE
 			return users[i].LastMessageId > users[j].LastMessageId
 		})
 	}
-	// fmt.Println("users in chat ===>", users)
 	utils.WriteJSON(w, http.StatusOK, users)
 }

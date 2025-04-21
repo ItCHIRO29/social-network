@@ -37,7 +37,6 @@ func Login(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		// if !IdenticalPasswords(password, userData.Password) {
 		if password != userData.Password {
 			fmt.Println("Incorrect Password")
 			utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect Password"})

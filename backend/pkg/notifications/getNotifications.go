@@ -12,7 +12,6 @@ import (
 )
 
 func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
-	// fmt.Println("GetNotifications")
 	query := `SELECT n.id, n.sender_id, n.receiver_id, n.type, n.reference_id, n.created_at, u.image, n.additional_data, n.seen FROM notifications n JOIN users u ON n.sender_id = u.id WHERE (n.receiver_id = $1 AND n.sender_id != $1) ORDER BY n.id DESC`
 	rows, err := db.Query(query, userId)
 	if err != nil {

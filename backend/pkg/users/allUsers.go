@@ -11,7 +11,6 @@ import (
 	"social-network/pkg/utils"
 )
 
-// Initialize the struct properly
 type User struct {
 	ID           int                 `json:"id"`
 	Username     string              `json:"username"`
@@ -63,34 +62,3 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userID int)
 	}
 	utils.WriteJSON(w, http.StatusOK, users)
 }
-
-// func GetAllUserToJoinGroup(db *sql.DB, userID int) ([]User, error) {
-// 	var AllUsers []User
-// 	query := `SELECT id, first_name, last_name, image FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM group_members WHERE group_id = ?);`
-// 	rows, err := db.Query(query, userID, userID)
-// 	if err != nil {
-// 		fmt.Println("Error executing query ===>", err)
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
-// 	for rows.Next() {
-// 		var uID int
-// 		var firstName, lastName, image string
-// 		if err := rows.Scan(&uID, &firstName, &lastName, &image); err != nil {
-// 			fmt.Println("Error scanning row:", err)
-// 			return nil, err
-// 		}
-// 		fullName := firstName + " " + lastName
-// 		user := User{
-// 			ID:       uID,
-// 			FullName: fullName,
-// 			Image:    strings.Trim(image, "./"),
-// 		}
-// 		AllUsers = append(AllUsers, user)
-// 		if err := rows.Err(); err != nil {
-// 			fmt.Println("Error iterating rows:", err)
-// 			return nil, err
-// 		}
-// 	}
-// 	return AllUsers, nil
-// }

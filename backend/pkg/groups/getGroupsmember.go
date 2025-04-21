@@ -34,6 +34,5 @@ func GetGroupsMember(w http.ResponseWriter, r *http.Request, db *sql.DB, userId 
 		}
 		AllGroups = append(AllGroups, group)
 	}
-	// fmt.Println(AllGroups)
 	utils.WriteJSON(w, 200, AllGroups)
 }

@@ -21,7 +21,6 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 			utils.WriteJSON(w, 400, "bad request")
 			return
 		}
-		// fmt.Println("Event from request :::", Event.Date)
 		if len(Event.Title) < 3 || len(Event.Title) > 15 {
 			fmt.Println("Error decoding request body", err)
 			utils.WriteJSON(w, 400, "invalid Title length")
@@ -49,13 +48,8 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 			return
 		}
 
-		// Get the current time in UTC to match the same base
 		now := time.Now().UTC()
 
-		// fmt.Println("Event time:", eventTime)
-		// fmt.Println("Now:", now)
-
-		// Compare times
 		if eventTime.Before(now) {
 			utils.WriteJSON(w, 400, "Choose a future date!")
 			return
@@ -132,7 +126,6 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		utils.WriteJSON(w, 500, "internal server error")
 		return
 	}
-	// query := `SELECT id, group_id, creator_id, title, description, date FROM events WHERE group_id = ?`
 	query := `
 	SELECT 
 		COALESCE(e.id, 0), 
@@ -166,7 +159,6 @@ func CreateEvent(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		}
 		Events = append(Events, Event)
 	}
-	// fmt.Println("Events in create event method posts:::", Events)
 	utils.WriteJSON(w, 200, Events)
 }
 
@@ -178,9 +170,3 @@ func GetGroupID(db *sql.DB, groupName string) (int, error) {
 	}
 	return groupID, nil
 }
-
-// func InsertNewEvent(Event *models.Event, userId int, Db *sql.DB, r *http.Request) error {
-// 	fmt.Println("event in insert event", Event)
-
-// 	return Db.QueryRow("INSERT INTO events (group_id, creator_id, title,description) VALUES (?, ?, ?)", Event.GroupId, userId, Event.Title, Event.Description).Err()
-// }

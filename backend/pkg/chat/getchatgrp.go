@@ -18,10 +18,8 @@ func GetChat(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		offset = 0
 	}
 
-	fmt.Println("offset in backend (group chat):", offset)
 
 	if offset <= 0 {
-		// Fetch the latest message ID if no valid offset provided
 		query := `SELECT id FROM group_chat WHERE group_id = ? ORDER BY id DESC LIMIT 1`
 		err := db.QueryRow(query, groupID).Scan(&offset)
 		if err != nil {
@@ -69,7 +67,6 @@ func GetChat(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 		offset = -1
 	} else {
 		offset = messages[len(messages)-1].Id
-		fmt.Println("offset in get group chat handler:", offset)
 	}
 
 	utils.WriteJSON(w, http.StatusOK, resp{Messages: messages, Offset: offset})
