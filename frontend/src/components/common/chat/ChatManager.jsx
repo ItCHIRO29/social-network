@@ -12,7 +12,7 @@ const ChatManager = () => {
   const ws = useContext(WebSocketContext);
   const socket = ws?.socket;
   const myData = useUserData();
-
+  // console.warn("mydata", myData);
   // Fetch users data on component mount
   useEffect(() => {
     const getUsers = async () => {
@@ -125,21 +125,6 @@ const ChatManager = () => {
 
   // Handle private messages
   useEffect(() => {
-    // const handlegroupmessage = (event) => {
-    //   if (event instanceof CustomEvent && event.detail && event.detail.message) {
-    //     const message = event.detail.message;
-    //     const senderUsername = message.sender;
-    //     const groupname = event.detail.receiver
-    //     const hasActiveChatWindow = chatWindows.has(groupname) &&
-    //       chatWindows.get(groupname).focused;
-    //     if (!hasActiveChatWindow) {
-    //       setGrps(prevgrps => {
-    //         const groups = prevgrps.get
-    //       })
-    //     }
-    //   }
-    // }
-
     const handlePrivateMessage = (event) => {
       if (event instanceof CustomEvent && event.detail && event.detail.message) {
         const message = event.detail.message;
@@ -157,32 +142,71 @@ const ChatManager = () => {
               const user = prevUsers.get(senderUsername);
               if (!user) return prevUsers;
 
-              const newUsers = new Map(prevUsers);
-              newUsers.set(senderUsername, {
+              const updatedUser = {
                 ...user,
                 userData: {
                   ...user.userData,
                   notify: true
                 }
-              });
+              };
 
+              const newUsers = new Map();
+
+              // First, insert the updated user at the top
+              newUsers.set(senderUsername, updatedUser);
+
+              // Then add the rest, skipping the updated one
+              for (const [username, userObj] of prevUsers.entries()) {
+                if (username !== senderUsername) {
+                  newUsers.set(username, userObj);
+                }
+              }
+
+              // console.log("Reordered users map:", Array.from(newUsers.entries()));
               return newUsers;
             });
+
           }
         }
       }
     };
+
+    const Sortusers = (event) => {
+      setUsers(prevUsers => {
+        const user = prevUsers.get(event.detail.receiver);
+        if (!user) {
+          return prevUsers;
+        }
+
+        const newUsers = new Map();
+
+        newUsers.set(event.detail.receiver, user);
+
+        for (const [username, userObj] of prevUsers.entries()) {
+          if (username !== event.detail.receiver) {
+            newUsers.set(username, userObj);
+          }
+        }
+
+        return newUsers;
+        ;
+      })
+    }
 
     // Add event listeners for private messages
     for (const [username] of users) {
       document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
     }
 
+    document.addEventListener("sendMessage", Sortusers)
+
     // Clean up
     return () => {
       for (const [username] of users) {
         document.removeEventListener(`privateMessage-${username}`, handlePrivateMessage);
       }
+      document.removeEventListener("sendMessage", Sortusers)
+
     };
   }, [users, chatWindows, myData.username]);
 

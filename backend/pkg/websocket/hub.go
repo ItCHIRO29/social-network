@@ -113,14 +113,15 @@ func (h *HubType) Run(db *sql.DB) {
 				statusMessage["username"] = client.Username
 				statusMessage["online"] = true
 				h.BroadcastMessage(statusMessage, &client, nil)
+				fmt.Println("register")
 			}
-
 		case client := <-h.Unregister:
 			h.UnregisterClient(client)
 			statusMessage := Message{}
 			statusMessage["type"] = "status"
 			statusMessage["username"] = client.Username
 			statusMessage["online"] = false
+			fmt.Println("unregister", len(client.Conns), len(h.Clients))
 			h.BroadcastMessage(statusMessage, &client, h.offlineDelayFunc)
 		case message := <-h.Broadcast:
 			h.BroadcastMessage(message, nil, nil)
@@ -187,7 +188,7 @@ func (h *HubType) UnregisterClient(client Client) {
 	h.Mu.Lock()
 	defer h.Mu.Unlock()
 
-	if len(client.Conns) == 0 {
+	if len(client.Conns) == 1 {
 		conns := h.Clients[client.Username].Conns
 		for _, conn := range conns {
 			conn.Close()
