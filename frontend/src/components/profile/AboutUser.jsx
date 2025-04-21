@@ -58,34 +58,32 @@ export default function AboutUser({ user }) {
                     {!isOwnProfile && user.follow_button?.state !== 'none' && (
                         <FollowButton userData={user} />
                     )}
-
-                    <button className={styles.followButton} onClick={async () => {
-                        try {
-                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/EditProfile`, {
-                                method: "POST",
-                                credentials: "include",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    "user_id": userData.id,
-                                    "public": privacy
-                                })
-                            })
-                            if (res.ok) {
-                                setPrivacy(!privacy);
+                    {
+                        isOwnProfile && 
+                            <button className={styles.followButton} onClick={async () => {
+                                try {
+                                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/EditProfile`, {
+                                        method: "POST",
+                                        credentials: "include",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            "user_id": userData.id,
+                                            "public": privacy
+                                        })
+                                    })
+                                    if (res.ok) {
+                                        setPrivacy(!privacy);
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                }
+        
                             }
-                        } catch (err) {
-                            console.error(err);
-                        }
-
+                            }>Switch to : {!privacy ? "public" : "private"}</button>                        
                     }
-                    }>Switch to : {!privacy ? "public" : "private"}</button>
                 </div>
-                {/* <button className={styles.followButton} onClick={() => {
-                    setShowEdit(true);
-                }}>Edit Profile</button> */}
-
             </div>
 
             {(user.public || isOwnProfile) && (
