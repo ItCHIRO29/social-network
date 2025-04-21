@@ -5,6 +5,5 @@ RUN go mod download
 COPY . .
 RUN go build -o server .
 RUN chmod +x ./server
-RUN ls -la
 EXPOSE 8080
 CMD ["./server"] 

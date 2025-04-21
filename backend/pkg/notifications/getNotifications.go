@@ -42,7 +42,7 @@ func GetNotifications(w http.ResponseWriter, r *http.Request, db *sql.DB, userId
 				return
 			}
 		}
-		createdAt, err := time.Parse("2006-01-02 15:04:05.999999999-07:00", createdAtStr)
+		createdAt, err := time.Parse("2006-01-02 15:04:05.999999999Z07:00", createdAtStr)
 		if err != nil {
 			fmt.Printf("error parsing timestamp %s: %v\n", createdAtStr, err)
 			http.Error(w, "internal server error", http.StatusInternalServerError)
