@@ -11,11 +11,11 @@ services:
 
   frontend:
     container_name: social-network-frontend
-    build: ./social-network-frontend
+    build: ./frontend
     ports:
       - "3000:3000"
     volumes:
-      - /social-network-frontend/node_modules
+      - /frontend/node_modules
     depends_on:
       - backend
     environment:
