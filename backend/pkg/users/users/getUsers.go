@@ -52,7 +52,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int) {
 FROM 
     users u
 WHERE 
-    u.id != $1 
+   (u.id != $1 
     AND EXISTS (
         SELECT 1 
         FROM followers 
@@ -61,9 +61,9 @@ WHERE
             OR (follower_id = $1 AND following_id = u.id)
         ) 
         AND accepted = 1
-    );`
+    ))OR( u.public=1 AND u.id != ?);`
 
-	rows, err := db.Query(query, userId)
+	rows, err := db.Query(query, userId, userId)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		w.WriteHeader(http.StatusInternalServerError)

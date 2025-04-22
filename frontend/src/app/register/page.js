@@ -23,6 +23,7 @@ export default function RegisterPage() {
         first_name: "",
         last_name: "",
         age: "",
+        BirthDate: "",
         gender: "",
         email: "",
         password: "",
@@ -229,7 +230,7 @@ export default function RegisterPage() {
 
                     <div className={styles.inputGroup}>
                         <input
-                            type="number"
+                            type="date"
                             name="age"
                             placeholder="Age"
                             value={formData.age}

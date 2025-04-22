@@ -29,7 +29,7 @@ export class Ws {
         console.log("messageeeeeeeeeeeeeeeeeeeeeeeee", message)
         switch (message.type) {
             case 'private message':
-                const eventName = `privateMessage-${message.sender}`;
+                const eventName = `privateMessage`;
                 const pEvent = new CustomEvent(eventName, { detail: { message } });
                 document.dispatchEvent(pEvent);
                 break;
@@ -51,6 +51,10 @@ export class Ws {
                 const eEvent = new CustomEvent('error', { detail: message });
                 document.dispatchEvent(eEvent);
                 break;
+            // case 'message-public':
+            //     const mevent = new CustomEvent('message-public', { detail: message });
+            //     document.dispatchEvent(mevent);
+            //     break;
         }
     }
 

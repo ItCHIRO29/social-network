@@ -1,8 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, use } from 'react';
 import ChatWindow from './ChatWindow';
 import styles from './ChatManager.module.css';
 import { WebSocketContext } from '../providers/websocketContext';
 import { useUserData } from "../providers/userDataContext";
+import { type } from 'os';
 
 const ChatManager = () => {
   const [chatWindows, setChatWindows] = useState(new Map());
@@ -126,6 +127,7 @@ const ChatManager = () => {
   // Handle private messages
   useEffect(() => {
     const handlePrivateMessage = (event) => {
+
       if (event instanceof CustomEvent && event.detail && event.detail.message) {
         const message = event.detail.message;
         const senderUsername = message.sender;
@@ -139,8 +141,19 @@ const ChatManager = () => {
           // If no active chat window, mark as unread (notify)
           if (!hasActiveChatWindow) {
             setUsers(prevUsers => {
-              const user = prevUsers.get(senderUsername);
-              if (!user) return prevUsers;
+              let user = prevUsers.get(senderUsername);
+              if (!user) {
+                console.warn(event.detail.message.senderData);
+                user = {
+                  userData: {
+                    firstname: event.detail.message.senderData.first_name,
+                    lastname: event.detail.message.senderData.last_name,
+                    image: event.detail.message.senderData.image,
+                    username: event.detail.message.senderData.username,
+                    type: "public",
+                  },
+                };
+              };
 
               const updatedUser = {
                 ...user,
@@ -194,9 +207,9 @@ const ChatManager = () => {
     }
 
     // Add event listeners for private messages
-    for (const [username] of users) {
-      document.addEventListener(`privateMessage-${username}`, handlePrivateMessage);
-    }
+    // for (const [username] of users) {
+    document.addEventListener(`privateMessage`, handlePrivateMessage);
+    // }
 
     document.addEventListener("sendMessage", Sortusers)
 

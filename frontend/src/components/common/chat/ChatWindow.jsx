@@ -139,7 +139,6 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
   };
 
   const fetchMessages = async (type, chatdata) => {
-    console.warn(type, chatdata)
     if (isLoadingOlder || !hasMoreMessages) return;
     setIsLoadingOlder(true);
     let link = "";
@@ -147,7 +146,10 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       link = `http://localhost:8080/api/chat/get_messages?opponent=${username}&offset=${offset}`;
     } else if (type === "groupe") {
       link = `http://localhost:8080/api/chat/get_chat_grp?group_id=${chatdata.chatdata.groupedata.id}&offset=${offset}`;
+    } else {
+      link = `http://localhost:8080/api/chat/get_messages?opponent=${username}&offset=${offset}`;
     }
+    console.warn("is entred", link)
     try {
       const response = await fetch(
         link,
@@ -261,6 +263,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
     const newMessage = {
       type: type === "groupe" ? "groupe" : 'private message',
       message: messageInput,
+      senderData: myData.userData,
       sender: myData.userData.username,
       receiver: username,
       groupeId: type === "groupe" ? chatdata.chatdata.groupedata.id : '',
@@ -402,8 +405,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
           </div>
         ))}
       </div>
-
-      <div className="chat-input">
+      {(type === "User" || type === "groupe") ? (<div className="chat-input">
         <form onSubmit={handleSubmit} style={{ display: 'flex', width: '100%', gap: '8px' }}>
           <input
             ref={inputRef}
@@ -422,7 +424,8 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
           </button>
           <button type="submit" className="send-btn"></button>
         </form>
-      </div>
+      </div>) : <p className='chat-input'>Follow this user to start a conversation..</p>}
+
 
       {showEmojiPicker && (
         <div

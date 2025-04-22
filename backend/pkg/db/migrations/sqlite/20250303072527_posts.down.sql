@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS posts
-DROP TABLE IF EXISTS private_posts
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS private_posts;

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     gender TEXT NOT NULL,
-    age INTEGER NOT NULL,
+    DateBirth TEXT NOT NULL,
     bio TEXT,
     nickname TEXT,
     username TEXT NOT NULL UNIQUE,
