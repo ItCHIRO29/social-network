@@ -137,21 +137,17 @@ const ChatManager = () => {
           // Check if we have a chat window open for this sender
           const hasActiveChatWindow = chatWindows.has(senderUsername) &&
             chatWindows.get(senderUsername).focused;
-
           // If no active chat window, mark as unread (notify)
           if (!hasActiveChatWindow) {
             setUsers(prevUsers => {
               let user = prevUsers.get(senderUsername);
               if (!user) {
-                console.warn(event.detail.message.senderData);
                 user = {
                   userData: {
+                    ...event.detail.message.senderData,
                     firstname: event.detail.message.senderData.first_name,
                     lastname: event.detail.message.senderData.last_name,
-                    image: event.detail.message.senderData.image,
-                    username: event.detail.message.senderData.username,
-                    type: "public",
-                  },
+                  }
                 };
               };
 

@@ -96,6 +96,8 @@ export default function RegisterPage() {
 
         // Validate all fields on submit
         const validation = isValidRegisterForm(formData);
+        console.log(validation);
+
         setErrors(validation.errors);
 
         if (!validation.isValid) {

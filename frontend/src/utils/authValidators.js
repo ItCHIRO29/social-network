@@ -103,7 +103,7 @@ export function isValidRegisterForm(formData) {
         username: isValidUsername(formData.username),
         first_name: isValidName(formData.first_name),
         last_name: isValidName(formData.last_name),
-        age: isValidBirthDay(formData.age),
+        // age: isValidBirthDay(formData.age),
         gender: isValidGender(formData.gender),
         email: isValidEmail(formData.email),
         password: isValidPassword(formData.password),

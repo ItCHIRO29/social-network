@@ -11,6 +11,7 @@ import (
 	"social-network/pkg/utils"
 
 	"github.com/gofrs/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(db *sql.DB) http.HandlerFunc {
@@ -37,7 +38,7 @@ func Login(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		if password != userData.Password {
+		if CheckPassword(password, userData.Password) {
 			fmt.Println("Incorrect Password")
 			utils.WriteJSON(w, http.StatusUnauthorized, models.HttpError{Error: "Incorrect Password"})
 			return
@@ -79,4 +80,9 @@ func generateSessionToken(userId int, db *sql.DB) (*http.Cookie, error) {
 		Path:     "/",
 	}
 	return &cookie, nil
+}
+
+func CheckPassword(hashedPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	return err == nil
 }

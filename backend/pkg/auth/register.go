@@ -32,6 +32,11 @@ func Register(db *sql.DB) http.HandlerFunc {
 		if userData.Image == "" {
 			userData.Image = "uploads/profileImages/default-avatar.svg"
 		}
+		userData.Password, err = HashPassword(userData.Password)
+		if err != nil {
+			utils.WriteJSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
 		res, err := db.Exec(`INSERT INTO users (first_name, last_name, nickname, DateBirth, gender, bio, image, username, email, password, last_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, userData.FirstName, userData.LastName, userData.Nickname, userData.BirthDay, userData.Gender, userData.Bio, userData.Image, userData.Username, userData.Email, userData.Password, time.Now().Format("2006-01-02 15:04:05"))
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "In Exec", err)

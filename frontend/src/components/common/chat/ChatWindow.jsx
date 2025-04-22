@@ -210,7 +210,7 @@ const ChatWindow = ({ type, chatdata, username, users, setUsers, myData, socket,
       handlePrivateMessage(event);
     };
 
-    document.addEventListener(`privateMessage-${username}`, eventListener);
+    document.addEventListener(`privateMessage`, eventListener);
     document.addEventListener(`groupMessage-${username}`, eventListener);
 
 
