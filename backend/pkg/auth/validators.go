@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"regexp"
 	"slices"
-	"strconv"
 	"strings"
+	"time"
 
 	"social-network/pkg/models"
 
@@ -50,12 +50,20 @@ func IsValidName(name string) bool {
 	return matched
 }
 
-func IsValidAge(age string) bool {
-	ageNum, err := strconv.Atoi(age)
-	if err != nil || ageNum < 16 || ageNum > 160 {
+func IsValidBirthDay(birthday string) bool {
+	birthTime, err := time.Parse("2006-01-02", birthday)
+	if err != nil {
 		return false
 	}
-	return true
+
+	now := time.Now()
+	age := now.Year() - birthTime.Year()
+
+	if now.YearDay() < birthTime.YearDay() {
+		age--
+	}
+
+	return age >= 16 && age <= 160
 }
 
 func IsValidGender(gender string) bool {
@@ -128,7 +136,7 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 		FirstName: r.FormValue("first_name"),
 		LastName:  r.FormValue("last_name"),
 		Nickname:  r.FormValue("nickname"),
-		Age:       r.FormValue("age"),
+		BirthDay:  r.FormValue("birth_day"),
 		Gender:    r.FormValue("gender"),
 		Bio:       r.FormValue("bio"),
 		Username:  r.FormValue("username"),
@@ -142,7 +150,7 @@ func IsValidRegisterForm(r *http.Request, db *sql.DB) (*models.User, error) {
 		return nil, errors.New("invalid last name")
 	}
 
-	if !IsValidAge(user.Age) {
+	if !IsValidBirthDay(user.BirthDay) {
 		return nil, errors.New("invalid age")
 	}
 	if !IsValidGender(user.Gender) {

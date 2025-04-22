@@ -1,11 +1,23 @@
-export function isValidAge(age) {
-    if (age === "") return "Age is required";
-    const ageNum = parseInt(age, 10);
-    if (isNaN(ageNum)) return "Age must be a number";
-    if (ageNum < 16) return "You must be at least 16 years old";
-    if (ageNum > 160) return "Age must be 160 or less";
+export function isValidBirthDay(birth_day) {
+    if (!birth_day) return "Birth Date is required";
+
+    const birthDate = new Date(birth_day);
+    const today = new Date();
+
+    if (isNaN(birthDate.getTime())) return "Invalid date format";
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    if (age < 16) return "You must be at least 16 years old";
+    if (age > 160) return "Age must be 160 or less";
+
     return "";
 }
+
 
 export function isValidBio(bio) {
     if (bio.length > 255) return "Bio must be 255 characters or less";
@@ -15,7 +27,7 @@ export function isValidBio(bio) {
 export function isValidEmail(email) {
     if (email === "") return "Email is required";
     if (email.length >= 255) return "Email is too long (max 254 characters)";
-    
+
     const re = /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$/;
     if (!re.test(email)) return "Invalid email format";
     return "";
@@ -91,7 +103,7 @@ export function isValidRegisterForm(formData) {
         username: isValidUsername(formData.username),
         first_name: isValidName(formData.first_name),
         last_name: isValidName(formData.last_name),
-        age: isValidAge(formData.age),
+        age: isValidBirthDay(formData.age),
         gender: isValidGender(formData.gender),
         email: isValidEmail(formData.email),
         password: isValidPassword(formData.password),
@@ -100,7 +112,7 @@ export function isValidRegisterForm(formData) {
     };
 
     const isValid = Object.values(errors).every(error => error === "");
-    
+
     return {
         isValid,
         errors,

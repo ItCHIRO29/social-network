@@ -105,10 +105,10 @@ export default function AboutUser({ user }) {
                                     <span>{user.nickname}</span>
                                 </div>
                             )}
-                            {user.age > 0 && (
+                            {user.birth_day && (
                                 <div className={styles.infoItem}>
-                                    <strong>Age:</strong>
-                                    <span>{user.age}</span>
+                                    <strong>Birth Day:</strong>
+                                    <span>{user.birth_day}</span>
                                 </div>
                             )}
                             {user.gender && (

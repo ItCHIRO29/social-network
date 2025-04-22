@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./register.module.css";
 import {
-    isValidAge,
+    isValidBirthDay,
     isValidBio,
     isValidEmail,
     isValidGender,
@@ -22,8 +22,7 @@ export default function RegisterPage() {
         username: "",
         first_name: "",
         last_name: "",
-        age: "",
-        BirthDate: "",
+        birth_day: "",
         gender: "",
         email: "",
         password: "",
@@ -36,7 +35,7 @@ export default function RegisterPage() {
         username: "",
         first_name: "",
         last_name: "",
-        age: "",
+        birth_day: "",
         gender: "",
         email: "",
         password: "",
@@ -74,7 +73,7 @@ export default function RegisterPage() {
             case "username": return isValidUsername(value);
             case "first_name": return isValidName(value);
             case "last_name": return isValidName(value);
-            case "age": return isValidAge(value);
+            case "birth_day": return isValidBirthDay(value);
             case "gender": return isValidGender(value);
             case "email": return isValidEmail(value);
             case "password": return isValidPassword(value);
@@ -231,14 +230,13 @@ export default function RegisterPage() {
                     <div className={styles.inputGroup}>
                         <input
                             type="date"
-                            name="age"
-                            placeholder="Age"
-                            value={formData.age}
+                            name="birth_day"
+                            value={formData.birth_day}
                             onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            className={`${styles.inputField} ${errors.age ? styles.inputError : ''}`}
+
+                            className={`${styles.inputField} ${errors.birth_day ? styles.inputError : ''}`}
                         />
-                        {errors.age && <p className={styles.errorText}>{errors.age}</p>}
+                        {errors.birth_day && <p className={styles.errorText}>{errors.birth_day}</p>}
                     </div>
 
                     <div className={styles.inputGroup}>

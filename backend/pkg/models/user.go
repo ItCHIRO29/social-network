@@ -5,7 +5,7 @@ type User struct {
 	FirstName    string       `json:"first_name"`
 	LastName     string       `json:"last_name"`
 	Nickname     string       `json:"nickname"`
-	Age          string       `json:"age"`
+	BirthDay     string       `json:"birth_day"`
 	Gender       string       `json:"gender"`
 	Bio          string       `json:"bio"`
 	Image        string       `json:"image"`
@@ -32,7 +32,7 @@ type PublicProfile struct {
 	FirstName        string       `json:"first_name"`
 	LastName         string       `json:"last_name"`
 	Nickname         string       `json:"nickname"`
-	Age              string       `json:"age"`
+	BirthDay         string       `json:"birth_day"`
 	Gender           string       `json:"gender"`
 	Bio              string       `json:"bio"`
 	Image            string       `json:"image"`
@@ -64,6 +64,6 @@ type FollowButton struct {
 }
 
 type EditProfile struct {
-	UserId int    `json:"user_id"`
+	UserId int  `json:"user_id"`
 	Public bool `json:"public"`
 }
