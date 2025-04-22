@@ -68,7 +68,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request, db *sql.DB, userId int)
 		return
 	}
 
-	if group.InvitedUsers != nil && len(group.InvitedUsers) > 0 {
+	if len(group.InvitedUsers) > 0 {
 		invitationQuery := `INSERT INTO group_members (user_id, group_id) VALUES (?, ?)`
 		for _, invitedId := range group.InvitedUsers {
 			result, err = tx.Exec(invitationQuery, invitedId, groupId)
